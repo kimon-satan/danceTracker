@@ -1,23 +1,22 @@
 #include "testApp.h"
 
 #define OFX_KINECT_GRAVITY 9.80665
-#define KINECT_SCR_WIDTH 640
-#define KINECT_SCR_HEIGHT 480
 
 
 //--------------------------------------------------------------
 void testApp::setup(){
     
     ofSetFrameRate(60);
-    kinect.init();
-	//kinect.init(true);  // shows infrared instead of RGB video image
-	//kinect.init(false, false);  // disable infrared/rgb video iamge (faster fps)
+    ofEnableSmoothing();
+    ofSetCircleResolution(60);
+
+	kinect.init(false, false);  // disable infrared/rgb video iamge (faster fps)
 	kinect.setVerbose(true);
 	kinect.open();
     
     // zero the tilt on startup
-	angle = 0;
-	kinect.setCameraTiltAngle(angle);
+	kinectAngle = 0;
+	kinect.setCameraTiltAngle(kinectAngle);
     
     pointCloudRotation = 0;
     
@@ -25,6 +24,95 @@ void testApp::setup(){
     
     cDist = 500;
     floorY = -2;
+    
+    cm.disableMouseInput();
+    
+    bgDm.allocate(kinect.width, kinect.height);
+    segImg.allocate(kinect.width, kinect.height);
+    
+    setupGui();
+
+    
+}
+
+void testApp::setupGui(){
+
+    int tabBarWidth = 80;
+    isGui = true;
+    // ---
+    guiTabBar = new ofxUITabBar();
+    guiTabBar->setWidth(tabBarWidth);
+    guiTabBar->setColorFill(ofxUIColor(200));
+    guiTabBar->setColorFillHighlight(ofxUIColor(255));
+    guiTabBar->setColorBack(ofxUIColor(255, 20, 20, 150));
+    
+    float dim  = 24;
+    float xInit = OFX_UI_GLOBAL_WIDGET_SPACING;
+    float length = 320 - xInit;
+    
+    for(int i = 0; i < NUM_CANVASES; i ++){
+    
+        canvases[i] = new ofxUICanvas(ofGetWidth() - (length + xInit), 0, length + xInit, ofGetHeight());
+        canvases[i]->setColorFill(ofxUIColor(200));
+        canvases[i]->setColorFillHighlight(ofxUIColor(255));
+        canvases[i]->setColorBack(ofxUIColor(20, 20, 20, 150));
+        
+    }
+    
+   
+    //--------------------------------------------
+    
+    canvases[0]->setName("Settings");
+    
+    canvases[0]->addLabel("Settings");
+    canvases[0]->addSpacer();
+    canvases[0]->addButton("SAVE", false);
+    canvases[0]->addButton("LOAD", false);
+    
+    
+    ofAddListener(canvases[0]->newGUIEvent,this,&testApp::guiEvent);
+    guiTabBar->addCanvas(canvases[0]);
+    
+    //---------------------------
+    
+	canvases[1]->setName("Kinect Controls");
+    canvases[1]->addSlider("CAM_TILT", -30, 30, kinectAngle, length-xInit, dim);
+
+    canvases[1]->addSlider("FLOOR_Y", -10, -1, floorY, length-xInit, dim);
+    
+    canvases[1]->addButton("RECORD_BACKGROUND", false);
+  
+    ofAddListener(canvases[1]->newGUIEvent,this,&testApp::guiEvent);
+    guiTabBar->addCanvas(canvases[1]);
+    
+    //------------------------
+    
+
+	canvases[2]->setName("Display Controls");
+    
+    
+    canvases[2]->addWidgetDown(new ofxUILabel("Display", OFX_UI_FONT_LARGE));
+    canvases[2]->addButton("POINT_CLOUD", false);
+    canvases[2]->addButton("SEGMENTATION", false);
+
+    canvases[2]->addSpacer();
+
+    canvases[2]->addSlider("CAM_DISTANCE", 100, 1000, cDist, length-xInit,dim);
+
+
+    
+    ofAddListener(canvases[2]->newGUIEvent,this,&testApp::guiEvent);
+    guiTabBar->addCanvas(canvases[2]);
+    
+    //------------------------
+    
+	canvases[3]->setName("Triggers");
+
+    
+    ofAddListener(canvases[3]->newGUIEvent,this,&testApp::guiEvent);
+    guiTabBar->addCanvas(canvases[3]);
+
+    
 
 }
 
@@ -34,10 +122,10 @@ void testApp::update(){
     kinect.update();
     
     if(kinect.isFrameNew()){
-                
+        liveImg.setFromPixels(kinect.getDepthPixels(), kinect.width, kinect.height);
+        segment();
         calcQ();
     }
-    
     
     cm.setDistance(cDist);
 }
@@ -91,25 +179,31 @@ void testApp::calcQ(){
 
 void testApp::recordBg(){
     
-    int w = 640;
-	int h = 480;
+    bgDm.setFromPixels(kinect.getDepthPixels(), kinect.width, kinect.height);
 
 }
 
 void testApp::segment(){
 
-    int step = 2;
-    int w = 640;
-	int h = 480;
+    int numPixels = kinect.width * kinect.height;
     
-    for(int y = 0; y < h; y += step) {
-		for(int x = 0; x < w; x += step) {
-			ofVec3f cur = kinect.getWorldCoordinateFor(x, y);
-            
-        }
+    unsigned char * bg_pix = bgDm.getPixels();
+    unsigned char * l_pix = liveImg.getPixels();
+    unsigned char * s_pix = segImg.getPixels();
+    
+    for(int i = 0; i < numPixels; i++) {
         
+        if(l_pix[i] > bg_pix[i] + 10){
+            s_pix[i] = 255;
+        }else{
+            s_pix[i] = 0;
+        }
     }
-
+    
+    segImg.flagImageChanged();
+    segImg.erode_3x3();
+        
+    
 }
 
 
@@ -118,40 +212,67 @@ void testApp::draw(){
     
     ofSetColor(0);
     
+    if(displayMode == DT_DM_POINTCLOUD){
     
-    cm.begin();
-    
-    ofScale(100,100,100);
-    
-    ofPushMatrix();
-        ofScale(0.05, 0.05, 0.05);
-        ofDrawGrid();
-    ofPopMatrix();
-
-    
-    ofPushMatrix();
-        ofTranslate(0, floorY, 0);
-        drawFloor();
-    ofPopMatrix();
-    
-    ofPushMatrix();
-    
-        //corrected coordinates area
-        ofRotate(qangle, qaxis.x, qaxis.y, qaxis.z);
+        cm.begin();
         
-        ofNoFill();
-        ofSetColor(255,255,0);
+        ofScale(100,100,100);
         
         ofPushMatrix();
-            ofScale(2,0.5,0.5);
-            ofBox(0.15);
+            ofScale(0.05, 0.05, 0.05);
+            ofDrawGrid();
+        ofPopMatrix();
+
+        
+        ofPushMatrix();
+            ofTranslate(0, floorY, 0);
+            drawFloor();
         ofPopMatrix();
         
-        drawPointCloud();
+        ofPushMatrix();
+        
+            //corrected coordinates area
+            ofRotate(qangle, qaxis.x, qaxis.y, qaxis.z);
+            
+            ofNoFill();
+            ofSetColor(255,255,0);
+            
+            ofPushMatrix();
+                ofScale(2,0.5,0.5);
+                ofBox(0.15);
+            ofPopMatrix();
+            
+            drawPointCloud();
+        
+        ofPopMatrix();
+                                        
+        cm.end();                           
+        
+    }
     
-    ofPopMatrix();
+    if(displayMode == DT_DM_SEGMENTATION){
     
-    cm.end();
+        
+        ofSetColor(255);
+        
+        ofPushMatrix();
+            ofTranslate(50, 100);
+            liveImg.draw(0,0,320,240);
+            ofTranslate(0, 260);
+            ofDrawBitmapString("live depthMap", 0,0);
+            ofTranslate(0, 40);
+            bgDm.draw(0,0,320,240);
+            ofTranslate(0, 260);
+            ofDrawBitmapString("background depthMap", 0,0);
+            ofTranslate(0, 40);
+            segImg.draw(0,0,320,240);
+            ofTranslate(0, 260);
+            ofDrawBitmapString("segmented depthMap", 0,0);
+            ofTranslate(0, 40);
+        
+        ofPopMatrix();
+        
+    }
     
 
 
@@ -203,37 +324,21 @@ void testApp::keyPressed(int key){
     
     switch(key){
             
-        case OF_KEY_UP:
-			angle++;
-			if(angle>30) angle=30;
-			kinect.setCameraTiltAngle(angle);
-			break;
-            
-		case OF_KEY_DOWN:
-			angle--;
-			if(angle<-30) angle=-30;
-			kinect.setCameraTiltAngle(angle);
-			break;
-            
-        case 'w':
-            cDist += 10;
-            break;
-            
-        case 's':
-            cDist -= 10;
-            break;
-            
-        case 'y':
-            floorY += 0.1;
-            break;
-            
-        case 'h':
-            floorY -= 0.1;
-            break;
+        
             
         case ' ':
-            calcQ();
-            break;
+            guiTabBar->toggleVisible();
+            isGui = !isGui;
+            if(displayMode == DT_DM_POINTCLOUD){
+                if(!isGui)
+                    cm.enableMouseInput();
+                else
+                    cm.disableMouseInput();
+                
+            }
+        break;
+    
+
             
     }
 
@@ -267,6 +372,15 @@ void testApp::mouseReleased(int x, int y, int button){
 
 //--------------------------------------------------------------
 void testApp::windowResized(int w, int h){
+    
+    float xInit = OFX_UI_GLOBAL_WIDGET_SPACING;
+    float length = 320 - xInit;
+    
+    for(int i = 0; i < NUM_CANVASES; i ++){
+
+        canvases[i]->setPosition(ofGetWidth() - (length + xInit), 0);
+        
+    }
 
 }
 
@@ -279,3 +393,57 @@ void testApp::gotMessage(ofMessage msg){
 void testApp::dragEvent(ofDragInfo dragInfo){ 
 
 }
+
+void testApp::guiEvent(ofxUIEventArgs &e)
+{
+    
+    string name = e.widget->getName();
+    
+    if(name == "CAM_DISTANCE"){
+        
+        ofxUISlider *slider = (ofxUISlider *) e.widget;
+        cDist = slider->getScaledValue();
+    }
+    
+    if(name == "CAM_TILT"){
+        
+        ofxUISlider *slider = (ofxUISlider *) e.widget;
+        kinectAngle = slider->getScaledValue();
+        kinect.setCameraTiltAngle(kinectAngle);
+    }
+    
+    if(name == "FLOOR_Y"){
+        
+        ofxUISlider *slider = (ofxUISlider *) e.widget;
+        floorY = slider->getScaledValue();
+        
+    }
+    
+    if(name == "RECORD_BACKGROUND"){
+    
+        recordBg();
+    }
+    
+    
+    if(name == "POINT_CLOUD"){
+        displayMode = DT_DM_POINTCLOUD;
+    }
+    
+    
+    if(name == "SEGMENTATION"){
+        displayMode = DT_DM_SEGMENTATION;
+    }
+    
+
+    
+	
+}
+
+void testApp::exit()
+{
+	delete guiTabBar;
+    
+    for(int i = 0; i < NUM_CANVASES; i ++)delete canvases[i];
+
+}
+

@@ -2,6 +2,18 @@
 
 #include "ofMain.h"
 #include "ofxKinect.h"
+#include "ofxOpenCv.h"
+#include "ofxUI.h"
+
+
+#define NUM_CANVASES 4
+
+enum dtDisplayMode{
+
+    DT_DM_POINTCLOUD,
+    DT_DM_SEGMENTATION,
+    DT_DM_COUNT
+};
 
 class testApp : public ofBaseApp{
 
@@ -20,6 +32,11 @@ class testApp : public ofBaseApp{
 		void dragEvent(ofDragInfo dragInfo);
 		void gotMessage(ofMessage msg);
     
+        void guiEvent(ofxUIEventArgs &e);
+        void exit();
+    
+        void setupGui();
+    
         void calcQ();
         void recordBg();
         void segment();
@@ -27,11 +44,12 @@ class testApp : public ofBaseApp{
         void drawPointCloud();
         void drawFloor();
 
+        ofxUITabBar *guiTabBar;
+        ofxUICanvas * canvases[NUM_CANVASES];
     
         ofxKinect 			kinect;
-        int					angle;
-    
-        ofxBase3DVideo* 	kinectSource;
+        int					kinectAngle;
+        dtDisplayMode       displayMode;
     
         int pointCloudRotation;
         float pitch, roll;
@@ -49,6 +67,11 @@ class testApp : public ofBaseApp{
         float cDist;
     
         float floorY;
+    
+        ofxCvGrayscaleImage bgDm;
+        ofxCvGrayscaleImage liveImg;
+        ofxCvGrayscaleImage segImg;
+        bool isGui;
     
 
     
