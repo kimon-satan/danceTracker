@@ -40,8 +40,10 @@ class testApp : public ofBaseApp{
         void calcQ();
         void recordBg();
         void segment();
+        void analyseUser();
     
-        void drawPointCloud();
+        void drawScenePointCloud();
+        void drawUserPointCloud();
         void drawFloor();
 
         ofxUITabBar *guiTabBar;
@@ -68,13 +70,24 @@ class testApp : public ofBaseApp{
     
         float floorY;
     
-        ofxCvGrayscaleImage bgDm;
         ofxCvGrayscaleImage liveImg;
         ofxCvGrayscaleImage segImg;
+        ofxCvGrayscaleImage segMask;
+        ofxCvContourFinder cfFinder;
+    
+        int segRes;
+        float segThresh, nearThresh, farThresh, minBlob, maxBlob;
+    
+        bool isUser;
+        bool isBgRecorded;
+    
+        vector<ofVec3f> bgDepths;
+        vector<ofVec3f> curDepths;
+        vector<ofVec3f> userPixels;
+    
+        ofVec3f com;
+    
         bool isGui;
-    
-
-    
     
     
 		

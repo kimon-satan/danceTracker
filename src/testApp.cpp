@@ -9,7 +9,8 @@ void testApp::setup(){
     ofSetFrameRate(60);
     ofEnableSmoothing();
     ofSetCircleResolution(60);
-
+    
+    //kinect.init();
 	kinect.init(false, false);  // disable infrared/rgb video iamge (faster fps)
 	kinect.setVerbose(true);
 	kinect.open();
@@ -27,8 +28,21 @@ void testApp::setup(){
     
     cm.disableMouseInput();
     
-    bgDm.allocate(kinect.width, kinect.height);
-    segImg.allocate(kinect.width, kinect.height);
+    
+    liveImg.allocate(kinect.width,kinect.height);
+    segMask.allocate(kinect.width, kinect.height);
+    
+    isBgRecorded = false;
+    isUser = false;
+    segThresh = 0.2;
+    segRes = 2;
+    nearThresh = 0.5;
+    farThresh = 8;
+    
+    minBlob = 0.02;
+    maxBlob = 0.5;
+    
+    kinect.getCalibration().setClippingInCentimeters(50,1000);
     
     setupGui();
 
@@ -78,9 +92,10 @@ void testApp::setupGui(){
 	canvases[1]->setName("Kinect Controls");
     canvases[1]->addSlider("CAM_TILT", -30, 30, kinectAngle, length-xInit, dim);
 
-    canvases[1]->addSlider("FLOOR_Y", -10, -1, floorY, length-xInit, dim);
+    canvases[1]->addSlider("FLOOR_Y", -10, -0.5, floorY, length-xInit, dim);
     
     canvases[1]->addButton("RECORD_BACKGROUND", false);
+    canvases[1]->addSlider("SEG_THRESH", 0, 1, segThresh, length-xInit, dim);
   
     ofAddListener(canvases[1]->newGUIEvent,this,&testApp::guiEvent);
     guiTabBar->addCanvas(canvases[1]);
@@ -122,12 +137,39 @@ void testApp::update(){
     kinect.update();
     
     if(kinect.isFrameNew()){
+        
+       
         liveImg.setFromPixels(kinect.getDepthPixels(), kinect.width, kinect.height);
-        segment();
         calcQ();
+        //rotate the pixels
+        
+        curDepths.clear();
+        
+        for(int y = 0; y < kinect.height; y += segRes) {
+            
+            for(int x = 0; x < kinect.width; x += segRes) {
+                
+                ofVec3f cur = kinect.getWorldCoordinateFor(x, y);
+                
+                ofVec3f curR = cur.getRotated(-qangle, qaxis);
+                
+                curDepths.push_back(curR);
+                
+            }
+            
+        }
+        
+        
+        if(isBgRecorded){
+            
+            segment();
+            if(isUser)analyseUser();
+        }
+       
     }
     
-    cm.setDistance(cDist);
+     cm.setDistance(cDist);
+   
 }
 
 
@@ -179,38 +221,137 @@ void testApp::calcQ(){
 
 void testApp::recordBg(){
     
-    bgDm.setFromPixels(kinect.getDepthPixels(), kinect.width, kinect.height);
+    isBgRecorded = true;
+    bgDepths = curDepths;
+    
+    float cFloor = 10;
+    
+    for(int i = 0 ; i < bgDepths.size(); i ++){
+    
+       if(bgDepths[i].z > nearThresh && bgDepths[i].z < farThresh){
+           
+           if(bgDepths[i].y < cFloor){
+               cFloor = bgDepths[i].y;
+           }
+       }
+    }
+    
+    floorY = cFloor;
 
 }
 
 void testApp::segment(){
-
-    int numPixels = kinect.width * kinect.height;
     
-    unsigned char * bg_pix = bgDm.getPixels();
-    unsigned char * l_pix = liveImg.getPixels();
+    segImg.allocate(kinect.width/segRes, kinect.height/segRes);
+    
     unsigned char * s_pix = segImg.getPixels();
     
-    for(int i = 0; i < numPixels; i++) {
-        
-        if(l_pix[i] > bg_pix[i] + 10){
-            s_pix[i] = 255;
-        }else{
-            s_pix[i] = 0;
-        }
+    int counter = 0;
+    
+	for(int i = 0; i < curDepths.size(); i ++) {
+
+            if(curDepths[i].z > nearThresh && curDepths[i].z < farThresh){
+                
+                //is inside range
+                
+                if(curDepths[i].z == 0){ //curDepth didn't record data
+                    s_pix[i] = 0;
+                }else if(bgDepths[i].z == 0){ // bgDepth didn't record data
+                    s_pix[i] = 255;
+                }else if(curDepths[i].z < bgDepths[i].z - segThresh){ //meets difference threshold
+                    s_pix[i] = 255;
+                }else{
+                    s_pix[i] = 0; // doesn't meet thresholds
+                }
+                
+            }else{
+                s_pix[i] = 0;
+            }
+            
     }
     
+    segImg.erode();
     segImg.flagImageChanged();
-    segImg.erode_3x3();
+    segMask.allocate(segImg.getWidth(), segImg.getHeight());
+    segMask = segImg;
+    segMask.resize(kinect.width, kinect.height);
+    
+    int numPixels = kinect.width * kinect.height;
+    
+    cfFinder.findContours(segMask, numPixels * minBlob, numPixels * maxBlob, 1, false);
+    segMask.set(0);
+    
+    //make a new mask based based on the contour
+    
+    if(cfFinder.blobs.size() > 0){
         
+        isUser = true;
+        
+        CvPoint pts[cfFinder.blobs[0].nPts];
+        
+        for(int i = 0; i < cfFinder.blobs[0].nPts; i ++){
+        
+            pts[i].x = cfFinder.blobs[0].pts[i].x;
+            pts[i].y = cfFinder.blobs[0].pts[i].y;
+            
+        }
+        
+        CvPoint * ppt[1] = { pts };
+        
+        int ppt_size[1] = { cfFinder.blobs[0].nPts };
+        
+        cvFillPoly(segMask.getCvImage(), ppt, ppt_size , 1, cvScalarAll(255));
+    
+    }else{
+        isUser = false;
+    }
+  
     
 }
 
+//--------------------------------------------------------------
+
+void testApp::analyseUser(){
+    
+    userPixels.clear();
+    
+    //create a dense array of rotated userPixels
+    
+    unsigned char * s_pix = segMask.getPixels();
+    
+    ofVec3f total(0,0,0);
+    
+    for(int y = 0; y < kinect.height; y ++){
+        
+        for(int x = 0; x < kinect.width; x ++){
+            
+            if(s_pix[y * kinect.width + x] > 0){
+                ofVec3f cur = kinect.getWorldCoordinateFor(x, y);
+                ofVec3f curR = cur.getRotated(-qangle, qaxis);
+                total += curR;
+                userPixels.push_back(curR);
+                
+                
+            }
+            
+        }
+        
+	}
+    
+    com = total/userPixels.size();
+
+    
+    
+
+
+}
 
 //--------------------------------------------------------------
 void testApp::draw(){
     
     ofSetColor(0);
+    
+    ofDrawBitmapString("FPS: " +  ofToString(ofGetFrameRate(), 2), 200,20);
     
     if(displayMode == DT_DM_POINTCLOUD){
     
@@ -229,22 +370,18 @@ void testApp::draw(){
             drawFloor();
         ofPopMatrix();
         
+            
+        ofNoFill();
+        ofSetColor(255,255,0);
+        
         ofPushMatrix();
-        
-            //corrected coordinates area
             ofRotate(qangle, qaxis.x, qaxis.y, qaxis.z);
-            
-            ofNoFill();
-            ofSetColor(255,255,0);
-            
-            ofPushMatrix();
-                ofScale(2,0.5,0.5);
-                ofBox(0.15);
-            ofPopMatrix();
-            
-            drawPointCloud();
-        
+            ofScale(2,0.5,0.5);
+            ofBox(0.15);
         ofPopMatrix();
+        
+        //drawScenePointCloud();
+        drawUserPointCloud();
                                         
         cm.end();                           
         
@@ -261,41 +398,62 @@ void testApp::draw(){
             ofTranslate(0, 260);
             ofDrawBitmapString("live depthMap", 0,0);
             ofTranslate(0, 40);
-            bgDm.draw(0,0,320,240);
-            ofTranslate(0, 260);
-            ofDrawBitmapString("background depthMap", 0,0);
-            ofTranslate(0, 40);
-            segImg.draw(0,0,320,240);
+            segMask.draw(0,0,320,240);
             ofTranslate(0, 260);
             ofDrawBitmapString("segmented depthMap", 0,0);
             ofTranslate(0, 40);
         
         ofPopMatrix();
         
+        ofPushMatrix();
+            ofTranslate(400, 100);
+            ofFill();
+            ofSetColor(50);
+            ofRect(0,0,320,240);
+            cfFinder.draw(0,0,320,240);
+            ofTranslate(0, 260);
+            ofSetColor(255);
+            ofDrawBitmapString("contour analysis", 0,0);
+        ofPopMatrix();
+        
     }
-    
-
 
 }
 
-void testApp::drawPointCloud() {
-    
-	int w = 640;
-	int h = 480;
+void testApp::drawScenePointCloud() {
     
 	glBegin(GL_POINTS);
-	
-    int step = 2;
-	for(int y = 0; y < h; y += step) {
-		for(int x = 0; x < w; x += step) {
-			ofVec3f cur = kinect.getWorldCoordinateFor(x, y);
-			ofColor color = kinect.getCalibratedColorAt(x,y);
-			glColor3ub((unsigned char)color.r,(unsigned char)color.g,(unsigned char)color.b);
-			glVertex3f(cur.x, -cur.y, cur.z);
-		}
+    glColor3ub(0, 0, 0);
+	    
+    for(int i = 0; i < curDepths.size(); i ++){
+        
+        glVertex3f(curDepths[i].x, -curDepths[i].y, curDepths[i].z);
+ 
+    }
+    
+	glEnd();
+}
+
+
+void testApp::drawUserPointCloud() {
+    
+	glBegin(GL_POINTS);
+    glColor3ub(0, 0, 0);
+    
+    
+    for(int i = 0; i < userPixels.size(); i ++){
+        
+        glVertex3f(userPixels[i].x, -userPixels[i].y, userPixels[i].z);
+        
 	}
     
 	glEnd();
+    
+    ofNoFill();
+    ofSetColor(0, 255, 255);
+    ofSphere(com.x, -com.y, com.z, 0.15);
+    
+    
 }
 
 
@@ -324,8 +482,6 @@ void testApp::keyPressed(int key){
     
     switch(key){
             
-        
-            
         case ' ':
             guiTabBar->toggleVisible();
             isGui = !isGui;
@@ -334,7 +490,6 @@ void testApp::keyPressed(int key){
                     cm.enableMouseInput();
                 else
                     cm.disableMouseInput();
-                
             }
         break;
     
@@ -418,6 +573,14 @@ void testApp::guiEvent(ofxUIEventArgs &e)
         floorY = slider->getScaledValue();
         
     }
+    
+    if(name == "SEG_THRESH"){
+        
+        ofxUISlider *slider = (ofxUISlider *) e.widget;
+        segThresh = slider->getScaledValue();
+        
+    }
+
     
     if(name == "RECORD_BACKGROUND"){
     
