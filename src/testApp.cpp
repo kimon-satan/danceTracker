@@ -3,6 +3,8 @@
 #define OFX_KINECT_GRAVITY 9.80665
 
 
+
+
 //--------------------------------------------------------------
 void testApp::setup(){
     
@@ -41,6 +43,8 @@ void testApp::setup(){
     
     minBlob = 0.02;
     maxBlob = 0.5;
+    
+    userHeight = 1.88;
     
     kinect.getCalibration().setClippingInCentimeters(50,1000);
     
@@ -109,6 +113,7 @@ void testApp::setupGui(){
     canvases[2]->addWidgetDown(new ofxUILabel("Display", OFX_UI_FONT_LARGE));
     canvases[2]->addButton("POINT_CLOUD", false);
     canvases[2]->addButton("SEGMENTATION", false);
+    canvases[2]->addButton("SCENE", false);
 
     canvases[2]->addSpacer();
 
@@ -121,8 +126,19 @@ void testApp::setupGui(){
     
     //------------------------
     
-	canvases[3]->setName("Triggers");
-
+	canvases[3]->setName("Scene Setup");
+    
+    canvases[3]->addLabel("SELECT_ZONE");
+    canvases[3]->addNumberDialer("C_ZONE", 0, 5, &cZone, 0);
+    
+    canvases[3]->addSpacer();
+    
+    eblTog = canvases[3]->addToggle("ENABLED", true);
+    
+    radSlid = canvases[3]->addSlider("RADIUS", 0.05, 0.5, 0.1);
+    tPosX = canvases[3]->addSlider("T_POS_X", -5, 5, 0.0);
+    tPosY = canvases[3]->addSlider("T_POS_Y", -2, 2, 0.0);
+    tPosZ = canvases[3]->addSlider("T_POS_Z", 0, 10, 0.0);
     
     ofAddListener(canvases[3]->newGUIEvent,this,&testApp::guiEvent);
     guiTabBar->addCanvas(canvases[3]);
@@ -163,7 +179,11 @@ void testApp::update(){
         if(isBgRecorded){
             
             segment();
-            if(isUser)analyseUser();
+            if(isUser){
+                
+                analyseUser();
+                currentScene.update(com, userHeight, userPixels);
+            }
         }
        
     }
@@ -339,12 +359,17 @@ void testApp::analyseUser(){
 	}
     
     com = total/userPixels.size();
-
     
+   
     
+    vector<ofVec3f>::iterator it = remove_if(userPixels.begin(), userPixels.end(),findOutliers(com, userHeight));
+    
+    userPixels.erase(it, userPixels.end());
 
 
 }
+
+
 
 //--------------------------------------------------------------
 void testApp::draw(){
@@ -353,9 +378,11 @@ void testApp::draw(){
     
     ofDrawBitmapString("FPS: " +  ofToString(ofGetFrameRate(), 2), 200,20);
     
-    if(displayMode == DT_DM_POINTCLOUD){
+    if(displayMode == DT_DM_POINTCLOUD || displayMode == DT_DM_SCENE){
     
         cm.begin();
+        
+        glEnable(GL_DEPTH_TEST);
         
         ofScale(100,100,100);
         
@@ -381,11 +408,29 @@ void testApp::draw(){
         ofPopMatrix();
         
         //drawScenePointCloud();
-        drawUserPointCloud();
-                                        
-        cm.end();                           
+        
+        if(isUser)drawUserPointCloud();
+        
+        if(displayMode == DT_DM_POINTCLOUD){
+            
+            if(isUser){
+                ofNoFill();
+                ofSetColor(0, 255, 255);
+                ofSphere(com.x, -com.y, com.z, userHeight/2);
+            }
+            
+        }else{
+        
+            currentScene.draw();
+        
+        }
+        
+        cm.end();
+        
+        glDisable(GL_DEPTH_TEST);
         
     }
+    
     
     if(displayMode == DT_DM_SEGMENTATION){
     
@@ -449,9 +494,6 @@ void testApp::drawUserPointCloud() {
     
 	glEnd();
     
-    ofNoFill();
-    ofSetColor(0, 255, 255);
-    ofSphere(com.x, -com.y, com.z, 0.15);
     
     
 }
@@ -485,7 +527,7 @@ void testApp::keyPressed(int key){
         case ' ':
             guiTabBar->toggleVisible();
             isGui = !isGui;
-            if(displayMode == DT_DM_POINTCLOUD){
+            if(displayMode == DT_DM_POINTCLOUD || displayMode == DT_DM_SCENE){
                 if(!isGui)
                     cm.enableMouseInput();
                 else
@@ -596,6 +638,65 @@ void testApp::guiEvent(ofxUIEventArgs &e)
     if(name == "SEGMENTATION"){
         displayMode = DT_DM_SEGMENTATION;
     }
+    
+    
+    if(name == "SCENE"){
+        displayMode = DT_DM_SCENE;
+    }
+    
+    if(name == "C_ZONE"){
+    
+        ofxUINumberDialer * dialler = (ofxUINumberDialer *) e.widget;
+        selZone = (int)dialler->getValue();
+        
+        ofVec3f tp = currentScene.getTZPos(selZone);
+        tPosX->setValue(tp.x);
+        tPosY->setValue(tp.y);
+        tPosZ->setValue(tp.z);
+        
+        radSlid->setValue(currentScene.getTZRadius(selZone));
+        
+        eblTog->setValue(currentScene.getTZEnabled(selZone));
+        
+        
+        
+    }
+    
+    if(name == "RADIUS"){
+        
+        ofxUISlider *slider = (ofxUISlider *) e.widget;
+        currentScene.setTZRadius(selZone, slider->getScaledValue());
+    
+    }
+    
+    if(name == "T_POS_X"){
+        
+        ofxUISlider *slider = (ofxUISlider *) e.widget;
+        currentScene.setTZPosX(selZone, slider->getScaledValue());
+    }
+    
+    if(name == "T_POS_Y"){
+        
+        ofxUISlider *slider = (ofxUISlider *) e.widget;
+       currentScene.setTZPosY(selZone, slider->getScaledValue());
+    
+    }
+    
+    if(name == "T_POS_Z"){
+        
+        ofxUISlider *slider = (ofxUISlider *) e.widget;
+        currentScene.setTZPosZ(selZone, slider->getScaledValue());
+    
+    }
+    
+    if(name == "ENABLED"){
+    
+        ofxUIToggle *tog = (ofxUIToggle *) e.widget;
+        currentScene.setTZEnabled(selZone, tog->getValue());
+        
+    }
+
+
     
 
     

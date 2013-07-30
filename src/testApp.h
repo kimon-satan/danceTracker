@@ -5,6 +5,7 @@
 #include "ofxOpenCv.h"
 #include "ofxUI.h"
 
+#include "scene.h"
 
 #define NUM_CANVASES 4
 
@@ -12,8 +13,29 @@ enum dtDisplayMode{
 
     DT_DM_POINTCLOUD,
     DT_DM_SEGMENTATION,
+    DT_DM_SCENE,
     DT_DM_COUNT
 };
+
+class findOutliers{
+    
+    ofVec3f com;
+    float userHeight;
+    
+public:
+    
+    findOutliers(ofVec3f com, float userHeight): com(com), userHeight(userHeight){};
+    
+    bool operator()(ofVec3f t) const{
+    
+        return (t.distance(com) > userHeight/2);
+    
+    };
+
+};
+
+
+
 
 class testApp : public ofBaseApp{
 
@@ -86,8 +108,18 @@ class testApp : public ofBaseApp{
         vector<ofVec3f> userPixels;
     
         ofVec3f com;
+        float userHeight;
+        float cZone; //just a dummy sort out later
+        int selZone;
     
         bool isGui;
+    
+    
+        scene currentScene;
+    
+        ofxUISlider * radSlid, * tPosX, * tPosY, * tPosZ;
+        ofxUIToggle * eblTog;
+    
     
     
 		
