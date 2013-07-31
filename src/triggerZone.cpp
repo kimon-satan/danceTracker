@@ -15,9 +15,9 @@ triggerZone::triggerZone(){
     radius = 0.25;
     
     isOccupied = false;
-    isEnabled = true;
+    isEnabled = false;
     
-    mSound.loadSound("sound/nonono.wav", true);
+  //  mSound.loadSound("sound/nonono.wav", true);
     
 }
 

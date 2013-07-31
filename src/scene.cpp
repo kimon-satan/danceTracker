@@ -11,11 +11,13 @@
 
 scene::scene(){
 
+    string fileNames[6] ={"indeterminacy.wav", "menAreMen.wav", "mindCanChange.wav", "noUse.wav", "purposeful.wav", "spring.wav"};
     
     for(int i = 0; i < 6; i ++){
         
-        triggerZone t;
+        ofPtr <triggerZone> t = ofPtr<triggerZone>(new triggerZone());
         triggerZones.push_back(t);
+        t->setSoundFile("sound/" + fileNames[i]);
         
     }
     
@@ -24,11 +26,11 @@ scene::scene(){
 
 void scene::draw(){
 
-    vector<triggerZone>::iterator it;
+    vector< ofPtr<triggerZone> >::iterator it;
     
     for(it = triggerZones.begin(); it != triggerZones.end(); it++){
     
-        it->draw();
+        (*it)->draw();
         
     }
     
@@ -37,14 +39,14 @@ void scene::draw(){
 
 void scene::update(ofVec3f com, float userHeight, vector<ofVec3f> & pc){
 
-    vector<triggerZone>::iterator it;
+    vector< ofPtr<triggerZone> >::iterator it;
     
     for(it = triggerZones.begin(); it != triggerZones.end(); it++){
         
-        if(it->getIsEnabled()){
+        if((*it)->getIsEnabled()){
             
-            if(it->checkInRange(com, userHeight))it->checkPoints(pc);
-            it->update();
+            if((*it)->checkInRange(com, userHeight))(*it)->checkPoints(pc);
+            (*it)->update();
             
         }
         
@@ -53,14 +55,5 @@ void scene::update(ofVec3f com, float userHeight, vector<ofVec3f> & pc){
 
 }
 
+ofPtr<triggerZone> scene::getTriggerZone(int tz){return triggerZones[tz];}
 
-ofVec3f scene::getTZPos(int tz){ return triggerZones[tz].getPos();}
-float scene::getTZRadius(int tz){ return triggerZones[tz].getRadius();}
-
-void scene::setTZRadius(int tz, float r){ triggerZones[tz].setRadius(r);}
-void scene::setTZPosX(int tz, float x){ triggerZones[tz].setPosX(x);}
-void scene::setTZPosY(int tz, float y){triggerZones[tz].setPosY(y);}
-void scene::setTZPosZ(int tz, float z){triggerZones[tz].setPosZ(z);}
-
-void scene::setTZEnabled(int tz, bool b){triggerZones[tz].setIsEnabled(b);}
-bool scene::getTZEnabled(int tz){return triggerZones[tz].getIsEnabled();}

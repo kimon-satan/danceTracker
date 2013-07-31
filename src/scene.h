@@ -22,20 +22,13 @@ class scene{
     
     //getters and setters
     
-    ofVec3f getTZPos(int tz);
-    float getTZRadius(int tz);
+    ofPtr<triggerZone> getTriggerZone(int tz);
     
-    void setTZRadius(int tz, float r);
-    void setTZPosX(int tz, float x);
-    void setTZPosY(int tz, float y);
-    void setTZPosZ(int tz, float z);
-    
-    void setTZEnabled(int tz, bool b);
-    bool getTZEnabled(int tz);
+
     
     private:
     
-    vector <triggerZone> triggerZones;
+    vector < ofPtr<triggerZone> > triggerZones;
     
     
     

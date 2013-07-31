@@ -7,14 +7,14 @@
 
 #include "scene.h"
 
-#define NUM_CANVASES 4
+#define NUM_CANVASES 3
 
 enum dtDisplayMode{
 
-    DT_DM_POINTCLOUD,
-    DT_DM_SEGMENTATION,
-    DT_DM_SCENE,
+    DT_DM_2D,
+    DT_DM_3D,
     DT_DM_COUNT
+    
 };
 
 class findOutliers{
@@ -54,7 +54,13 @@ class testApp : public ofBaseApp{
 		void dragEvent(ofDragInfo dragInfo);
 		void gotMessage(ofMessage msg);
     
-        void guiEvent(ofxUIEventArgs &e);
+        void dispEvents(ofxUIEventArgs &e);
+    
+        void s0Events(ofxUIEventArgs &e);
+        void s1Events(ofxUIEventArgs &e);
+        void s2Events(ofxUIEventArgs &e);
+    
+    
         void exit();
     
         void setupGui();
@@ -68,12 +74,17 @@ class testApp : public ofBaseApp{
         void drawUserPointCloud();
         void drawFloor();
 
-        ofxUITabBar *guiTabBar;
-        ofxUICanvas * canvases[NUM_CANVASES];
+        ofxUITabBar * settingsTabBar;
+        ofxUITabBar * displayTabBar;
+        ofxUICanvas * settingsCanvases[NUM_CANVASES];
+        ofxUICanvas * displayCanvases[2];
     
         ofxKinect 			kinect;
         int					kinectAngle;
+    
         dtDisplayMode       displayMode;
+    
+        bool isViewCom, isViewCScene, isViewSegPoints;
     
         int pointCloudRotation;
         float pitch, roll;
@@ -87,8 +98,7 @@ class testApp : public ofBaseApp{
         float rRange;
         float pRange;
     
-        ofEasyCam cm;
-        float cDist;
+        ofEasyCam  cm;
     
         float floorY;
     
@@ -112,10 +122,13 @@ class testApp : public ofBaseApp{
         float cZone; //just a dummy sort out later
         int selZone;
     
-        bool isGui;
+        bool isSettingsGui, isDisplayGui, isCamMouse, isCamKey;
     
     
+        int tabBarWidth, tabBarHeight;
         scene currentScene;
+    
+        ofxUIToggle * mouseTog;
     
         ofxUISlider * radSlid, * tPosX, * tPosY, * tPosZ;
         ofxUIToggle * eblTog;

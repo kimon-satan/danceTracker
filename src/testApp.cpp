@@ -25,11 +25,7 @@ void testApp::setup(){
     
     calcQ();
     
-    cDist = 500;
-    floorY = -2;
-    
-    cm.disableMouseInput();
-    
+    floorY = -1;
     
     liveImg.allocate(kinect.width,kinect.height);
     segMask.allocate(kinect.width, kinect.height);
@@ -39,112 +35,181 @@ void testApp::setup(){
     segThresh = 0.2;
     segRes = 2;
     nearThresh = 0.5;
-    farThresh = 8;
+    farThresh = 12;
     
-    minBlob = 0.02;
+    minBlob = 0.005;
     maxBlob = 0.5;
     
-    userHeight = 1.88;
+    userHeight = 1.80;
     
-    kinect.getCalibration().setClippingInCentimeters(50,1000);
+    kinect.getCalibration().setClippingInCentimeters(50,1500);
+    
+    isViewCom = false;
+    isViewCScene = false;
+    isViewSegPoints = false;
+    
+    cm.reset();
+    cm.setPosition(0, 0, 1000);
+    cm.setTarget(ofVec3f(0, 0, 500));
+
+    
+    isCamMouse = false, isCamKey = true;
+
+    cm.disableMouseInput();
     
     setupGui();
 
     
+
 }
 
 void testApp::setupGui(){
 
-    int tabBarWidth = 80;
-    isGui = true;
-    // ---
-    guiTabBar = new ofxUITabBar();
-    guiTabBar->setWidth(tabBarWidth);
-    guiTabBar->setColorFill(ofxUIColor(200));
-    guiTabBar->setColorFillHighlight(ofxUIColor(255));
-    guiTabBar->setColorBack(ofxUIColor(255, 20, 20, 150));
-    
+    tabBarWidth = 320;
+    tabBarHeight = 100;
     float dim  = 24;
     float xInit = OFX_UI_GLOBAL_WIDGET_SPACING;
-    float length = 320 - xInit;
+    float length = tabBarWidth - xInit;
     
+    
+    isSettingsGui = true;
+    isDisplayGui = true;
+    
+    // ---
+    settingsTabBar = new ofxUITabBar();
+    
+    settingsTabBar->setPosition(0, ofGetHeight() - tabBarHeight);
+    settingsTabBar->setColorFill(ofxUIColor(200));
+    settingsTabBar->setColorFillHighlight(ofxUIColor(255));
+    settingsTabBar->setColorBack(ofxUIColor(255, 20, 20, 150));
+    
+   
     for(int i = 0; i < NUM_CANVASES; i ++){
     
-        canvases[i] = new ofxUICanvas(ofGetWidth() - (length + xInit), 0, length + xInit, ofGetHeight());
-        canvases[i]->setColorFill(ofxUIColor(200));
-        canvases[i]->setColorFillHighlight(ofxUIColor(255));
-        canvases[i]->setColorBack(ofxUIColor(20, 20, 20, 150));
+        settingsCanvases[i] = new ofxUICanvas(0, 0, tabBarWidth, 500);
+        settingsCanvases[i]->setColorFill(ofxUIColor(200));
+        settingsCanvases[i]->setColorFillHighlight(ofxUIColor(255));
+        settingsCanvases[i]->setColorBack(ofxUIColor(20, 20, 20, 150));
         
     }
     
    
     //--------------------------------------------
     
-    canvases[0]->setName("Settings");
+    settingsCanvases[0]->setName("Save/Load");
     
-    canvases[0]->addLabel("Settings");
-    canvases[0]->addSpacer();
-    canvases[0]->addButton("SAVE", false);
-    canvases[0]->addButton("LOAD", false);
+    settingsCanvases[0]->addLabel("Save/Load");
+    settingsCanvases[0]->addSpacer();
+    settingsCanvases[0]->addButton("SAVE", false);
+    settingsCanvases[0]->addButton("LOAD", false);
     
     
-    ofAddListener(canvases[0]->newGUIEvent,this,&testApp::guiEvent);
-    guiTabBar->addCanvas(canvases[0]);
+    ofAddListener(settingsCanvases[0]->newGUIEvent,this,&testApp::s0Events);
+    settingsTabBar->addCanvas(settingsCanvases[0]);
     
     //---------------------------
     
-	canvases[1]->setName("Kinect Controls");
-    canvases[1]->addSlider("CAM_TILT", -30, 30, kinectAngle, length-xInit, dim);
-
-    canvases[1]->addSlider("FLOOR_Y", -10, -0.5, floorY, length-xInit, dim);
+	settingsCanvases[1]->setName("Initial Setup");
     
-    canvases[1]->addButton("RECORD_BACKGROUND", false);
-    canvases[1]->addSlider("SEG_THRESH", 0, 1, segThresh, length-xInit, dim);
+    settingsCanvases[1]->addSlider("KN_TILT", -30, 30, kinectAngle, length-xInit, dim);
+    
+    settingsCanvases[1]->addSpacer();
+    
+    settingsCanvases[1]->addButton("RECORD_BACKGROUND", false);
+    
+    settingsCanvases[1]->addSpacer();
+    
+    settingsCanvases[1]->addSlider("NEAR_THRESH", 0, 2, nearThresh, length-xInit, dim);
+    settingsCanvases[1]->addSlider("FAR_THRESH", 5, 15, farThresh, length-xInit, dim);
+    settingsCanvases[1]->addSlider("SEG_THRESH", 0, 1, segThresh, length-xInit, dim);
+    settingsCanvases[1]->addSlider("MIN_BLOB", 0, 0.1, minBlob, length-xInit, dim);
+    settingsCanvases[1]->addSlider("MAX_BLOB", 0.25, 1, maxBlob, length-xInit, dim);
+     
+    
+    settingsCanvases[1]->addSpacer();
+    settingsCanvases[1]->addSlider("FLOOR_Y", -10, -0.5, floorY, length-xInit, dim);
+    settingsCanvases[1]->addSlider("USER_HEIGHT", 1, 2, userHeight, length-xInit, dim);
+   
   
-    ofAddListener(canvases[1]->newGUIEvent,this,&testApp::guiEvent);
-    guiTabBar->addCanvas(canvases[1]);
+    ofAddListener(settingsCanvases[1]->newGUIEvent,this,&testApp::s1Events);
+    settingsTabBar->addCanvas(settingsCanvases[1]);
     
     //------------------------
     
+    
+	settingsCanvases[2]->setName("Scene Setup");
+    
+    settingsCanvases[2]->addLabel("SELECT_ZONE");
+    settingsCanvases[2]->addNumberDialer("C_ZONE", 0, 5, &cZone, 0);
+    
+    settingsCanvases[2]->addSpacer();
+    
+    eblTog = settingsCanvases[2]->addToggle("ENABLED", true);
+    
+    radSlid = settingsCanvases[2]->addSlider("RADIUS", 0.05, 0.5, 0.1);
+    tPosX = settingsCanvases[2]->addSlider("T_POS_X", -5, 5, 0.0);
+    tPosY = settingsCanvases[2]->addSlider("T_POS_Y", -2, 2, 0.0);
+    tPosZ = settingsCanvases[2]->addSlider("T_POS_Z", 0, 10, 0.0);
+    
+    ofAddListener(settingsCanvases[2]->newGUIEvent,this,&testApp::s2Events);
+    settingsTabBar->addCanvas(settingsCanvases[2]);
 
-	canvases[2]->setName("Display Controls");
-    
-    
-    canvases[2]->addWidgetDown(new ofxUILabel("Display", OFX_UI_FONT_LARGE));
-    canvases[2]->addButton("POINT_CLOUD", false);
-    canvases[2]->addButton("SEGMENTATION", false);
-    canvases[2]->addButton("SCENE", false);
-
-    canvases[2]->addSpacer();
-
-    canvases[2]->addSlider("CAM_DISTANCE", 100, 1000, cDist, length-xInit,dim);
 
 
-    
-    ofAddListener(canvases[2]->newGUIEvent,this,&testApp::guiEvent);
-    guiTabBar->addCanvas(canvases[2]);
-    
-    //------------------------
-    
-	canvases[3]->setName("Scene Setup");
-    
-    canvases[3]->addLabel("SELECT_ZONE");
-    canvases[3]->addNumberDialer("C_ZONE", 0, 5, &cZone, 0);
-    
-    canvases[3]->addSpacer();
-    
-    eblTog = canvases[3]->addToggle("ENABLED", true);
-    
-    radSlid = canvases[3]->addSlider("RADIUS", 0.05, 0.5, 0.1);
-    tPosX = canvases[3]->addSlider("T_POS_X", -5, 5, 0.0);
-    tPosY = canvases[3]->addSlider("T_POS_Y", -2, 2, 0.0);
-    tPosZ = canvases[3]->addSlider("T_POS_Z", 0, 10, 0.0);
-    
-    ofAddListener(canvases[3]->newGUIEvent,this,&testApp::guiEvent);
-    guiTabBar->addCanvas(canvases[3]);
 
     
 
+    //--------------------------------------DISPLAY SETTINGS----------------------------------------------------------//
+    
+    displayTabBar = new ofxUITabBar();
+    displayTabBar->setPosition(ofGetWidth() - 100, ofGetHeight() - tabBarHeight);
+    displayTabBar->setColorFill(ofxUIColor(200));
+    displayTabBar->setColorFillHighlight(ofxUIColor(255));
+    displayTabBar->setColorBack(ofxUIColor(255, 20, 20, 150));
+    ofAddListener(displayTabBar->newGUIEvent,this,&testApp::dispEvents);
+    
+    for(int i = 0; i < 2; i ++){
+        
+        displayCanvases[i] = new ofxUICanvas(ofGetWidth() - tabBarWidth, 0, tabBarWidth, 300);
+        displayCanvases[i]->setColorFill(ofxUIColor(200));
+        displayCanvases[i]->setColorFillHighlight(ofxUIColor(255));
+        displayCanvases[i]->setColorBack(ofxUIColor(20, 20, 20, 150));
+        
+    }
+    
+    displayCanvases[0]->setName("2D");
+    displayCanvases[0]->setVisible(false);
+    
+    ofAddListener(displayCanvases[0]->newGUIEvent,this,&testApp::dispEvents);
+    displayTabBar->addCanvas(displayCanvases[0]);
+    
+    displayCanvases[1]->setName("3D");
+    
+    mouseTog = displayCanvases[1]->addToggle("MOUSE_INPUT", isCamMouse);
+    
+    displayCanvases[1]->addSpacer();
+    
+    displayCanvases[1]->addLabel("Z/X = ZOOM IN/OUT");
+    displayCanvases[1]->addLabel("A/S = TRUCK LEFT/RIGHT");
+    
+    displayCanvases[1]->addButton("RESET_CAM", false);
+    displayCanvases[1]->addButton("OVERHEAD", false);
+    displayCanvases[1]->addButton("FROM_LEFT", false);
+    displayCanvases[1]->addButton("FROM_RIGHT", false);
+    
+    displayCanvases[1]->addToggle("VIEW_USER", isViewSegPoints);
+    displayCanvases[1]->addToggle("VIEW_COM", isViewCom);
+    displayCanvases[1]->addToggle("VIEW_SCENE", isViewCScene);
+    
+    
+    
+    ofAddListener(displayCanvases[1]->newGUIEvent,this,&testApp::dispEvents);
+    displayTabBar->addCanvas(displayCanvases[1]);
+  
+    
+    
+
+   
 }
 
 //--------------------------------------------------------------
@@ -188,8 +253,8 @@ void testApp::update(){
        
     }
     
-     cm.setDistance(cDist);
-   
+
+    
 }
 
 
@@ -378,7 +443,7 @@ void testApp::draw(){
     
     ofDrawBitmapString("FPS: " +  ofToString(ofGetFrameRate(), 2), 200,20);
     
-    if(displayMode == DT_DM_POINTCLOUD || displayMode == DT_DM_SCENE){
+    if(displayMode == DT_DM_3D){
     
         cm.begin();
         
@@ -407,22 +472,22 @@ void testApp::draw(){
             ofBox(0.15);
         ofPopMatrix();
         
-        //drawScenePointCloud();
         
-        if(isUser)drawUserPointCloud();
-        
-        if(displayMode == DT_DM_POINTCLOUD){
-            
-            if(isUser){
-                ofNoFill();
-                ofSetColor(0, 255, 255);
-                ofSphere(com.x, -com.y, com.z, userHeight/2);
-            }
-            
+        if(isViewSegPoints){
+            if(isUser)drawUserPointCloud();
         }else{
+            drawScenePointCloud();
+        }
         
+        if(isViewCom){
+            ofNoFill();
+            ofSetColor(0, 255, 255);
+            ofSphere(com.x, -com.y, com.z, userHeight/2);
+        }
+        
+        
+        if(isViewCScene){
             currentScene.draw();
-        
         }
         
         cm.end();
@@ -432,13 +497,12 @@ void testApp::draw(){
     }
     
     
-    if(displayMode == DT_DM_SEGMENTATION){
+    if(displayMode == DT_DM_2D){
     
-        
         ofSetColor(255);
         
         ofPushMatrix();
-            ofTranslate(50, 100);
+            ofTranslate(50, 50);
             liveImg.draw(0,0,320,240);
             ofTranslate(0, 260);
             ofDrawBitmapString("live depthMap", 0,0);
@@ -451,7 +515,7 @@ void testApp::draw(){
         ofPopMatrix();
         
         ofPushMatrix();
-            ofTranslate(400, 100);
+            ofTranslate(400, 50);
             ofFill();
             ofSetColor(50);
             ofRect(0,0,320,240);
@@ -525,21 +589,65 @@ void testApp::keyPressed(int key){
     switch(key){
             
         case ' ':
-            guiTabBar->toggleVisible();
-            isGui = !isGui;
-            if(displayMode == DT_DM_POINTCLOUD || displayMode == DT_DM_SCENE){
-                if(!isGui)
-                    cm.enableMouseInput();
-                else
-                    cm.disableMouseInput();
-            }
+            settingsTabBar->toggleVisible();
+            isSettingsGui = !isSettingsGui;
         break;
-    
-
             
+        case OF_KEY_RETURN:
+            displayTabBar->toggleVisible();
+            isDisplayGui = !isDisplayGui;
+            break;
+        
+                     
     }
 
 
+    if(isCamKey){
+        
+        switch(key){
+                
+            case 'a':
+            {
+              
+                cm.truck(-10);
+
+                
+            }
+                break;
+                
+            case 's':
+            {
+               
+                cm.truck(10);
+                
+            }
+                break;
+                
+            
+            case 'z':
+            {
+                
+                cm.dolly(10);
+                
+            }
+            break;
+                
+                
+            case 'x':
+            {
+                
+                cm.dolly(-10);
+                
+            }
+                break;
+            
+                
+                
+        }
+    
+    
+    }
+    
 }
 
 //--------------------------------------------------------------
@@ -570,12 +678,12 @@ void testApp::mouseReleased(int x, int y, int button){
 //--------------------------------------------------------------
 void testApp::windowResized(int w, int h){
     
-    float xInit = OFX_UI_GLOBAL_WIDGET_SPACING;
-    float length = 320 - xInit;
+    displayTabBar->setPosition(ofGetWidth() - 100 ,ofGetHeight() - tabBarHeight);
+    settingsTabBar->setPosition(0,ofGetHeight() - tabBarHeight);
     
-    for(int i = 0; i < NUM_CANVASES; i ++){
+    for(int i = 0; i < 2; i ++){
 
-        canvases[i]->setPosition(ofGetWidth() - (length + xInit), 0);
+        displayCanvases[i]->setPosition(ofGetWidth() - tabBarWidth, 0);
         
     }
 
@@ -587,127 +695,211 @@ void testApp::gotMessage(ofMessage msg){
 }
 
 //--------------------------------------------------------------
-void testApp::dragEvent(ofDragInfo dragInfo){ 
+void testApp::dragEvent(ofDragInfo dragInfo){
 
 }
 
-void testApp::guiEvent(ofxUIEventArgs &e)
-{
+void testApp::dispEvents(ofxUIEventArgs &e){
     
     string name = e.widget->getName();
     
-    if(name == "CAM_DISTANCE"){
+    if(name == "2D"){
         
-        ofxUISlider *slider = (ofxUISlider *) e.widget;
-        cDist = slider->getScaledValue();
+        displayMode = DT_DM_2D;
+        displayCanvases[0]->toggleVisible();
+        cm.disableMouseInput();
+        isCamMouse = false;
+        isCamMouse = false;
+    }
+    if(name == "3D"){
+        
+        displayMode = DT_DM_3D;
+        mouseTog->setValue(false);
+        isCamKey = true;
+    }
+
+    
+    if(name == "MOUSE_INPUT"){
+        (isCamMouse)? cm.disableMouseInput(): cm.enableMouseInput();
+        isCamMouse = !isCamMouse;
     }
     
-    if(name == "CAM_TILT"){
+    if(name == "RESET_CAM"){
         
+        cm.reset();
+        cm.setTarget(ofVec3f(0, 0, 500));
+        cm.setDistance(500);
+      
+        
+    }
+    
+    
+    if(name == "OVERHEAD"){
+    
+        cm.setPosition(1, 500, 500);
+        cm.setTarget(ofVec3f(0, 0, 500));
+    }
+
+    
+    if(name == "FROM_LEFT"){
+        
+        cm.setPosition(-500, 200, 500);
+        cm.setTarget(ofVec3f(0, 0, 500));
+    
+    }
+    
+    if(name == "FROM_RIGHT"){
+        
+        cm.setPosition(500, 200, 500);
+        cm.setTarget(ofVec3f(0, 0, 500));
+        
+    }
+
+    
+
+    if(name == "VIEW_USER"){
+        ofxUIToggle *tog = (ofxUIToggle *) e.widget;
+        isViewSegPoints = tog->getValue();
+    }
+
+    if(name == "VIEW_COM"){
+        ofxUIToggle *tog = (ofxUIToggle *) e.widget;
+        isViewCom = tog->getValue();
+    }
+    
+    if(name == "VIEW_SCENE"){
+        ofxUIToggle *tog = (ofxUIToggle *) e.widget;
+        isViewCScene = tog->getValue();
+    }
+
+    
+    
+}
+
+
+
+void testApp::s0Events(ofxUIEventArgs &e){
+    
+       
+    
+	
+}
+
+
+void testApp::s1Events(ofxUIEventArgs &e){
+    
+    string name = e.widget->getName();
+    
+    if(name == "KN_TILT"){
         ofxUISlider *slider = (ofxUISlider *) e.widget;
         kinectAngle = slider->getScaledValue();
         kinect.setCameraTiltAngle(kinectAngle);
     }
     
-    if(name == "FLOOR_Y"){
-        
-        ofxUISlider *slider = (ofxUISlider *) e.widget;
-        floorY = slider->getScaledValue();
-        
-    }
-    
     if(name == "SEG_THRESH"){
-        
         ofxUISlider *slider = (ofxUISlider *) e.widget;
         segThresh = slider->getScaledValue();
-        
+    }
+    
+    if(name == "NEAR_THRESH"){
+        ofxUISlider *slider = (ofxUISlider *) e.widget;
+        nearThresh = slider->getScaledValue();
+    }
+    
+    if(name == "FAR_THRESH"){
+        ofxUISlider *slider = (ofxUISlider *) e.widget;
+        farThresh = slider->getScaledValue();
+    }
+
+    if(name == "MIN_BLOB"){
+        ofxUISlider *slider = (ofxUISlider *) e.widget;
+        minBlob = slider->getScaledValue();
+    }
+
+    if(name == "MAX_BLOB"){
+        ofxUISlider *slider = (ofxUISlider *) e.widget;
+        maxBlob = slider->getScaledValue();
+    }
+    
+    if(name == "MAX_BLOB"){
+        ofxUISlider *slider = (ofxUISlider *) e.widget;
+        maxBlob = slider->getScaledValue();
+    }
+    
+    if(name == "FLOOR_Y"){
+        ofxUISlider *slider = (ofxUISlider *) e.widget;
+        floorY = slider->getScaledValue();
+    }
+    
+    if(name == "USER_HEIGHT"){
+        ofxUISlider *slider = (ofxUISlider *) e.widget;
+        userHeight = slider->getScaledValue();
+    }
+    
+    if(name == "RECORD_BACKGROUND"){
+        recordBg();
     }
 
     
-    if(name == "RECORD_BACKGROUND"){
+
+}
+
+void testApp::s2Events(ofxUIEventArgs &e){
     
-        recordBg();
-    }
-    
-    
-    if(name == "POINT_CLOUD"){
-        displayMode = DT_DM_POINTCLOUD;
-    }
-    
-    
-    if(name == "SEGMENTATION"){
-        displayMode = DT_DM_SEGMENTATION;
-    }
-    
-    
-    if(name == "SCENE"){
-        displayMode = DT_DM_SCENE;
-    }
+    string name = e.widget->getName();
     
     if(name == "C_ZONE"){
-    
+        
         ofxUINumberDialer * dialler = (ofxUINumberDialer *) e.widget;
         selZone = (int)dialler->getValue();
         
-        ofVec3f tp = currentScene.getTZPos(selZone);
+        ofPtr<triggerZone> tz = currentScene.getTriggerZone(selZone);
+        ofVec3f tp = tz->getPos();
         tPosX->setValue(tp.x);
         tPosY->setValue(tp.y);
         tPosZ->setValue(tp.z);
         
-        radSlid->setValue(currentScene.getTZRadius(selZone));
-        
-        eblTog->setValue(currentScene.getTZEnabled(selZone));
-        
+        radSlid->setValue(tz->getRadius());
+        eblTog->setValue(tz->getIsEnabled());
         
         
     }
     
     if(name == "RADIUS"){
-        
         ofxUISlider *slider = (ofxUISlider *) e.widget;
-        currentScene.setTZRadius(selZone, slider->getScaledValue());
-    
+        currentScene.getTriggerZone(selZone)->setRadius(slider->getScaledValue());
     }
     
     if(name == "T_POS_X"){
-        
         ofxUISlider *slider = (ofxUISlider *) e.widget;
-        currentScene.setTZPosX(selZone, slider->getScaledValue());
+        currentScene.getTriggerZone(selZone)->setPosX(slider->getScaledValue());
     }
     
     if(name == "T_POS_Y"){
-        
         ofxUISlider *slider = (ofxUISlider *) e.widget;
-       currentScene.setTZPosY(selZone, slider->getScaledValue());
-    
+        currentScene.getTriggerZone(selZone)->setPosY(slider->getScaledValue());
     }
     
     if(name == "T_POS_Z"){
-        
         ofxUISlider *slider = (ofxUISlider *) e.widget;
-        currentScene.setTZPosZ(selZone, slider->getScaledValue());
-    
+        currentScene.getTriggerZone(selZone)->setPosZ(slider->getScaledValue());
     }
     
     if(name == "ENABLED"){
-    
         ofxUIToggle *tog = (ofxUIToggle *) e.widget;
-        currentScene.setTZEnabled(selZone, tog->getValue());
-        
+        currentScene.getTriggerZone(selZone)->setIsEnabled(tog->getValue());
     }
 
 
-    
-
-    
-	
 }
 
 void testApp::exit()
 {
-	delete guiTabBar;
+	delete settingsTabBar;
+    delete displayTabBar;
     
-    for(int i = 0; i < NUM_CANVASES; i ++)delete canvases[i];
+    for(int i = 0; i < NUM_CANVASES; i ++)delete settingsCanvases[i];
+    for(int i = 0; i < 2; i ++)delete displayCanvases[i];
 
 }
 
