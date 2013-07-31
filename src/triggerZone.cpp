@@ -8,6 +8,8 @@
 
 #include "triggerZone.h"
 
+int triggerZone::index = 0;
+
 triggerZone::triggerZone(){
 
     shape = TZ_SPHERE;
@@ -16,6 +18,10 @@ triggerZone::triggerZone(){
     
     isOccupied = false;
     isEnabled = false;
+    
+    mName = "defaultZone_" + ofToString(index, 0);
+    
+    index += 1;
     
   //  mSound.loadSound("sound/nonono.wav", true);
     
@@ -88,6 +94,9 @@ void triggerZone::update(){
     }
 }
 
+
+
+
 //getters and setters
 
 void triggerZone::setSoundFile(string s){
@@ -113,3 +122,16 @@ void triggerZone::setPosZ(float z){center.z = z;}
 
 void triggerZone::setShape(int t){shape = tzShape(t);}
 int triggerZone::getShape(){return (int)shape;}
+
+
+void triggerZone::setName(string s){
+    
+    mName = s;
+}
+
+string triggerZone::getName(){
+    
+    return mName;
+}
+
+

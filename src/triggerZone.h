@@ -32,6 +32,7 @@ public:
     
     void update();
     
+    
     //getters and setters
     
     void setIsEnabled(bool b);
@@ -50,6 +51,10 @@ public:
     void setShape(int t);
     int getShape();
     
+    void setName(string s);
+    string getName();
+
+    
     
 private:
     
@@ -59,8 +64,12 @@ private:
     ofVec3f corners[2];
     ofSoundPlayer mSound;
     
+    string mName;
+    
     bool isOccupied;
     bool isEnabled;
+    
+    static int index;
     
     
 };

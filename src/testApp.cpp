@@ -53,13 +53,17 @@ void testApp::setup(){
     cm.setTarget(ofVec3f(0, 0, 500));
 
     
-    isCamMouse = false, isCamKey = true;
+    isCamMouse = false; isCamKey = true; isTextFocus = false;
 
     cm.disableMouseInput();
     
-    setupGui();
-
+    ofPtr<scene>  s = ofPtr<scene>(new scene());
+    allScenes.push_back(s);
+    currentScene = s;
     
+    setupGui();
+    
+
 
 }
 
@@ -67,7 +71,9 @@ void testApp::setupGui(){
 
     tabBarWidth = 320;
     tabBarHeight = 100;
+    
     float dim  = 24;
+    
     float xInit = OFX_UI_GLOBAL_WIDGET_SPACING;
     float length = tabBarWidth - xInit;
     
@@ -111,7 +117,7 @@ void testApp::setupGui(){
     
 	settingsCanvases[1]->setName("Initial Setup");
     
-    settingsCanvases[1]->addSlider("KN_TILT", -30, 30, kinectAngle, length-xInit, dim);
+    sc1Sliders[0] = settingsCanvases[1]->addSlider("KN_TILT", -30, 30, kinectAngle, length-xInit, dim);
     
     settingsCanvases[1]->addSpacer();
     
@@ -119,16 +125,16 @@ void testApp::setupGui(){
     
     settingsCanvases[1]->addSpacer();
     
-    settingsCanvases[1]->addSlider("NEAR_THRESH", 0, 2, nearThresh, length-xInit, dim);
-    settingsCanvases[1]->addSlider("FAR_THRESH", 5, 15, farThresh, length-xInit, dim);
-    settingsCanvases[1]->addSlider("SEG_THRESH", 0, 1, segThresh, length-xInit, dim);
-    settingsCanvases[1]->addSlider("MIN_BLOB", 0, 0.1, minBlob, length-xInit, dim);
-    settingsCanvases[1]->addSlider("MAX_BLOB", 0.25, 1, maxBlob, length-xInit, dim);
+    sc1Sliders[1] = settingsCanvases[1]->addSlider("NEAR_THRESH", 0, 2, nearThresh, length-xInit, dim);
+    sc1Sliders[2] = settingsCanvases[1]->addSlider("FAR_THRESH", 5, 15, farThresh, length-xInit, dim);
+    sc1Sliders[3] =  settingsCanvases[1]->addSlider("SEG_THRESH", 0, 1, segThresh, length-xInit, dim);
+    sc1Sliders[4] = settingsCanvases[1]->addSlider("MIN_BLOB", 0, 0.1, minBlob, length-xInit, dim);
+    sc1Sliders[5] = settingsCanvases[1]->addSlider("MAX_BLOB", 0.25, 1, maxBlob, length-xInit, dim);
      
     
     settingsCanvases[1]->addSpacer();
-    settingsCanvases[1]->addSlider("FLOOR_Y", -10, -0.5, floorY, length-xInit, dim);
-    settingsCanvases[1]->addSlider("USER_HEIGHT", 1, 2, userHeight, length-xInit, dim);
+    sc1Sliders[6] = settingsCanvases[1]->addSlider("FLOOR_Y", -10, -0.5, floorY, length-xInit, dim);
+    sc1Sliders[7] = settingsCanvases[1]->addSlider("USER_HEIGHT", 1, 2, userHeight, length-xInit, dim);
    
   
     ofAddListener(settingsCanvases[1]->newGUIEvent,this,&testApp::s1Events);
@@ -138,18 +144,56 @@ void testApp::setupGui(){
     
     
 	settingsCanvases[2]->setName("Scene Setup");
+
+    settingsCanvases[2]->addLabel("SELECTED SCENE");
+    sc2TextInput[0] = settingsCanvases[2]->addTextInput("S_NAME", "");
+    sc2TextInput[0]->setTextString(currentScene->getName());
     
-    settingsCanvases[2]->addLabel("SELECT_ZONE");
-    settingsCanvases[2]->addNumberDialer("C_ZONE", 0, 5, &cZone, 0);
+    ofxUILabelButton * sb = (ofxUILabelButton *)settingsCanvases[2]->addWidgetDown(new ofxUILabelButton("SCENE_MINUS", true, 25));
+    ofxUILabelButton * sc = (ofxUILabelButton *)settingsCanvases[2]->addWidgetRight(new ofxUILabelButton("SCENE_PLUS", true, 25));
+  
+    sb->setLabelText("-");
+    sc->setLabelText("+");
+
+    
+    settingsCanvases[2]->addButton("CREATE_SCENE", false);
+    settingsCanvases[2]->addButton("DELETE_SCENE", false);
+
     
     settingsCanvases[2]->addSpacer();
     
+    settingsCanvases[2]->addLabel("SELECTED_ZONE");
+    sc2TextInput[1] = settingsCanvases[2]->addTextInput("Z_NAME", "none");
+    
+    ofxUILabelButton * zb = (ofxUILabelButton *)settingsCanvases[2]->addWidgetDown(new ofxUILabelButton("ZONE_MINUS", true, 25));
+    ofxUILabelButton * zc = (ofxUILabelButton *)settingsCanvases[2]->addWidgetRight(new ofxUILabelButton("ZONE_PLUS", true, 25));
+    
+    zb->setLabelText("-");
+    zc->setLabelText("+");
+    
+    settingsCanvases[2]->addButton("CREATE_ZONE", false);
+    settingsCanvases[2]->addButton("DELETE_ZONE", false);
+    
+   
+
+    
     eblTog = settingsCanvases[2]->addToggle("ENABLED", true);
+    
+    settingsCanvases[2]->addSpacer();
     
     radSlid = settingsCanvases[2]->addSlider("RADIUS", 0.05, 0.5, 0.1);
     tPosX = settingsCanvases[2]->addSlider("T_POS_X", -5, 5, 0.0);
     tPosY = settingsCanvases[2]->addSlider("T_POS_Y", -2, 2, 0.0);
     tPosZ = settingsCanvases[2]->addSlider("T_POS_Z", 0, 10, 0.0);
+    
+    settingsCanvases[2]->addSpacer();
+    
+    settingsCanvases[2]->addLabel("SOUNDFILE");
+    sc2TextInput[2] = settingsCanvases[2]->addTextInput("SOUNDFILE", "default.wav");
+    
+    settingsCanvases[2]->addButton("RELOAD_SOUND", false);
+    
+    for(int i = 0; i < 3; i++)sc2TextInput[i]->setTriggerType(OFX_UI_TEXTINPUT_ON_FOCUS);
     
     ofAddListener(settingsCanvases[2]->newGUIEvent,this,&testApp::s2Events);
     settingsTabBar->addCanvas(settingsCanvases[2]);
@@ -247,7 +291,7 @@ void testApp::update(){
             if(isUser){
                 
                 analyseUser();
-                currentScene.update(com, userHeight, userPixels);
+                currentScene->update(com, userHeight, userPixels);
             }
         }
        
@@ -441,7 +485,7 @@ void testApp::draw(){
     
     ofSetColor(0);
     
-    ofDrawBitmapString("FPS: " +  ofToString(ofGetFrameRate(), 2), 200,20);
+    ofDrawBitmapString("FPS: " +  ofToString(ofGetFrameRate(), 2), 20,20);
     
     if(displayMode == DT_DM_3D){
     
@@ -487,7 +531,7 @@ void testApp::draw(){
         
         
         if(isViewCScene){
-            currentScene.draw();
+            currentScene->draw();
         }
         
         cm.end();
@@ -502,7 +546,7 @@ void testApp::draw(){
         ofSetColor(255);
         
         ofPushMatrix();
-            ofTranslate(50, 50);
+            ofTranslate(ofGetWidth() - 750, 50);
             liveImg.draw(0,0,320,240);
             ofTranslate(0, 260);
             ofDrawBitmapString("live depthMap", 0,0);
@@ -515,7 +559,7 @@ void testApp::draw(){
         ofPopMatrix();
         
         ofPushMatrix();
-            ofTranslate(400, 50);
+            ofTranslate(ofGetWidth() - 360, 50);
             ofFill();
             ofSetColor(50);
             ofRect(0,0,320,240);
@@ -586,6 +630,8 @@ void testApp::drawFloor(){
 //--------------------------------------------------------------
 void testApp::keyPressed(int key){
     
+    if(isTextFocus)return; //no key events whilst textFocus
+    
     switch(key){
             
         case ' ':
@@ -602,7 +648,7 @@ void testApp::keyPressed(int key){
     }
 
 
-    if(isCamKey){
+    if(isCamKey) {
         
         switch(key){
                 
@@ -668,11 +714,14 @@ void testApp::mouseDragged(int x, int y, int button){
 //--------------------------------------------------------------
 void testApp::mousePressed(int x, int y, int button){
 
+    isMouseDown = true;
+    
 }
 
 //--------------------------------------------------------------
 void testApp::mouseReleased(int x, int y, int button){
-
+    
+    isMouseDown = false;
 }
 
 //--------------------------------------------------------------
@@ -848,49 +897,179 @@ void testApp::s2Events(ofxUIEventArgs &e){
     
     string name = e.widget->getName();
     
-    if(name == "C_ZONE"){
+    isTextFocus = false;
+    
+    if(e.widget->getKind() == 12){ //no key events whilst text is focussed
         
-        ofxUINumberDialer * dialler = (ofxUINumberDialer *) e.widget;
-        selZone = (int)dialler->getValue();
+        ofxUITextInput * t = (ofxUITextInput *) e.widget;
         
-        ofPtr<triggerZone> tz = currentScene.getTriggerZone(selZone);
-        ofVec3f tp = tz->getPos();
-        tPosX->setValue(tp.x);
-        tPosY->setValue(tp.y);
-        tPosZ->setValue(tp.z);
-        
-        radSlid->setValue(tz->getRadius());
-        eblTog->setValue(tz->getIsEnabled());
-        
+        if(t->getTriggerType() == OFX_UI_TEXTINPUT_ON_FOCUS){
+            t->setTriggerType(OFX_UI_TEXTINPUT_ON_UNFOCUS);
+             isTextFocus = true;
+        }else{
+             t->setTriggerType(OFX_UI_TEXTINPUT_ON_FOCUS);
+             isTextFocus = false;
+            
+            if(name == "S_NAME"){
+                currentScene->setName(t->getTextString());
+            }
+            
+            if(currentScene->getNumTriggerZones() > 0){
+                if(name == "Z_NAME"){
+                    currentZone->setName(t->getTextString());
+                }
+            }
+        }
+       
         
     }
     
-    if(name == "RADIUS"){
-        ofxUISlider *slider = (ofxUISlider *) e.widget;
-        currentScene.getTriggerZone(selZone)->setRadius(slider->getScaledValue());
+    if(isMouseDown){
+    
+        if(name == "SCENE_PLUS"){
+            
+            selScene = min(selScene + 1, (int)allScenes.size() - 1);
+            currentScene = allScenes[selScene];
+            sc2TextInput[0]->setTextString(currentScene->getName());
+            selZone = 0;
+            if(currentScene->getNumTriggerZones() > 0){
+                currentZone = currentScene->getTriggerZone(selZone);
+                updateTZGuiElements();
+            }
+            
+        }
+        
+        if(name == "SCENE_MINUS"){
+            
+            selScene = max(selScene - 1, 0);
+            currentScene = allScenes[selScene];
+            sc2TextInput[0]->setTextString(currentScene->getName());
+            selZone = 0;
+            if(currentScene->getNumTriggerZones() > 0){
+                currentZone = currentScene->getTriggerZone(selZone);
+                updateTZGuiElements();
+            }
+            
+        }
+        
+        if(name == "CREATE_SCENE"){
+            
+            ofPtr<scene> t = ofPtr<scene>(new scene());
+            allScenes.insert(allScenes.begin() + selScene + 1, t);
+            selScene = min(selScene + 1, (int)allScenes.size() - 1);
+            currentScene = t;
+            selZone = 0;
+            sc2TextInput[0]->setTextString(currentScene->getName());
+        }
+        
+        if(name == "DELETE_SCENE"){
+        
+            if(allScenes.size() > 1){
+                allScenes.erase(remove(allScenes.begin(), allScenes.end(), currentScene));
+                selScene = max(selScene - 1, 0);
+                currentScene = allScenes[selScene];
+                sc2TextInput[0]->setTextString(currentScene->getName());
+                selZone = 0;
+                if(currentScene->getNumTriggerZones() > 0){
+                    currentZone = currentScene->getTriggerZone(selZone);
+                    updateTZGuiElements();
+                }
+                
+            }
+        }
+        
+        
+        if(name == "CREATE_ZONE"){
+            
+            currentZone = currentScene->addTriggerZone(selZone);
+            selZone = min(selZone + 1, (int)currentScene->getNumTriggerZones() - 1);
+            updateTZGuiElements();
+        }
+        
+        if(currentScene->getNumTriggerZones() > 0){
+            
+            if(name == "ZONE_PLUS"){
+                
+                selZone = min(selZone + 1, (int)currentScene->getNumTriggerZones() - 1);
+                currentZone = currentScene->getTriggerZone(selZone);
+                updateTZGuiElements();
+               
+                
+            }
+            
+            if(name == "ZONE_MINUS"){
+                
+                selZone = max(selZone - 1, 0);
+                currentZone = currentScene->getTriggerZone(selZone);
+                 updateTZGuiElements();
+                
+            }
+        
+            
+            if(name == "DELETE_ZONE"){
+                
+                currentScene->removeTriggerZone(selZone);
+                selZone = max(selZone - 1, 0);
+              
+                if(currentScene->getNumTriggerZones() > 0){
+                    currentZone = currentScene->getTriggerZone(selZone);
+                    updateTZGuiElements();
+                }
+                
+            }
+            
+                       
+        }
+    
+        
     }
     
-    if(name == "T_POS_X"){
-        ofxUISlider *slider = (ofxUISlider *) e.widget;
-        currentScene.getTriggerZone(selZone)->setPosX(slider->getScaledValue());
-    }
+    if(currentScene->getNumTriggerZones() > 0 ){
     
-    if(name == "T_POS_Y"){
-        ofxUISlider *slider = (ofxUISlider *) e.widget;
-        currentScene.getTriggerZone(selZone)->setPosY(slider->getScaledValue());
-    }
-    
-    if(name == "T_POS_Z"){
-        ofxUISlider *slider = (ofxUISlider *) e.widget;
-        currentScene.getTriggerZone(selZone)->setPosZ(slider->getScaledValue());
-    }
-    
-    if(name == "ENABLED"){
-        ofxUIToggle *tog = (ofxUIToggle *) e.widget;
-        currentScene.getTriggerZone(selZone)->setIsEnabled(tog->getValue());
+        if(name == "RADIUS"){
+            ofxUISlider *slider = (ofxUISlider *) e.widget;
+            currentZone->setRadius(slider->getScaledValue());
+        }
+        
+        if(name == "T_POS_X"){
+            ofxUISlider *slider = (ofxUISlider *) e.widget;
+            currentZone->setPosX(slider->getScaledValue());
+        }
+        
+        if(name == "T_POS_Y"){
+            ofxUISlider *slider = (ofxUISlider *) e.widget;
+            currentZone->setPosY(slider->getScaledValue());
+        }
+        
+        if(name == "T_POS_Z"){
+            ofxUISlider *slider = (ofxUISlider *) e.widget;
+            currentZone->setPosZ(slider->getScaledValue());
+        }
+        
+        if(name == "ENABLED"){
+            ofxUIToggle *tog = (ofxUIToggle *) e.widget;
+            currentZone->setIsEnabled(tog->getValue());
+        }
+
+        
     }
 
 
+}
+
+void testApp::updateTZGuiElements(){
+
+   sc2TextInput[1]->setTextString(currentZone->getName());
+    
+    ofVec3f tp = currentZone->getPos();
+    tPosX->setValue(tp.x);
+    tPosY->setValue(tp.y);
+    tPosZ->setValue(tp.z);
+    
+    radSlid->setValue(currentZone->getRadius());
+    eblTog->setValue(currentZone->getIsEnabled());
+    
+    
 }
 
 void testApp::exit()

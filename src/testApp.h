@@ -73,6 +73,9 @@ class testApp : public ofBaseApp{
         void drawScenePointCloud();
         void drawUserPointCloud();
         void drawFloor();
+    
+    
+        void updateTZGuiElements();
 
         ofxUITabBar * settingsTabBar;
         ofxUITabBar * displayTabBar;
@@ -120,19 +123,38 @@ class testApp : public ofBaseApp{
         ofVec3f com;
         float userHeight;
         float cZone; //just a dummy sort out later
-        int selZone;
+        int selZone, selScene;
     
-        bool isSettingsGui, isDisplayGui, isCamMouse, isCamKey;
-    
+        bool isSettingsGui, isDisplayGui, isCamMouse, isCamKey, isTextFocus;
+        bool isMouseDown;
     
         int tabBarWidth, tabBarHeight;
-        scene currentScene;
     
-        ofxUIToggle * mouseTog;
+        vector<ofPtr<scene> > allScenes;
+    
+        ofPtr<scene> currentScene;
+        ofPtr<triggerZone> currentZone;
+    
+    
+        //UI pointers
+    
+        //canvas 1
+    
+        ofxUISlider * sc1Sliders[8];
+    
+    
+        //canvas 2
+    
+        ofxUITextInput * sc2TextInput[3];
+    
+        ofxUIDropDownList * sc2DropDowns[2];
     
         ofxUISlider * radSlid, * tPosX, * tPosY, * tPosZ;
         ofxUIToggle * eblTog;
     
+        //displayCanvas 3d
+    
+        ofxUIToggle * mouseTog;
     
     
 		
