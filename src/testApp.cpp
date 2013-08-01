@@ -51,6 +51,15 @@ void testApp::setup(){
     cm.reset();
     cm.setPosition(0, 0, 1000);
     cm.setTarget(ofVec3f(0, 0, 500));
+    
+    ambientLight.setAmbientColor(ofColor(100));
+
+    topLight.setScale(0.01);
+    topLight.setSpotlight();
+    topLight.setSpotConcentration(10);
+    topLight.setPosition(0, 3, -5);
+    setLightOri(topLight, ofVec3f(50, 0, 0));
+
 
     
     isCamMouse = false; isCamKey = true; isTextFocus = false;
@@ -63,9 +72,21 @@ void testApp::setup(){
     
     setupGui();
     
+ 
 
 
 }
+
+
+void testApp::setLightOri(ofLight &light, ofVec3f rot){
+    ofVec3f xax(1, 0, 0);
+    ofVec3f yax(0, 1, 0);
+    ofVec3f zax(0, 0, 1);
+    ofQuaternion q;
+    q.makeRotate(rot.x, xax, rot.y, yax, rot.z, zax);
+    light.setOrientation(q);
+}
+
 
 void testApp::setupGui(){
 
@@ -146,6 +167,7 @@ void testApp::setupGui(){
     
     
 	settingsCanvases[2]->setName("Scene Setup");
+ 
 
     settingsCanvases[2]->addLabel("SELECTED SCENE");
     sc2TextInput[0] = settingsCanvases[2]->addTextInput("S_NAME", "");
@@ -177,11 +199,17 @@ void testApp::setupGui(){
     settingsCanvases[2]->addButton("DELETE_ZONE", false);
     
    
-
-    
     eblTog = settingsCanvases[2]->addToggle("ENABLED", true);
     
     settingsCanvases[2]->addSpacer();
+    
+    vector<string> st;
+    st.push_back("sphere");
+    st.push_back("box");
+    
+    settingsCanvases[2]->addLabel("SHAPE TYPE");
+    shapeRad = settingsCanvases[2]->addRadio("SHAPE_TYPE", st, OFX_UI_ORIENTATION_HORIZONTAL);
+    shapeRad->activateToggle("sphere");
     
     radSlid = settingsCanvases[2]->addSlider("RADIUS", 0.05, 0.5, 0.1);
     tPosX = settingsCanvases[2]->addSlider("T_POS_X", -5, 5, 0.0);
@@ -190,16 +218,20 @@ void testApp::setupGui(){
     
     settingsCanvases[2]->addSpacer();
     
+    xDimSlid= settingsCanvases[2]->addSlider("X_DIM", 0.05,2.0,0.5);
+    yDimSlid= settingsCanvases[2]->addSlider("Y_DIM", 0.05,2.0,0.5);
+    zDimSlid= settingsCanvases[2]->addSlider("Z_DIM", 0.05,2.0,0.5);
+    
+    settingsCanvases[2]->addSpacer();
+    
     settingsCanvases[2]->addLabel("SOUNDFILE");
     sc2TextInput[2] = settingsCanvases[2]->addTextInput("SOUNDFILE", "none");
-    
-    settingsCanvases[2]->addButton("RELOAD_SOUND", false);
     
     for(int i = 0; i < 3; i++)sc2TextInput[i]->setTriggerType(OFX_UI_TEXTINPUT_ON_FOCUS);
     
     ofAddListener(settingsCanvases[2]->newGUIEvent,this,&testApp::s2Events);
     settingsTabBar->addCanvas(settingsCanvases[2]);
-
+    settingsCanvases[2]->autoSizeToFitWidgets();
 
 
 
@@ -309,9 +341,16 @@ void testApp::saveSettings(string fn){
                         if(XML.pushTag("ZONE", tz)){
                         
                             XML.addValue("NAME", z->getName());
+                            
                             XML.addValue("POS_X", z->getPos().x);
                             XML.addValue("POS_Y", z->getPos().y);
                             XML.addValue("POS_Z", z->getPos().z);
+                            
+                            XML.addValue("SHAPE", z->getShape());
+                            
+                            XML.addValue("DIM_X", z->getBoxDims().x);
+                            XML.addValue("DIM_Y", z->getBoxDims().y);
+                            XML.addValue("DIM_Z", z->getBoxDims().z);
                             XML.addValue("RADIUS", z->getRadius());
                             XML.addValue("SOUNDFILE", z->getSoundFileName());
                             XML.addValue("ENABLED", z->getIsEnabled());
@@ -408,9 +447,13 @@ void testApp::loadSettings(string fn){
                             ofPtr<triggerZone> z = nScene->addTriggerZone(max(0,tz - 1));
                             
                             z->setName(XML.getValue("NAME", ""));
+                            z->setShape(XML.getValue("SHAPE", 0));
                             z->setPosX(XML.getValue("POS_X", 0.0));
                             z->setPosY(XML.getValue("POS_Y", 0.0));
                             z->setPosZ(XML.getValue("POS_Z", 0.0));
+                            z->setBoxDimsX( XML.getValue("DIM_X", 0.5));
+                            z->setBoxDimsY( XML.getValue("DIM_Y", 0.5));
+                            z->setBoxDimsZ( XML.getValue("DIM_Z", 0.5));
                             z->setRadius(XML.getValue("RADIUS",1.0));
                             z->setSoundFile(XML.getValue("SOUNDFILE", ""));
                             z->setIsEnabled(XML.getValue("ENABLED", false));
@@ -701,14 +744,22 @@ void testApp::draw(){
     ofSetColor(0);
     
     ofDrawBitmapString("FPS: " +  ofToString(ofGetFrameRate(), 2), 20,20);
+
     
     if(displayMode == DT_DM_3D){
     
         cm.begin();
         
+        
         glEnable(GL_DEPTH_TEST);
         
         ofScale(100,100,100);
+        
+        ofNoFill();
+       
+        topLight.draw();
+        ambientLight.enable();
+        topLight.enable();
         
         ofPushMatrix();
             ofScale(0.05, 0.05, 0.05);
@@ -1256,6 +1307,14 @@ void testApp::s2Events(ofxUIEventArgs &e){
     
     if(currentScene->getNumTriggerZones() > 0 ){
     
+        if(name == "sphere"){
+            currentZone->setShape(0);
+        }
+        
+        if(name == "box"){
+            currentZone->setShape(1);
+        }
+        
         if(name == "RADIUS"){
             ofxUISlider *slider = (ofxUISlider *) e.widget;
             currentZone->setRadius(slider->getScaledValue());
@@ -1274,6 +1333,22 @@ void testApp::s2Events(ofxUIEventArgs &e){
         if(name == "T_POS_Z"){
             ofxUISlider *slider = (ofxUISlider *) e.widget;
             currentZone->setPosZ(slider->getScaledValue());
+        }
+        
+        
+        if(name == "X_DIM"){
+            ofxUISlider *slider = (ofxUISlider *) e.widget;
+            currentZone->setBoxDimsX(slider->getScaledValue());
+        }
+        
+        if(name == "Y_DIM"){
+            ofxUISlider *slider = (ofxUISlider *) e.widget;
+            currentZone->setBoxDimsY(slider->getScaledValue());
+        }
+        
+        if(name == "Z_DIM"){
+            ofxUISlider *slider = (ofxUISlider *) e.widget;
+            currentZone->setBoxDimsZ(slider->getScaledValue());
         }
         
         if(name == "ENABLED"){
@@ -1299,6 +1374,12 @@ void testApp::updateTZGuiElements(){
     
     radSlid->setValue(currentZone->getRadius());
     eblTog->setValue(currentZone->getIsEnabled());
+    
+    xDimSlid->setValue(currentZone->getBoxDims().x);
+    yDimSlid->setValue(currentZone->getBoxDims().y);
+    zDimSlid->setValue(currentZone->getBoxDims().z);
+    (currentZone->getShape() == 0) ? shapeRad->activateToggle("sphere") : shapeRad->activateToggle("box");
+    
     
     currentZone->setIsSelected(true);
 }

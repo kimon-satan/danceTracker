@@ -15,9 +15,11 @@
 enum tzShape{
 
     TZ_SPHERE,
-    TZ_CUBE
+    TZ_BOX
 
 };
+
+
 
 class triggerZone{
     
@@ -44,12 +46,17 @@ public:
     string getSoundFileName();
     
     ofVec3f getPos();
+    ofVec3f getBoxDims();
     float getRadius();
     
     void setRadius(float r);
     void setPosX(float x);
     void setPosY(float y);
     void setPosZ(float z);
+    
+    void setBoxDimsX(float x);
+    void setBoxDimsY(float y);
+    void setBoxDimsZ(float z);
 
     void setShape(int t);
     int getShape();
@@ -66,6 +73,8 @@ private:
     
     tzShape shape;
     ofVec3f center;
+    ofVec3f boxDims;
+
     float radius;
     ofVec3f corners[2];
     ofSoundPlayer mSound;

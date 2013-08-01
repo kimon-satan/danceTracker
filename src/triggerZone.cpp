@@ -14,6 +14,8 @@ triggerZone::triggerZone(){
 
     shape = TZ_SPHERE;
     center.set(0,0,2);
+    boxDims.set(1,0.5,1);
+    
     radius = 0.25;
     
     isOccupied = false;
@@ -32,12 +34,6 @@ triggerZone::triggerZone(){
 
 void triggerZone::draw(){
     
-    if(shape == TZ_CUBE){
-        ofPushStyle();
-        ofSetRectMode(OF_RECTMODE_CENTER);
-        ofRect(0, 0, 1, 1);
-        ofPopStyle();
-    }else{
     
         ofPushMatrix();
         
@@ -59,10 +55,21 @@ void triggerZone::draw(){
         }else{
             ofSetColor(60);
         }
-            ofSphere(0,0,0, radius);
-        
+    
+            if(shape == TZ_BOX){
+                ofFill();
+                ofPushMatrix();
+                ofScale(boxDims.x, boxDims.y, boxDims.z);
+                ofBox(1);
+                ofPopMatrix();
+                
+            }else{
+                ofNoFill();
+                ofSphere(0,0,0, radius);
+            }
+    
         ofPopMatrix();
-    }
+    
 }
 
 
@@ -73,14 +80,41 @@ void triggerZone::checkPoints(vector<ofVec3f> & pc){
     
     isOccupied = false;
     
-    for(it = pc.begin(); it != pc.end(); it++){
-        
-        if(it->distance(center) < radius){
+    if(shape == TZ_SPHERE){
+    
+        for(it = pc.begin(); it != pc.end(); it++){
             
-            isOccupied = true;
-            break;
+            if(it->distance(center) < radius){
+                
+                isOccupied = true;
+                break;
+                
+            }
+        
+        }
+        
+    }else if(shape == TZ_BOX){
+    
+        for(it = pc.begin(); it != pc.end(); it++){
+            
+            if(it->x <= center.x + boxDims.x/2 && it->x >= center.x - boxDims.x/2){
+                
+                if(it->y <= center.y + boxDims.y/2 && it->y >= center.y - boxDims.y/2){
+                 
+                    if(it->z <= center.z + boxDims.z/2 && it->z >= center.z - boxDims.z/2){
+                        
+                        isOccupied = true;
+                        break;
+                        
+                    }
+                    
+                }
+            
+            
+            }
             
         }
+        
     
     }
     
@@ -140,6 +174,7 @@ void triggerZone::setIsEnabled(bool b){isEnabled = b;}
 bool triggerZone::getIsEnabled(){return isEnabled;}
 
 ofVec3f triggerZone::getPos(){return center;}
+ofVec3f triggerZone::getBoxDims(){return boxDims;}
 float triggerZone::getRadius(){return radius;}
 
 void triggerZone::setRadius(float r){radius = r;}
@@ -166,4 +201,7 @@ string triggerZone::getName(){
 void triggerZone::toggleSelected(){isSelected = !isSelected;}
 void triggerZone::setIsSelected(bool b){isSelected = b;}
 
+void triggerZone::setBoxDimsX(float x){boxDims.x = x; }
+void triggerZone::setBoxDimsY(float y){boxDims.y = y; }
+void triggerZone::setBoxDimsZ(float z){boxDims.z = z; }
 

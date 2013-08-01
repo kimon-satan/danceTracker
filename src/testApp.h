@@ -64,6 +64,8 @@ class testApp : public ofBaseApp{
     
         void exit();
     
+        void setLightOri(ofLight &light, ofVec3f rot);
+    
         void setupGui();
     
         void saveSettings(string fn);
@@ -106,6 +108,7 @@ class testApp : public ofBaseApp{
         float pRange;
     
         ofEasyCam  cm;
+        ofLight topLight, ambientLight;
     
         float floorY;
     
@@ -154,10 +157,11 @@ class testApp : public ofBaseApp{
         //canvas 2
     
         ofxUITextInput * sc2TextInput[3];
-    
+        ofxUIRadio * shapeRad;
         ofxUIDropDownList * sc2DropDowns[2];
     
         ofxUISlider * radSlid, * tPosX, * tPosY, * tPosZ;
+        ofxUISlider * xDimSlid, * yDimSlid, * zDimSlid;
         ofxUIToggle * eblTog;
     
         //displayCanvas 3d
