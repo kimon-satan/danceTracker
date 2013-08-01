@@ -32,6 +32,8 @@ public:
     
     void update();
     
+    void reloadSound();
+    
     
     //getters and setters
     
@@ -39,6 +41,7 @@ public:
     bool getIsEnabled();
     
     void setSoundFile(string s);
+    string getSoundFileName();
     
     ofVec3f getPos();
     float getRadius();
@@ -53,6 +56,9 @@ public:
     
     void setName(string s);
     string getName();
+    
+    void toggleSelected();
+    void setIsSelected(bool b);
 
     
     
@@ -63,13 +69,16 @@ private:
     float radius;
     ofVec3f corners[2];
     ofSoundPlayer mSound;
+    ofTrueTypeFont font;
     
-    string mName;
+    string mName, mSoundFileName;
     
-    bool isOccupied;
-    bool isEnabled;
+    bool isOccupied, isEnabled, isSelected;
+    
     
     static int index;
+    
+    
     
     
 };

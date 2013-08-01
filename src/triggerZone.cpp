@@ -20,10 +20,13 @@ triggerZone::triggerZone(){
     isEnabled = false;
     
     mName = "defaultZone_" + ofToString(index, 0);
+    mSoundFileName = "none";
+    font.loadFont("NewMedia.ttf", 15);
     
     index += 1;
     
-  //  mSound.loadSound("sound/nonono.wav", true);
+    isSelected = false;
+    
     
 }
 
@@ -39,6 +42,17 @@ void triggerZone::draw(){
         ofPushMatrix();
         
             ofTranslate(center.x, center.y, center.z);
+        
+        ofPushMatrix();
+        (isSelected) ? ofSetColor(255,0,0) : ofSetColor(255);
+            ofRectangle r = font.getStringBoundingBox(mName, 0, 0);
+            
+            ofTranslate(- r.width/200, radius + r.height/100, 0);
+            ofPushMatrix();
+                ofScale(0.01,-0.01,0.01);
+                font.drawString(mName, 0, 0);
+            ofPopMatrix();
+        ofPopMatrix();
         
         if(isEnabled){
             (isOccupied) ? ofSetColor(255, 0, 0): ofSetColor(255, 255, 0);
@@ -96,16 +110,30 @@ void triggerZone::update(){
 
 
 
+void triggerZone::reloadSound(){ //when loading settings from file
+
+    string s = "sound/" + mSoundFileName;
+    mSound.stop();
+    mSound.unloadSound();
+    mSound.loadSound(s);
+}
+
 
 //getters and setters
 
 void triggerZone::setSoundFile(string s){
-
+    
+    mSoundFileName = s;
+    
+    s = "sound/" + s;
+    
     mSound.stop();
     mSound.unloadSound();
     mSound.loadSound(s);
     
 }
+
+string triggerZone::getSoundFileName(){return mSoundFileName;}
 
 
 void triggerZone::setIsEnabled(bool b){isEnabled = b;}
@@ -133,5 +161,9 @@ string triggerZone::getName(){
     
     return mName;
 }
+
+
+void triggerZone::toggleSelected(){isSelected = !isSelected;}
+void triggerZone::setIsSelected(bool b){isSelected = b;}
 
 

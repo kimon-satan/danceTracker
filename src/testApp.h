@@ -4,6 +4,7 @@
 #include "ofxKinect.h"
 #include "ofxOpenCv.h"
 #include "ofxUI.h"
+#include "ofxXmlSettings.h"
 
 #include "scene.h"
 
@@ -64,6 +65,9 @@ class testApp : public ofBaseApp{
         void exit();
     
         void setupGui();
+    
+        void saveSettings(string fn);
+        void loadSettings(string fn);
     
         void calcQ();
         void recordBg();
@@ -137,6 +141,10 @@ class testApp : public ofBaseApp{
     
     
         //UI pointers
+    
+        //canvas 0
+    
+        ofxUITextInput * fileNameInput;
     
         //canvas 1
     

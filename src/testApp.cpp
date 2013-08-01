@@ -106,6 +106,8 @@ void testApp::setupGui(){
     
     settingsCanvases[0]->addLabel("Save/Load");
     settingsCanvases[0]->addSpacer();
+    
+    fileNameInput = settingsCanvases[0]->addTextInput("FILENAME", "none");
     settingsCanvases[0]->addButton("SAVE", false);
     settingsCanvases[0]->addButton("LOAD", false);
     
@@ -189,7 +191,7 @@ void testApp::setupGui(){
     settingsCanvases[2]->addSpacer();
     
     settingsCanvases[2]->addLabel("SOUNDFILE");
-    sc2TextInput[2] = settingsCanvases[2]->addTextInput("SOUNDFILE", "default.wav");
+    sc2TextInput[2] = settingsCanvases[2]->addTextInput("SOUNDFILE", "none");
     
     settingsCanvases[2]->addButton("RELOAD_SOUND", false);
     
@@ -254,6 +256,219 @@ void testApp::setupGui(){
     
 
    
+}
+
+void testApp::saveSettings(string fn){
+
+    ofxXmlSettings XML;
+    
+    if(fn.substr(fn.length()-4, 4) != ".xml")fn += ".xml";
+    
+    string filePath = "XMLs/" + fn;
+    
+    XML.addTag("DANCE_TRACKER");
+    
+    if(XML.pushTag("DANCE_TRACKER")){
+    
+        XML.addTag("MAIN_SETTINGS");
+        
+        if(XML.pushTag("MAIN_SETTINGS")){
+            
+            XML.addValue("KN_TILT", kinect.getTargetCameraTiltAngle());
+            XML.addValue("FLOOR_Y", floorY);
+            XML.addValue("SEG_FRESH", segThresh);
+            XML.addValue("USER_HEIGHT", userHeight);
+            XML.addValue("NEAR_THRESH", nearThresh);
+            XML.addValue("FAR_THRESH", farThresh);
+            XML.addValue("MIN_BLOB", minBlob);
+            XML.addValue("MAX_BLOB", maxBlob);
+            
+            XML.popTag();
+        }
+        
+        XML.addTag("SCENE_SETTINGS");
+        
+        if(XML.pushTag("SCENE_SETTINGS")){
+        
+            for(int sn = 0; sn < allScenes.size(); sn++){
+            
+                XML.addTag("SCENE");
+                
+                if(XML.pushTag("SCENE", sn)){
+                    
+                    XML.addValue("NAME", allScenes[sn]->getName());
+                    
+                    int numZones = allScenes[sn]->getNumTriggerZones();
+                    
+                    for(int tz = 0; tz < numZones; tz++){
+                        
+                        ofPtr<triggerZone> z = allScenes[sn]->getTriggerZone(tz);
+                        
+                        XML.addTag("ZONE");
+                        
+                        if(XML.pushTag("ZONE", tz)){
+                        
+                            XML.addValue("NAME", z->getName());
+                            XML.addValue("POS_X", z->getPos().x);
+                            XML.addValue("POS_Y", z->getPos().y);
+                            XML.addValue("POS_Z", z->getPos().z);
+                            XML.addValue("RADIUS", z->getRadius());
+                            XML.addValue("SOUNDFILE", z->getSoundFileName());
+                            XML.addValue("ENABLED", z->getIsEnabled());
+                        
+                            //zone tag
+                            XML.popTag();
+                        }
+                        
+                    
+                    }
+                    
+                    //scene tag
+                    XML.popTag();
+                }
+                
+            
+            }
+         
+            //scene settings tag
+            XML.popTag();
+        }
+        
+        //danceTracker tag
+        XML.popTag();
+    }
+    
+    XML.saveFile(filePath);
+    
+}
+
+void testApp::loadSettings(string fn){
+
+    ofxXmlSettings XML;
+    
+    if(fn.substr(fn.length()-4, 4) != ".xml")fn += ".xml";
+    
+    string filePath = "XMLs/" + fn;
+    
+    if(XML.loadFile(filePath)){
+    
+        if(XML.pushTag("DANCE_TRACKER")){
+            
+            if(XML.pushTag("MAIN_SETTINGS")){
+                
+                float kt = XML.getValue("KN_TILT", 0.0);
+                kinect.setCameraTiltAngle(kt);
+                sc1Sliders[0]->setValue(kt);
+                
+                nearThresh = XML.getValue("NEAR_THRESH", 0.5);
+                sc1Sliders[1]->setValue(nearThresh);
+                
+                farThresh = XML.getValue("FAR_THRESH", 10.0);
+                sc1Sliders[2]->setValue(farThresh);
+                
+                segThresh = XML.getValue("SEG_FRESH", 0.1);
+                sc1Sliders[3]->setValue(segThresh);
+                
+                minBlob = XML.getValue("MIN_BLOB", 0.005);
+                sc1Sliders[4]->setValue(minBlob);
+                
+                maxBlob = XML.getValue("MAX_BLOB", 10.0);
+                sc1Sliders[5]->setValue(maxBlob);
+                
+                floorY = XML.getValue("FLOOR_Y", 1.0);
+                sc1Sliders[6]->setValue(floorY);
+                
+                userHeight = XML.getValue("USER_HEIGHT", 1.8);
+                sc1Sliders[7]->setValue(userHeight);
+                
+                XML.popTag();
+            }
+            
+               
+        if(XML.pushTag("SCENE_SETTINGS")){
+            
+            allScenes.clear();
+            
+            int numScenes = XML.getNumTags("SCENE");
+            
+            for(int sn = 0; sn < numScenes; sn++){
+                
+                if(XML.pushTag("SCENE", sn)){
+                    
+                    ofPtr<scene> nScene = ofPtr<scene>(new scene());
+                    
+                    nScene->setName(XML.getValue("NAME", ""));
+                    
+                    int numZones = XML.getNumTags("ZONE");
+                    
+                    for(int tz = 0; tz < numZones; tz++){
+                        
+                        if(XML.pushTag("ZONE", tz)){
+                            
+                            ofPtr<triggerZone> z = nScene->addTriggerZone(max(0,tz - 1));
+                            
+                            z->setName(XML.getValue("NAME", ""));
+                            z->setPosX(XML.getValue("POS_X", 0.0));
+                            z->setPosY(XML.getValue("POS_Y", 0.0));
+                            z->setPosZ(XML.getValue("POS_Z", 0.0));
+                            z->setRadius(XML.getValue("RADIUS",1.0));
+                            z->setSoundFile(XML.getValue("SOUNDFILE", ""));
+                            z->setIsEnabled(XML.getValue("ENABLED", false));
+                            
+                            //zone tag
+                            XML.popTag();
+                            
+                            
+                        }
+                        
+                        
+                    }
+                    
+                    
+                    allScenes.push_back(nScene);
+                    
+                    //scene tag
+                    XML.popTag();
+                }
+                
+                
+            }
+            
+            selScene = 0;
+            currentScene = allScenes[selScene];
+            sc2TextInput[0]->setTextString(currentScene->getName());
+            //there will probably be more to update here later
+            
+            if(currentScene->getNumTriggerZones() > 0){
+                selZone = 0;
+                currentZone = currentScene->getTriggerZone(selZone);
+                updateTZGuiElements();
+            }else{
+                //potentially refactor into a disableZoneElements
+                
+                selZone = 0;
+                sc2TextInput[1]->setTextString("none");
+                sc2TextInput[2]->setTextString("none");
+            }
+            
+                //scene settings tag
+                XML.popTag();
+            }
+            
+            //danceTracker Tag
+            XML.popTag();
+        }
+        
+
+        
+        
+    
+    }else{
+    
+        cout << "failed /n";
+        
+    }
+    
 }
 
 //--------------------------------------------------------------
@@ -829,7 +1044,12 @@ void testApp::dispEvents(ofxUIEventArgs &e){
 
 void testApp::s0Events(ofxUIEventArgs &e){
     
-       
+     string name = e.widget->getName();
+
+    if(isMouseDown){
+            if(name == "SAVE")saveSettings(fileNameInput->getTextString());
+            if(name == "LOAD")loadSettings(fileNameInput->getTextString());
+    }
     
 	
 }
@@ -918,7 +1138,14 @@ void testApp::s2Events(ofxUIEventArgs &e){
                 if(name == "Z_NAME"){
                     currentZone->setName(t->getTextString());
                 }
+                
+                if(name == "SOUNDFILE"){
+                    currentZone->setSoundFile(t->getTextString());
+                }
             }
+            
+            
+            
         }
        
         
@@ -981,6 +1208,7 @@ void testApp::s2Events(ofxUIEventArgs &e){
         
         if(name == "CREATE_ZONE"){
             
+            if(currentScene->getNumTriggerZones() > 0)currentZone->setIsSelected(false);
             currentZone = currentScene->addTriggerZone(selZone);
             selZone = min(selZone + 1, (int)currentScene->getNumTriggerZones() - 1);
             updateTZGuiElements();
@@ -990,6 +1218,7 @@ void testApp::s2Events(ofxUIEventArgs &e){
             
             if(name == "ZONE_PLUS"){
                 
+                currentZone->setIsSelected(false);
                 selZone = min(selZone + 1, (int)currentScene->getNumTriggerZones() - 1);
                 currentZone = currentScene->getTriggerZone(selZone);
                 updateTZGuiElements();
@@ -999,6 +1228,7 @@ void testApp::s2Events(ofxUIEventArgs &e){
             
             if(name == "ZONE_MINUS"){
                 
+                currentZone->setIsSelected(false);
                 selZone = max(selZone - 1, 0);
                 currentZone = currentScene->getTriggerZone(selZone);
                  updateTZGuiElements();
@@ -1060,6 +1290,7 @@ void testApp::s2Events(ofxUIEventArgs &e){
 void testApp::updateTZGuiElements(){
 
    sc2TextInput[1]->setTextString(currentZone->getName());
+    sc2TextInput[2]->setTextString(currentZone->getSoundFileName());
     
     ofVec3f tp = currentZone->getPos();
     tPosX->setValue(tp.x);
@@ -1069,7 +1300,7 @@ void testApp::updateTZGuiElements(){
     radSlid->setValue(currentZone->getRadius());
     eblTog->setValue(currentZone->getIsEnabled());
     
-    
+    currentZone->setIsSelected(true);
 }
 
 void testApp::exit()
