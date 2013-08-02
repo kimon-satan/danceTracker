@@ -12,14 +12,19 @@ void testApp::setup(){
     ofEnableSmoothing();
     ofSetCircleResolution(60);
     
-    //kinect.init();
-	kinect.init(false, false);  // disable infrared/rgb video iamge (faster fps)
-	kinect.setVerbose(true);
-	kinect.open();
+    numBlankFrames = 0;
     
-    // zero the tilt on startup
-	kinectAngle = 0;
-	kinect.setCameraTiltAngle(kinectAngle);
+    kinect.clear();
+    kinect.init(false, false);  // disable infrared/rgb video iamge (faster fps)
+    kinect.setVerbose(true);
+    kinect.open();
+    
+
+    if(kinect.isConnected()){
+        // zero the tilt on startup
+        kinectAngle = 0;
+        kinect.setCameraTiltAngle(kinectAngle);
+    }
     
     pointCloudRotation = 0;
     
@@ -59,8 +64,6 @@ void testApp::setup(){
     topLight.setSpotConcentration(10);
     topLight.setPosition(0, 3, -5);
     setLightOri(topLight, ofVec3f(50, 0, 0));
-
-
     
     isCamMouse = false; isCamKey = true; isTextFocus = false;
 
@@ -71,9 +74,8 @@ void testApp::setup(){
     currentScene = s;
     
     setupGui();
+    updateZoneControls(); 
     
- 
-
 
 }
 
@@ -110,6 +112,7 @@ void testApp::setupGui(){
     settingsTabBar->setColorFillHighlight(ofxUIColor(255));
     settingsTabBar->setColorBack(ofxUIColor(255, 20, 20, 150));
     
+    ofAddListener(settingsTabBar->newGUIEvent,this,&testApp::settingsEvents);
    
     for(int i = 0; i < NUM_CANVASES; i ++){
     
@@ -198,44 +201,82 @@ void testApp::setupGui(){
     settingsCanvases[2]->addButton("CREATE_ZONE", false);
     settingsCanvases[2]->addButton("DELETE_ZONE", false);
     
-   
-    eblTog = settingsCanvases[2]->addToggle("ENABLED", true);
-    
-    settingsCanvases[2]->addSpacer();
-    
-    vector<string> st;
-    st.push_back("sphere");
-    st.push_back("box");
-    
-    settingsCanvases[2]->addLabel("SHAPE TYPE");
-    shapeRad = settingsCanvases[2]->addRadio("SHAPE_TYPE", st, OFX_UI_ORIENTATION_HORIZONTAL);
-    shapeRad->activateToggle("sphere");
-    
-    radSlid = settingsCanvases[2]->addSlider("RADIUS", 0.05, 0.5, 0.1);
-    tPosX = settingsCanvases[2]->addSlider("T_POS_X", -5, 5, 0.0);
-    tPosY = settingsCanvases[2]->addSlider("T_POS_Y", -2, 2, 0.0);
-    tPosZ = settingsCanvases[2]->addSlider("T_POS_Z", 0, 10, 0.0);
-    
-    settingsCanvases[2]->addSpacer();
-    
-    xDimSlid= settingsCanvases[2]->addSlider("X_DIM", 0.05,2.0,0.5);
-    yDimSlid= settingsCanvases[2]->addSlider("Y_DIM", 0.05,2.0,0.5);
-    zDimSlid= settingsCanvases[2]->addSlider("Z_DIM", 0.05,2.0,0.5);
-    
-    settingsCanvases[2]->addSpacer();
-    
-    settingsCanvases[2]->addLabel("SOUNDFILE");
-    sc2TextInput[2] = settingsCanvases[2]->addTextInput("SOUNDFILE", "none");
-    
-    for(int i = 0; i < 3; i++)sc2TextInput[i]->setTriggerType(OFX_UI_TEXTINPUT_ON_FOCUS);
     
     ofAddListener(settingsCanvases[2]->newGUIEvent,this,&testApp::s2Events);
     settingsTabBar->addCanvas(settingsCanvases[2]);
     settingsCanvases[2]->autoSizeToFitWidgets();
 
+    //----------------------ZONE CANVASES --------------//
 
-
+    for(int i = 0; i < 3; i ++){
+        
+        if(i == 0)
+            zoneCanvases[i] = new ofxUICanvas(ofGetWidth()/2 - 400, ofGetHeight() - 200, 600, 200);
+        else
+            zoneCanvases[i] = new ofxUICanvas(ofGetWidth()/2 + 210, ofGetHeight() - 200, 300, 200);
+        
+        zoneCanvases[i]->setColorFill(ofxUIColor(200));
+        zoneCanvases[i]->setColorFillHighlight(ofxUIColor(255));
+        zoneCanvases[i]->setColorBack(ofxUIColor(20, 20, 20, 150));
     
+        
+    }
+    
+    //zone c0 -------------------------------------------
+    
+    vector<string> st;
+    st.push_back("sphere");
+    st.push_back("box");
+    
+    zoneCanvases[0]->addLabel("SHAPE TYPE", OFX_UI_FONT_SMALL);
+    shapeRad = new ofxUIRadio("SHAPE_TYPE", st, OFX_UI_ORIENTATION_HORIZONTAL ,20, 20);
+    shapeRad->activateToggle("sphere");
+    
+    zoneCanvases[0]->addWidgetRight(shapeRad);
+    
+    zoneCanvases[0]->addWidgetRight(new ofxUISpacer(1,20));
+    
+    eblTog = new ofxUIToggle("ENABLED", true, 20, 20, 0, 0, OFX_UI_FONT_SMALL);
+    eblTog->setColorFill(ofxUIColor(255,0,0));
+    zoneCanvases[0]->addWidgetRight(eblTog);
+    
+    zoneCanvases[0]->addWidgetRight(new ofxUISpacer(1,20));
+    
+    zoneCanvases[0]->addWidgetRight(new ofxUILabel("SOUNDFILE", OFX_UI_FONT_SMALL));
+    sc2TextInput[2] = new ofxUITextInput("SOUNDFILE", "none", 200);
+    zoneCanvases[0]->addWidgetRight(sc2TextInput[2]);
+    
+    zoneCanvases[0]->addSpacer();
+    
+    float slw = 200 - OFX_UI_GLOBAL_WIDGET_SPACING - 5;
+    
+    tPosX = new ofxUISlider("T_POS_X", -5, 5, 0.0, slw, 10);
+    tPosY = new ofxUISlider("T_POS_Y", -2, 2, 0.0, slw, 10);
+    tPosZ = new ofxUISlider("T_POS_Z", 0, 10, 0.0, slw, 10);
+    
+    zoneCanvases[0]->addWidgetDown(tPosX);
+    zoneCanvases[0]->addWidgetRight(tPosY);
+    zoneCanvases[0]->addWidgetRight(tPosZ);
+    
+    ofAddListener(zoneCanvases[0]->newGUIEvent,this,&testApp::s2Events);
+    
+    for(int i = 0; i < 3; i++)sc2TextInput[i]->setTriggerType(OFX_UI_TEXTINPUT_ON_FOCUS);
+    
+    
+    //zone c1----------------------------------------------------
+    
+    radSlid = zoneCanvases[1]->addSlider("RADIUS", 0.05, 0.5, 0.1);
+
+    ofAddListener(zoneCanvases[1]->newGUIEvent,this,&testApp::s2Events);
+    
+    
+    //zone c2 ----------------------------------------------------------------
+    
+    xDimSlid= zoneCanvases[2]->addSlider("X_DIM", 0.05,10.0,0.5);
+    yDimSlid= zoneCanvases[2]->addSlider("Y_DIM", 0.05,2.0,0.5);
+    zDimSlid= zoneCanvases[2]->addSlider("Z_DIM", 0.05,10.0,0.5);
+    
+    ofAddListener(zoneCanvases[2]->newGUIEvent,this,&testApp::s2Events);
 
     //--------------------------------------DISPLAY SETTINGS----------------------------------------------------------//
     
@@ -519,9 +560,12 @@ void testApp::update(){
     
     kinect.update();
     
-    if(kinect.isFrameNew()){
+    numBlankFrames += 1;
+    
+    if(kinect.isFrameNew() || numBlankFrames == 10){
         
-       
+        numBlankFrames = 0;
+        
         liveImg.setFromPixels(kinect.getDepthPixels(), kinect.width, kinect.height);
         calcQ();
         //rotate the pixels
@@ -535,7 +579,7 @@ void testApp::update(){
                 ofVec3f cur = kinect.getWorldCoordinateFor(x, y);
                 
                 ofVec3f curR = cur.getRotated(-qangle, qaxis);
-                
+                curR *= ofVec3f(1,-1,1);
                 curDepths.push_back(curR);
                 
             }
@@ -554,7 +598,7 @@ void testApp::update(){
         }
        
     }
-    
+
 
     
 }
@@ -715,6 +759,7 @@ void testApp::analyseUser(){
             if(s_pix[y * kinect.width + x] > 0){
                 ofVec3f cur = kinect.getWorldCoordinateFor(x, y);
                 ofVec3f curR = cur.getRotated(-qangle, qaxis);
+                curR *= ofVec3f(1,-1,1);
                 total += curR;
                 userPixels.push_back(curR);
                 
@@ -753,7 +798,7 @@ void testApp::draw(){
         
         glEnable(GL_DEPTH_TEST);
         
-        ofScale(100,100,100);
+        ofScale(-100,100,100);
         
         ofNoFill();
        
@@ -792,7 +837,7 @@ void testApp::draw(){
         if(isViewCom){
             ofNoFill();
             ofSetColor(0, 255, 255);
-            ofSphere(com.x, -com.y, com.z, userHeight/2);
+            ofSphere(com.x, com.y, com.z, userHeight/2);
         }
         
         
@@ -846,7 +891,7 @@ void testApp::drawScenePointCloud() {
 	    
     for(int i = 0; i < curDepths.size(); i ++){
         
-        glVertex3f(curDepths[i].x, -curDepths[i].y, curDepths[i].z);
+        glVertex3f(curDepths[i].x, curDepths[i].y, curDepths[i].z);
  
     }
     
@@ -862,7 +907,7 @@ void testApp::drawUserPointCloud() {
     
     for(int i = 0; i < userPixels.size(); i ++){
         
-        glVertex3f(userPixels[i].x, -userPixels[i].y, userPixels[i].z);
+        glVertex3f(userPixels[i].x, userPixels[i].y, userPixels[i].z);
         
 	}
     
@@ -903,6 +948,10 @@ void testApp::keyPressed(int key){
         case ' ':
             settingsTabBar->toggleVisible();
             isSettingsGui = !isSettingsGui;
+            if(!isSettingsGui)
+                for(int i = 0; i < 3; i++)zoneCanvases[i]->setVisible(false);
+            else
+                if(settingsTabBar->getActiveCanvas()->getName() == "Scene Setup")updateZoneControls();
         break;
             
         case OF_KEY_RETURN:
@@ -1014,6 +1063,23 @@ void testApp::dragEvent(ofDragInfo dragInfo){
 
 }
 
+void testApp::settingsEvents(ofxUIEventArgs &e){
+    
+    string name = e.widget->getName();
+    
+    if(name == "Scene Setup"){
+        
+        updateZoneControls();
+        
+    }else{
+    
+        for(int i = 0; i < 3; i++)zoneCanvases[i]->setVisible(false);
+        
+    }
+    
+    
+}
+
 void testApp::dispEvents(ofxUIEventArgs &e){
     
     string name = e.widget->getName();
@@ -1025,12 +1091,18 @@ void testApp::dispEvents(ofxUIEventArgs &e){
         cm.disableMouseInput();
         isCamMouse = false;
         isCamMouse = false;
+        for(int i = 0; i < 3; i++)zoneCanvases[i]->setVisible(false);
+        
     }
     if(name == "3D"){
         
         displayMode = DT_DM_3D;
         mouseTog->setValue(false);
         isCamKey = true;
+        
+        if(settingsTabBar->getActiveCanvas()){
+            if(settingsTabBar->getActiveCanvas()->getName() == "Scene Setup")updateZoneControls();
+        }
     }
 
     
@@ -1210,10 +1282,7 @@ void testApp::s2Events(ofxUIEventArgs &e){
             currentScene = allScenes[selScene];
             sc2TextInput[0]->setTextString(currentScene->getName());
             selZone = 0;
-            if(currentScene->getNumTriggerZones() > 0){
-                currentZone = currentScene->getTriggerZone(selZone);
-                updateTZGuiElements();
-            }
+            updateZoneControls();
             
         }
         
@@ -1223,10 +1292,7 @@ void testApp::s2Events(ofxUIEventArgs &e){
             currentScene = allScenes[selScene];
             sc2TextInput[0]->setTextString(currentScene->getName());
             selZone = 0;
-            if(currentScene->getNumTriggerZones() > 0){
-                currentZone = currentScene->getTriggerZone(selZone);
-                updateTZGuiElements();
-            }
+            updateZoneControls();
             
         }
         
@@ -1238,6 +1304,7 @@ void testApp::s2Events(ofxUIEventArgs &e){
             currentScene = t;
             selZone = 0;
             sc2TextInput[0]->setTextString(currentScene->getName());
+            updateZoneControls();
         }
         
         if(name == "DELETE_SCENE"){
@@ -1248,10 +1315,7 @@ void testApp::s2Events(ofxUIEventArgs &e){
                 currentScene = allScenes[selScene];
                 sc2TextInput[0]->setTextString(currentScene->getName());
                 selZone = 0;
-                if(currentScene->getNumTriggerZones() > 0){
-                    currentZone = currentScene->getTriggerZone(selZone);
-                    updateTZGuiElements();
-                }
+                updateZoneControls();
                 
             }
         }
@@ -1262,7 +1326,7 @@ void testApp::s2Events(ofxUIEventArgs &e){
             if(currentScene->getNumTriggerZones() > 0)currentZone->setIsSelected(false);
             currentZone = currentScene->addTriggerZone(selZone);
             selZone = min(selZone + 1, (int)currentScene->getNumTriggerZones() - 1);
-            updateTZGuiElements();
+            updateZoneControls();
         }
         
         if(currentScene->getNumTriggerZones() > 0){
@@ -1272,7 +1336,7 @@ void testApp::s2Events(ofxUIEventArgs &e){
                 currentZone->setIsSelected(false);
                 selZone = min(selZone + 1, (int)currentScene->getNumTriggerZones() - 1);
                 currentZone = currentScene->getTriggerZone(selZone);
-                updateTZGuiElements();
+                updateZoneControls();
                
                 
             }
@@ -1282,7 +1346,7 @@ void testApp::s2Events(ofxUIEventArgs &e){
                 currentZone->setIsSelected(false);
                 selZone = max(selZone - 1, 0);
                 currentZone = currentScene->getTriggerZone(selZone);
-                 updateTZGuiElements();
+                 updateZoneControls();
                 
             }
         
@@ -1291,11 +1355,7 @@ void testApp::s2Events(ofxUIEventArgs &e){
                 
                 currentScene->removeTriggerZone(selZone);
                 selZone = max(selZone - 1, 0);
-              
-                if(currentScene->getNumTriggerZones() > 0){
-                    currentZone = currentScene->getTriggerZone(selZone);
-                    updateTZGuiElements();
-                }
+                updateZoneControls();
                 
             }
             
@@ -1309,10 +1369,12 @@ void testApp::s2Events(ofxUIEventArgs &e){
     
         if(name == "sphere"){
             currentZone->setShape(0);
+            updateZoneControls();
         }
         
         if(name == "box"){
             currentZone->setShape(1);
+            updateZoneControls();
         }
         
         if(name == "RADIUS"){
@@ -1362,8 +1424,30 @@ void testApp::s2Events(ofxUIEventArgs &e){
 
 }
 
-void testApp::updateTZGuiElements(){
+void testApp::updateZoneControls(){
+    
+    if(currentScene->getNumTriggerZones() > 0 && displayMode == DT_DM_3D){
+        
+        zoneCanvases[0]->setVisible(true);
+        
+        currentZone = currentScene->getTriggerZone(selZone);
+        if(currentZone->getShape() == 0){
+            zoneCanvases[1]->setVisible(true);
+            zoneCanvases[2]->setVisible(false);
+        }else{
+            zoneCanvases[1]->setVisible(false);
+            zoneCanvases[2]->setVisible(true);
+        }
+        updateTZGuiElements();
+    }else{
+        for(int i = 0; i < 3; i++)zoneCanvases[i]->setVisible(false);
+    }
 
+
+}
+
+void testApp::updateTZGuiElements(){
+    
    sc2TextInput[1]->setTextString(currentZone->getName());
     sc2TextInput[2]->setTextString(currentZone->getSoundFileName());
     
@@ -1386,6 +1470,8 @@ void testApp::updateTZGuiElements(){
 
 void testApp::exit()
 {
+    
+    kinect.close();
 	delete settingsTabBar;
     delete displayTabBar;
     

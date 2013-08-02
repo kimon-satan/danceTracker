@@ -14,7 +14,7 @@ triggerZone::triggerZone(){
 
     shape = TZ_SPHERE;
     center.set(0,0,2);
-    boxDims.set(1,0.5,1);
+    boxDims.set(0.5,0.25,0.5);
     
     radius = 0.25;
     
@@ -24,10 +24,15 @@ triggerZone::triggerZone(){
     mName = "defaultZone_" + ofToString(index, 0);
     mSoundFileName = "none";
     font.loadFont("NewMedia.ttf", 15);
-    
+
     index += 1;
     
     isSelected = false;
+    
+    occupyCount = 0;
+    
+    isLoop = true;
+    isPlayToEnd = false;
     
     
 }
@@ -39,36 +44,46 @@ void triggerZone::draw(){
         
             ofTranslate(center.x, center.y, center.z);
         
-        ofPushMatrix();
-        (isSelected) ? ofSetColor(255,0,0) : ofSetColor(255);
-            ofRectangle r = font.getStringBoundingBox(mName, 0, 0);
-            
-            ofTranslate(- r.width/200, radius + r.height/100, 0);
             ofPushMatrix();
-                ofScale(0.01,-0.01,0.01);
-                font.drawString(mName, 0, 0);
-            ofPopMatrix();
-        ofPopMatrix();
-        
-        if(isEnabled){
-            (isOccupied) ? ofSetColor(255, 0, 0): ofSetColor(255, 255, 0);
-        }else{
-            ofSetColor(60);
-        }
+            (isSelected) ? ofSetColor(255,0,0) : ofSetColor(255);
+                ofRectangle r = font.getStringBoundingBox(mName, 0, 0);
     
-            if(shape == TZ_BOX){
-                ofFill();
+                if(shape == TZ_SPHERE)
+                    ofTranslate(- r.width/200, radius + r.height/100, 0);
+                else
+                    ofTranslate(- r.width/200, boxDims.y/2 + r.height/100, 0);
+    
                 ofPushMatrix();
-                ofScale(boxDims.x, boxDims.y, boxDims.z);
-                ofBox(1);
+                    ofScale(0.01,-0.01,0.01);
+                    font.drawString(mName, 0, 0);
                 ofPopMatrix();
-                
+            ofPopMatrix();
+            
+            if(isEnabled){
+                (isOccupied) ? ofSetColor(255, 0, 0): ofSetColor(255, 255, 0);
             }else{
-                ofNoFill();
-                ofSphere(0,0,0, radius);
+                ofSetColor(60);
             }
+        
+                if(shape == TZ_BOX){
+                  
+                    ofPushMatrix();
+                    ofScale(boxDims.x, boxDims.y, boxDims.z);
+                    ofBox(1);
+                    ofPopMatrix();
+                    
+                }else{
+                    ofNoFill();
+                    ofSphere(0,0,0, radius);
+                }
+
     
         ofPopMatrix();
+    
+    /*if(isOccupied){
+        ofSetColor(0, 255, 255);
+        ofSphere(intersect, 0.05);
+    }*/
     
 }
 
@@ -78,7 +93,6 @@ void triggerZone::checkPoints(vector<ofVec3f> & pc){
     
     vector<ofVec3f>::iterator it;
     
-    isOccupied = false;
     
     if(shape == TZ_SPHERE){
     
@@ -86,6 +100,7 @@ void triggerZone::checkPoints(vector<ofVec3f> & pc){
             
             if(it->distance(center) < radius){
                 
+                intersect.set(*it);
                 isOccupied = true;
                 break;
                 
@@ -118,13 +133,34 @@ void triggerZone::checkPoints(vector<ofVec3f> & pc){
     
     }
     
+    if(isOccupied){
+        
+        if(occupyCount == 0){
+            mSound.stop();
+            mSound.play();
+        }
+        
+        occupyCount +=1;
+        
+    }else{
+        
+        occupyCount = 0;
+        
+    }
+    
+    
+    
 }
 
 bool triggerZone::checkInRange(ofVec3f com, float userHeight){
     
+    isOccupied = false;
+    
     float d = com.distance(center);
     
     bool inRange = (d <= userHeight/2 + radius );
+    
+    if(!inRange)occupyCount = 0;
     
     return inRange;
 
@@ -132,14 +168,18 @@ bool triggerZone::checkInRange(ofVec3f com, float userHeight){
 
 void triggerZone::update(){
 
-    if(isOccupied){
+    if(!isEnabled && mSound.getIsPlaying())mSound.stop();
     
-        if(!mSound.getIsPlaying())mSound.play();
-        
-    }else{
+    if(!isOccupied){
     
-        if(mSound.getIsPlaying())mSound.stop();
+        if(!isPlayToEnd){
+            if(mSound.getIsPlaying())mSound.stop();
+        }else{
+            mSound.setLoop(false);
+        }
     }
+    
+    
 }
 
 
@@ -150,6 +190,7 @@ void triggerZone::reloadSound(){ //when loading settings from file
     mSound.stop();
     mSound.unloadSound();
     mSound.loadSound(s);
+    mSound.setLoop(isLoop);
 }
 
 
@@ -164,6 +205,7 @@ void triggerZone::setSoundFile(string s){
     mSound.stop();
     mSound.unloadSound();
     mSound.loadSound(s);
+    mSound.setLoop(isLoop);
     
 }
 

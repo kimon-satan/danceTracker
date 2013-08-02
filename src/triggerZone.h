@@ -66,6 +66,12 @@ public:
     
     void toggleSelected();
     void setIsSelected(bool b);
+    
+    void setIsLoop(bool b);
+    void getIsLoop();
+    
+    void setIsPlayToEnd(bool b);
+    void getIsPlayToEnd();
 
     
     
@@ -74,6 +80,7 @@ private:
     tzShape shape;
     ofVec3f center;
     ofVec3f boxDims;
+    ofVec3f intersect;
 
     float radius;
     ofVec3f corners[2];
@@ -84,6 +91,8 @@ private:
     
     bool isOccupied, isEnabled, isSelected;
     
+    bool isLoop, isPlayToEnd;
+    int occupyCount;
     
     static int index;
     

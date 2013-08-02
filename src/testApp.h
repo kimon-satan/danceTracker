@@ -55,6 +55,7 @@ class testApp : public ofBaseApp{
 		void dragEvent(ofDragInfo dragInfo);
 		void gotMessage(ofMessage msg);
     
+        void settingsEvents(ofxUIEventArgs &e);
         void dispEvents(ofxUIEventArgs &e);
     
         void s0Events(ofxUIEventArgs &e);
@@ -81,16 +82,19 @@ class testApp : public ofBaseApp{
         void drawFloor();
     
     
+        void updateZoneControls();
         void updateTZGuiElements();
 
         ofxUITabBar * settingsTabBar;
         ofxUITabBar * displayTabBar;
         ofxUICanvas * settingsCanvases[NUM_CANVASES];
         ofxUICanvas * displayCanvases[2];
+        ofxUICanvas * zoneCanvases[3];
     
         ofxKinect 			kinect;
         int					kinectAngle;
-    
+        int numBlankFrames;
+
         dtDisplayMode       displayMode;
     
         bool isViewCom, isViewCScene, isViewSegPoints;
