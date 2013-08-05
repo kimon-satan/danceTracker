@@ -10,7 +10,7 @@
 #define __danceTracker__triggerZone__
 
 #include "ofMain.h"
-
+#include "oscManager.h"
 
 enum tzShape{
 
@@ -25,12 +25,14 @@ class triggerZone{
     
 public:
 
-    triggerZone();
+    triggerZone(ofPtr<oscManager> o);
     
     void draw();
     
     bool checkInRange(ofVec3f com, float userHeight);
     void checkPoints(vector<ofVec3f> & pc);
+    
+    void updateAllAudio();
     
     void update();
     
@@ -38,6 +40,8 @@ public:
     
     
     //getters and setters
+    
+    void deselect();
     
     void setIsEnabled(bool b);
     bool getIsEnabled();
@@ -68,10 +72,18 @@ public:
     void setIsSelected(bool b);
     
     void setIsLoop(bool b);
-    void getIsLoop();
+    bool getIsLoop();
     
     void setIsPlayToEnd(bool b);
-    void getIsPlayToEnd();
+    bool getIsPlayToEnd();
+    
+    bool getIsAudioLoaded();
+    
+    void setSensitivity(float s);
+    float getSensitivity();
+    
+    int getIndex();
+    
 
     
     
@@ -87,12 +99,18 @@ private:
     ofSoundPlayer mSound;
     ofTrueTypeFont font;
     
+    float sensitivity;
+    
     string mName, mSoundFileName;
     
     bool isOccupied, isEnabled, isSelected;
     
     bool isLoop, isPlayToEnd;
     int occupyCount;
+    
+    ofPtr<oscManager> mOsc;
+    
+    int mIndex;
     
     static int index;
     

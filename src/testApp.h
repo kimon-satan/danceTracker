@@ -9,6 +9,7 @@
 #include "scene.h"
 
 #define NUM_CANVASES 3
+#define USE_KINECT false
 
 enum dtDisplayMode{
 
@@ -62,6 +63,7 @@ class testApp : public ofBaseApp{
         void s1Events(ofxUIEventArgs &e);
         void s2Events(ofxUIEventArgs &e);
     
+        void fEvents(ofxUIEventArgs &e);
     
         void exit();
     
@@ -85,15 +87,25 @@ class testApp : public ofBaseApp{
         void updateZoneControls();
         void updateTZGuiElements();
 
+
+    
+        //variables
+    
+        bool isFakeUser;
+    
         ofxUITabBar * settingsTabBar;
         ofxUITabBar * displayTabBar;
         ofxUICanvas * settingsCanvases[NUM_CANVASES];
         ofxUICanvas * displayCanvases[2];
         ofxUICanvas * zoneCanvases[3];
     
+        ofxUICanvas * fakeCanvas;
+    
         ofxKinect 			kinect;
         int					kinectAngle;
         int numBlankFrames;
+    
+        ofPtr<oscManager>  mOsc;
 
         dtDisplayMode       displayMode;
     
@@ -131,6 +143,10 @@ class testApp : public ofBaseApp{
         vector<ofVec3f> curDepths;
         vector<ofVec3f> userPixels;
     
+        ofVec3f fakePos;
+        float fakeRadius;
+        int numFakePoints;
+    
         ofVec3f com;
         float userHeight;
         float cZone; //just a dummy sort out later
@@ -164,9 +180,11 @@ class testApp : public ofBaseApp{
         ofxUIRadio * shapeRad;
         ofxUIDropDownList * sc2DropDowns[2];
     
+        ofxUISlider * sensSlider;
         ofxUISlider * radSlid, * tPosX, * tPosY, * tPosZ;
         ofxUISlider * xDimSlid, * yDimSlid, * zDimSlid;
-        ofxUIToggle * eblTog;
+        ofxUIToggle * eblTog, *loopTog, *playToEndTog;
+    
     
         //displayCanvas 3d
     

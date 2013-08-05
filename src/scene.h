@@ -15,12 +15,14 @@ class scene{
 
     public:
     
-    scene();
+    scene(ofPtr<oscManager> o);
     void draw();
     void update(ofVec3f com, float userHeight,vector<ofVec3f> & pc);
     
     ofPtr<triggerZone> addTriggerZone(int tz);
     void removeTriggerZone(int tz);
+    
+    void deselectAll();
     
     //getters and setters
     
@@ -29,10 +31,13 @@ class scene{
     void setName(string s);
     string getName();
     
+
     
     private:
     
     vector < ofPtr<triggerZone> > triggerZones;
+    ofPtr<oscManager> mOsc;
+    
     
     string mName;
     

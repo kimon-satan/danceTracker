@@ -10,17 +10,7 @@
 
 int scene::index = 0;
 
-scene::scene(){
-
-    /*string fileNames[6] ={"indeterminacy.wav", "menAreMen.wav", "mindCanChange.wav", "noUse.wav", "purposeful.wav", "spring.wav"};
-    
-    for(int i = 0; i < 6; i ++){
-        
-        ofPtr <triggerZone> t = ofPtr<triggerZone>(new triggerZone());
-        triggerZones.push_back(t);
-        t->setSoundFile("sound/" + fileNames[i]);
-        
-    }*/
+scene::scene(ofPtr<oscManager> o): mOsc(o){
     
     mName = "emptyScene_" + ofToString(index,0);
     
@@ -60,12 +50,22 @@ void scene::update(ofVec3f com, float userHeight, vector<ofVec3f> & pc){
 
 }
 
+void scene::deselectAll(){
+
+    vector< ofPtr<triggerZone> >::iterator it;
+    
+    for(it = triggerZones.begin(); it != triggerZones.end(); it++){
+     
+        (*it)->deselect();
+    }
+}
+
 ofPtr<triggerZone> scene::getTriggerZone(int tz){return triggerZones[tz];}
 int scene::getNumTriggerZones(){return triggerZones.size();}
 
 ofPtr<triggerZone> scene::addTriggerZone(int tz){
     
-    ofPtr <triggerZone> t = ofPtr<triggerZone>(new triggerZone());
+    ofPtr <triggerZone> t = ofPtr<triggerZone>(new triggerZone(mOsc));
     if(triggerZones.size() > 0){
         triggerZones.insert(triggerZones.begin() + tz + 1, t);
     }else{
@@ -77,6 +77,7 @@ ofPtr<triggerZone> scene::addTriggerZone(int tz){
 
 void scene::removeTriggerZone(int tz){
 
+    mOsc->removeZone(triggerZones[tz]->getIndex());
     triggerZones.erase(triggerZones.begin() + tz);
     
 }

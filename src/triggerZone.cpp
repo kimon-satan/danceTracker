@@ -10,8 +10,8 @@
 
 int triggerZone::index = 0;
 
-triggerZone::triggerZone(){
-
+triggerZone::triggerZone(ofPtr<oscManager> o) : mOsc(o){
+    
     shape = TZ_SPHERE;
     center.set(0,0,2);
     boxDims.set(0.5,0.25,0.5);
@@ -24,7 +24,8 @@ triggerZone::triggerZone(){
     mName = "defaultZone_" + ofToString(index, 0);
     mSoundFileName = "none";
     font.loadFont("NewMedia.ttf", 15);
-
+    
+    mIndex = index;
     index += 1;
     
     isSelected = false;
@@ -34,7 +35,21 @@ triggerZone::triggerZone(){
     isLoop = true;
     isPlayToEnd = false;
     
+    sensitivity = 1.0;
     
+    //addZone to SC
+    mOsc->addZone(mIndex, mName);
+    
+    updateAllAudio();
+    
+    
+}
+
+void triggerZone::updateAllAudio(){
+    
+    mOsc->updateZoneSettings(mIndex, "loop", isLoop);
+    mOsc->updateZoneSettings(mIndex, "playToEnd", isPlayToEnd);
+
 }
 
 void triggerZone::draw(){
@@ -91,8 +106,12 @@ void triggerZone::draw(){
 void triggerZone::checkPoints(vector<ofVec3f> & pc){
     
     
+    int targetAmt = max(1, (int)(pc.size() * (1-sensitivity)));
+    int inTotal = 0;
+    
     vector<ofVec3f>::iterator it;
     
+    isOccupied = false;
     
     if(shape == TZ_SPHERE){
     
@@ -100,9 +119,13 @@ void triggerZone::checkPoints(vector<ofVec3f> & pc){
             
             if(it->distance(center) < radius){
                 
-                intersect.set(*it);
-                isOccupied = true;
-                break;
+                inTotal += 1;
+                
+                if(inTotal >= targetAmt){
+                    intersect.set(*it);
+                    isOccupied = true;
+                    break;
+                }
                 
             }
         
@@ -118,8 +141,14 @@ void triggerZone::checkPoints(vector<ofVec3f> & pc){
                  
                     if(it->z <= center.z + boxDims.z/2 && it->z >= center.z - boxDims.z/2){
                         
-                        isOccupied = true;
-                        break;
+                        inTotal += 1;
+                        
+                        if(inTotal >= targetAmt){
+                            intersect.set(*it);
+                            isOccupied = true;
+                             break;
+                        }
+                       
                         
                     }
                     
@@ -136,15 +165,20 @@ void triggerZone::checkPoints(vector<ofVec3f> & pc){
     if(isOccupied){
         
         if(occupyCount == 0){
-            mSound.stop();
-            mSound.play();
+           // mSound.stop();
+            mOsc->stopZone(mIndex);
+            //mSound.play();
+            mOsc->playZone(mIndex);
         }
         
         occupyCount +=1;
         
     }else{
         
-        occupyCount = 0;
+        if(occupyCount > 0){
+            mOsc->stopZone(mIndex);
+            occupyCount = 0;
+        }
         
     }
     
@@ -154,13 +188,17 @@ void triggerZone::checkPoints(vector<ofVec3f> & pc){
 
 bool triggerZone::checkInRange(ofVec3f com, float userHeight){
     
-    isOccupied = false;
-    
     float d = com.distance(center);
     
-    bool inRange = (d <= userHeight/2 + radius );
+    bool inRange = (d <= userHeight/2 + radius);
     
-    if(!inRange)occupyCount = 0;
+    if(!inRange && isOccupied){
+        
+        mOsc->stopZone(mIndex);
+        isOccupied = false;
+        occupyCount = 0;
+        
+    }
     
     return inRange;
 
@@ -168,16 +206,7 @@ bool triggerZone::checkInRange(ofVec3f com, float userHeight){
 
 void triggerZone::update(){
 
-    if(!isEnabled && mSound.getIsPlaying())mSound.stop();
-    
-    if(!isOccupied){
-    
-        if(!isPlayToEnd){
-            if(mSound.getIsPlaying())mSound.stop();
-        }else{
-            mSound.setLoop(false);
-        }
-    }
+
     
     
 }
@@ -186,11 +215,13 @@ void triggerZone::update(){
 
 void triggerZone::reloadSound(){ //when loading settings from file
 
+    //no longer used
     string s = "sound/" + mSoundFileName;
     mSound.stop();
     mSound.unloadSound();
     mSound.loadSound(s);
     mSound.setLoop(isLoop);
+    
 }
 
 
@@ -200,19 +231,24 @@ void triggerZone::setSoundFile(string s){
     
     mSoundFileName = s;
     
-    s = "sound/" + s;
+    ofFile f("sound/" + s);
     
-    mSound.stop();
-    mSound.unloadSound();
-    mSound.loadSound(s);
-    mSound.setLoop(isLoop);
+    mOsc->loadZoneSound(mIndex, f.getAbsolutePath());
+    
+    
+    //reloadSound();
     
 }
 
 string triggerZone::getSoundFileName(){return mSoundFileName;}
 
 
-void triggerZone::setIsEnabled(bool b){isEnabled = b;}
+void triggerZone::setIsEnabled(bool b){
+
+    isEnabled = b;
+    if(!isEnabled)mOsc->stopZone(mIndex);
+
+}
 bool triggerZone::getIsEnabled(){return isEnabled;}
 
 ofVec3f triggerZone::getPos(){return center;}
@@ -247,3 +283,42 @@ void triggerZone::setBoxDimsX(float x){boxDims.x = x; }
 void triggerZone::setBoxDimsY(float y){boxDims.y = y; }
 void triggerZone::setBoxDimsZ(float z){boxDims.z = z; }
 
+
+void triggerZone::setIsLoop(bool b){
+
+    mOsc->updateZoneSettings(mIndex, "loop", b);
+    isLoop = b;
+
+
+}
+bool triggerZone::getIsLoop(){return isLoop;}
+
+void triggerZone::setIsPlayToEnd(bool b){
+    
+    mOsc->updateZoneSettings(mIndex, "playToEnd", b);
+    isPlayToEnd = b;
+
+}
+
+bool triggerZone::getIsPlayToEnd(){return isPlayToEnd;}
+
+bool triggerZone::getIsAudioLoaded(){
+   
+    bool b =   ofFile::doesFileExist("sound/" + mSoundFileName);
+    
+    return b;
+
+}
+
+void triggerZone::deselect(){
+    
+    if(isOccupied)mOsc->stopZone(mIndex);
+    isOccupied = false;
+    occupyCount = 0;
+    
+}
+
+void triggerZone::setSensitivity(float s){sensitivity = s;}
+float triggerZone::getSensitivity(){return sensitivity;}
+
+int triggerZone::getIndex(){ return mIndex; }

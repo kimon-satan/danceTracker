@@ -14,17 +14,23 @@ void testApp::setup(){
     
     numBlankFrames = 0;
     
-    kinect.clear();
-    kinect.init(false, false);  // disable infrared/rgb video iamge (faster fps)
-    kinect.setVerbose(true);
-    kinect.open();
-    
+    if(USE_KINECT){
+        kinect.clear();
+        kinect.init(false, false);  // disable infrared/rgb video iamge (faster fps)
+        kinect.setVerbose(true);
+        kinect.open();
+        
 
-    if(kinect.isConnected()){
-        // zero the tilt on startup
-        kinectAngle = 0;
-        kinect.setCameraTiltAngle(kinectAngle);
+        if(kinect.isConnected()){
+            // zero the tilt on startup
+            kinectAngle = 0;
+            kinect.setCameraTiltAngle(kinectAngle);
+            kinect.getCalibration().setClippingInCentimeters(50,1500);
+        }
+        
     }
+    
+    mOsc = ofPtr<oscManager>(new oscManager());
     
     pointCloudRotation = 0;
     
@@ -47,7 +53,10 @@ void testApp::setup(){
     
     userHeight = 1.80;
     
-    kinect.getCalibration().setClippingInCentimeters(50,1500);
+    fakePos.set(0,0,5);
+    fakeRadius = 0.25;
+    numFakePoints = 1000;
+
     
     isViewCom = false;
     isViewCScene = false;
@@ -69,13 +78,14 @@ void testApp::setup(){
 
     cm.disableMouseInput();
     
-    ofPtr<scene>  s = ofPtr<scene>(new scene());
+    ofPtr<scene>  s = ofPtr<scene>(new scene(mOsc));
     allScenes.push_back(s);
     currentScene = s;
     
     setupGui();
     updateZoneControls(); 
     
+    isFakeUser = false;
 
 }
 
@@ -248,7 +258,21 @@ void testApp::setupGui(){
     
     zoneCanvases[0]->addSpacer();
     
+    loopTog = new ofxUIToggle("LOOP", true, 20,20,0,0, OFX_UI_FONT_SMALL);
+    playToEndTog = new ofxUIToggle("PLAY_TO_END", false, 20,20,0,0, OFX_UI_FONT_SMALL);
+    
+    zoneCanvases[0]->addWidgetDown(loopTog);
+    zoneCanvases[0]->addWidgetRight(playToEndTog);
+    
+    zoneCanvases[0]->addSpacer();
+    
     float slw = 200 - OFX_UI_GLOBAL_WIDGET_SPACING - 5;
+    
+    sensSlider = new ofxUISlider("SENSITIVITY", 0.75, 1.0, 1.0, slw, 10);
+    
+    zoneCanvases[0]->addWidgetDown(sensSlider);
+    
+    zoneCanvases[0]->addSpacer();
     
     tPosX = new ofxUISlider("T_POS_X", -5, 5, 0.0, slw, 10);
     tPosY = new ofxUISlider("T_POS_Y", -2, 2, 0.0, slw, 10);
@@ -257,6 +281,7 @@ void testApp::setupGui(){
     zoneCanvases[0]->addWidgetDown(tPosX);
     zoneCanvases[0]->addWidgetRight(tPosY);
     zoneCanvases[0]->addWidgetRight(tPosZ);
+    
     
     ofAddListener(zoneCanvases[0]->newGUIEvent,this,&testApp::s2Events);
     
@@ -326,8 +351,17 @@ void testApp::setupGui(){
     displayTabBar->addCanvas(displayCanvases[1]);
   
     
+    fakeCanvas = new ofxUICanvas(ofGetWidth() - tabBarWidth, 500, tabBarWidth, 125);
+    fakeCanvas->setColorFill(ofxUIColor(200));
+    fakeCanvas->setColorFillHighlight(ofxUIColor(255));
+    fakeCanvas->setColorBack(ofxUIColor(20, 20, 20, 150));
     
-
+    fakeCanvas->addSlider("F_POS_X", -5, 5, fakePos.x);
+    fakeCanvas->addSlider("F_POS_Y", -2, 2, fakePos.y);
+    fakeCanvas->addSlider("F_POS_Z", -5, 5, fakePos.z);
+    
+    ofAddListener(fakeCanvas->newGUIEvent,this,&testApp::fEvents);
+    fakeCanvas->setVisible(false);
    
 }
 
@@ -383,6 +417,7 @@ void testApp::saveSettings(string fn){
                         
                             XML.addValue("NAME", z->getName());
                             
+                            
                             XML.addValue("POS_X", z->getPos().x);
                             XML.addValue("POS_Y", z->getPos().y);
                             XML.addValue("POS_Z", z->getPos().z);
@@ -394,7 +429,10 @@ void testApp::saveSettings(string fn){
                             XML.addValue("DIM_Z", z->getBoxDims().z);
                             XML.addValue("RADIUS", z->getRadius());
                             XML.addValue("SOUNDFILE", z->getSoundFileName());
+                            XML.addValue("IS_LOOP", z->getIsLoop());
+                            XML.addValue("IS_PLAY_TO_END", z->getIsPlayToEnd());
                             XML.addValue("ENABLED", z->getIsEnabled());
+                            XML.addValue("SENSITIVITY", z->getSensitivity());
                         
                             //zone tag
                             XML.popTag();
@@ -475,7 +513,7 @@ void testApp::loadSettings(string fn){
                 
                 if(XML.pushTag("SCENE", sn)){
                     
-                    ofPtr<scene> nScene = ofPtr<scene>(new scene());
+                    ofPtr<scene> nScene = ofPtr<scene>(new scene(mOsc));
                     
                     nScene->setName(XML.getValue("NAME", ""));
                     
@@ -497,7 +535,10 @@ void testApp::loadSettings(string fn){
                             z->setBoxDimsZ( XML.getValue("DIM_Z", 0.5));
                             z->setRadius(XML.getValue("RADIUS",1.0));
                             z->setSoundFile(XML.getValue("SOUNDFILE", ""));
+                            z->setIsPlayToEnd(XML.getValue("IS_PLAY_TO_END", false));
+                            z->setIsLoop(XML.getValue("IS_LOOP", true));
                             z->setIsEnabled(XML.getValue("ENABLED", false));
+                            z->setSensitivity(XML.getValue("SENSITIVITY", 1.0));
                             
                             //zone tag
                             XML.popTag();
@@ -558,9 +599,14 @@ void testApp::loadSettings(string fn){
 //--------------------------------------------------------------
 void testApp::update(){
     
-    kinect.update();
+    mOsc->update();
     
-    numBlankFrames += 1;
+    if(USE_KINECT){
+        
+        kinect.update();
+        numBlankFrames += 1;
+        
+    }
     
     if(kinect.isFrameNew() || numBlankFrames == 10){
         
@@ -597,7 +643,24 @@ void testApp::update(){
             }
         }
        
+    }else if(isFakeUser){
+        
+        userPixels.clear();
+        
+        for(int i = 0; i < numFakePoints; i ++){
+            ofVec3f p(0,ofRandom(-fakeRadius, fakeRadius),0);
+            p.rotate(ofRandom(0,360), ofRandom(0,360), ofRandom(0,360));
+            p += fakePos;
+            userPixels.push_back(p);
+        }
+        
+        
+        currentScene->update(fakePos, fakeRadius * 3, userPixels);
+    
+    
     }
+    
+    
 
 
     
@@ -829,7 +892,7 @@ void testApp::draw(){
         
         
         if(isViewSegPoints){
-            if(isUser)drawUserPointCloud();
+            if(isUser || isFakeUser)drawUserPointCloud();
         }else{
             drawScenePointCloud();
         }
@@ -957,7 +1020,12 @@ void testApp::keyPressed(int key){
         case OF_KEY_RETURN:
             displayTabBar->toggleVisible();
             isDisplayGui = !isDisplayGui;
-            break;
+        break;
+            
+        case 'F':
+            isFakeUser = !isFakeUser;
+            fakeCanvas->setVisible(isFakeUser);
+        break;
         
                      
     }
@@ -1263,7 +1331,14 @@ void testApp::s2Events(ofxUIEventArgs &e){
                 }
                 
                 if(name == "SOUNDFILE"){
+                    
                     currentZone->setSoundFile(t->getTextString());
+                    if(currentZone->getIsAudioLoaded())
+                        currentZone->setIsEnabled(currentZone->getIsEnabled());
+                    else
+                        currentZone->setIsEnabled(false);
+                    
+                    updateZoneControls();
                 }
             }
             
@@ -1278,6 +1353,7 @@ void testApp::s2Events(ofxUIEventArgs &e){
     
         if(name == "SCENE_PLUS"){
             
+            currentScene->deselectAll();
             selScene = min(selScene + 1, (int)allScenes.size() - 1);
             currentScene = allScenes[selScene];
             sc2TextInput[0]->setTextString(currentScene->getName());
@@ -1288,6 +1364,7 @@ void testApp::s2Events(ofxUIEventArgs &e){
         
         if(name == "SCENE_MINUS"){
             
+             currentScene->deselectAll();
             selScene = max(selScene - 1, 0);
             currentScene = allScenes[selScene];
             sc2TextInput[0]->setTextString(currentScene->getName());
@@ -1298,7 +1375,8 @@ void testApp::s2Events(ofxUIEventArgs &e){
         
         if(name == "CREATE_SCENE"){
             
-            ofPtr<scene> t = ofPtr<scene>(new scene());
+            currentScene->deselectAll();
+            ofPtr<scene> t = ofPtr<scene>(new scene(mOsc));
             allScenes.insert(allScenes.begin() + selScene + 1, t);
             selScene = min(selScene + 1, (int)allScenes.size() - 1);
             currentScene = t;
@@ -1355,6 +1433,7 @@ void testApp::s2Events(ofxUIEventArgs &e){
                 
                 currentScene->removeTriggerZone(selZone);
                 selZone = max(selZone - 1, 0);
+                if(currentScene->getNumTriggerZones() > 0)currentZone = currentScene->getTriggerZone(selZone);
                 updateZoneControls();
                 
             }
@@ -1415,7 +1494,26 @@ void testApp::s2Events(ofxUIEventArgs &e){
         
         if(name == "ENABLED"){
             ofxUIToggle *tog = (ofxUIToggle *) e.widget;
-            currentZone->setIsEnabled(tog->getValue());
+            if(currentZone->getIsAudioLoaded()){
+                currentZone->setIsEnabled(tog->getValue());
+            }else{
+                tog->setValue(false);
+            }
+        }
+        
+        if(name == "LOOP"){
+            ofxUIToggle *tog = (ofxUIToggle *) e.widget;
+            currentZone->setIsLoop(tog->getValue());
+        }
+        
+        if(name == "PLAY_TO_END"){
+            ofxUIToggle *tog = (ofxUIToggle *) e.widget;
+            currentZone->setIsPlayToEnd(tog->getValue());        
+        }
+        
+        if(name == "SENSITIVITY"){
+            ofxUISlider *slider = (ofxUISlider *) e.widget;
+            currentZone->setSensitivity(slider->getScaledValue());
         }
 
         
@@ -1426,24 +1524,42 @@ void testApp::s2Events(ofxUIEventArgs &e){
 
 void testApp::updateZoneControls(){
     
-    if(currentScene->getNumTriggerZones() > 0 && displayMode == DT_DM_3D){
+    if(currentScene->getNumTriggerZones() > 0){
         
-        zoneCanvases[0]->setVisible(true);
+        if(displayMode == DT_DM_3D){
         
-        currentZone = currentScene->getTriggerZone(selZone);
-        if(currentZone->getShape() == 0){
-            zoneCanvases[1]->setVisible(true);
-            zoneCanvases[2]->setVisible(false);
-        }else{
-            zoneCanvases[1]->setVisible(false);
-            zoneCanvases[2]->setVisible(true);
+            zoneCanvases[0]->setVisible(true);
+            
+            currentZone = currentScene->getTriggerZone(selZone);
+            if(currentZone->getShape() == 0){
+                zoneCanvases[1]->setVisible(true);
+                zoneCanvases[2]->setVisible(false);
+            }else{
+                zoneCanvases[1]->setVisible(false);
+                zoneCanvases[2]->setVisible(true);
+            }
         }
+        
         updateTZGuiElements();
+        
     }else{
         for(int i = 0; i < 3; i++)zoneCanvases[i]->setVisible(false);
+        sc2TextInput[1]->setTextString("none");
     }
 
 
+}
+
+void testApp::fEvents(ofxUIEventArgs &e){
+
+    string name = e.widget->getName();
+    ofxUISlider *slider = (ofxUISlider *) e.widget;
+    
+    if(name == "F_POS_X")fakePos.x = slider->getScaledValue();
+    if(name == "F_POS_Y")fakePos.y = slider->getScaledValue();
+    if(name == "F_POS_Z")fakePos.z = slider->getScaledValue();
+
+        
 }
 
 void testApp::updateTZGuiElements(){
@@ -1458,25 +1574,31 @@ void testApp::updateTZGuiElements(){
     
     radSlid->setValue(currentZone->getRadius());
     eblTog->setValue(currentZone->getIsEnabled());
+    loopTog->setValue(currentZone->getIsLoop());
+    playToEndTog->setValue(currentZone->getIsPlayToEnd());
     
     xDimSlid->setValue(currentZone->getBoxDims().x);
     yDimSlid->setValue(currentZone->getBoxDims().y);
     zDimSlid->setValue(currentZone->getBoxDims().z);
     (currentZone->getShape() == 0) ? shapeRad->activateToggle("sphere") : shapeRad->activateToggle("box");
-    
-    
+    sensSlider->setValue(currentZone->getSensitivity());
     currentZone->setIsSelected(true);
+    
+    
 }
 
-void testApp::exit()
-{
+
+void testApp::exit(){
     
     kinect.close();
 	delete settingsTabBar;
     delete displayTabBar;
     
     for(int i = 0; i < NUM_CANVASES; i ++)delete settingsCanvases[i];
-    for(int i = 0; i < 2; i ++)delete displayCanvases[i];
+    for(int i = 0; i < 2; i++)delete displayCanvases[i];
+    for(int i = 0; i < 3; i++)delete zoneCanvases[i];
+    delete fakeCanvas;
+        
 
 }
 
