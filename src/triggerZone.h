@@ -11,6 +11,7 @@
 
 #include "ofMain.h"
 #include "oscManager.h"
+#include "synthDictionary.h"
 
 enum tzShape{
 
@@ -27,7 +28,7 @@ public:
 
     triggerZone(ofPtr<oscManager> o);
     
-    void draw();
+    void draw(ofVec3f camPos);
     
     bool checkInRange(ofVec3f com, float userHeight);
     void checkPoints(vector<ofVec3f> & pc);
@@ -82,6 +83,12 @@ public:
     void setSensitivity(float s);
     float getSensitivity();
     
+    void setMinReplaySecs(float s);
+    float getMinReplaySecs();
+    
+    int getSynthType();
+    void setSynthType(int i);
+    
     int getIndex();
     
 
@@ -89,26 +96,34 @@ public:
     
 private:
     
+    void updateSynthParams();
+    
     tzShape shape;
     ofVec3f center;
     ofVec3f boxDims;
-    ofVec3f intersect;
 
     float radius;
     ofVec3f corners[2];
     ofSoundPlayer mSound;
     ofTrueTypeFont font;
     
-    float sensitivity;
+    synthType synth;
+    vector<synthParam> synthParams;
+    
+    float sensitivity, minReplaySecs;
     
     string mName, mSoundFileName;
     
     bool isOccupied, isEnabled, isSelected;
     
     bool isLoop, isPlayToEnd;
-    int occupyCount;
+    int occupyCount, emptyCount;
     
     ofPtr<oscManager> mOsc;
+    
+    ofVec3f mCom;
+    ofVec3f iCom;
+    int numUp, inTotal;
     
     int mIndex;
     

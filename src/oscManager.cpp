@@ -166,9 +166,19 @@ void oscManager::updateZoneSettings(int index, string item, float value){
     ofxOscMessage m;
     m.setAddress("/updateZoneSettings");
     m.addIntArg(index);
-    m.addStringArg("item");
+    m.addStringArg(item);
     m.addFloatArg(value);
     
+    sender.sendMessage(m);
+    
+}
+
+void oscManager::updateSynth(int index){
+
+    ofxOscMessage m;
+    m.setAddress("/updateSynth");
+    m.addIntArg(index);
+  
     sender.sendMessage(m);
     
 }

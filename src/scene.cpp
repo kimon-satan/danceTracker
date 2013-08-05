@@ -19,13 +19,13 @@ scene::scene(ofPtr<oscManager> o): mOsc(o){
 }
 
 
-void scene::draw(){
+void scene::draw(ofVec3f camPos){
 
     vector< ofPtr<triggerZone> >::iterator it;
     
     for(it = triggerZones.begin(); it != triggerZones.end(); it++){
     
-        (*it)->draw();
+        (*it)->draw(camPos);
         
     }
     

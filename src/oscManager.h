@@ -12,6 +12,7 @@
 #include "ofMain.h"
 #include "ofxOsc.h"
 
+
 #define SCPORT 57120
 #define RCPORT 71717
 
@@ -33,6 +34,7 @@ class oscManager{
     void updateZoneSettings(int index, string item, float value);
     void updateZoneSettings(int index, string item, int value);
     
+    void updateSynth(int index);
     
     void printMessage(ofxOscMessage & m);
     

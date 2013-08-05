@@ -16,7 +16,7 @@ class scene{
     public:
     
     scene(ofPtr<oscManager> o);
-    void draw();
+    void draw(ofVec3f camPos);
     void update(ofVec3f com, float userHeight,vector<ofVec3f> & pc);
     
     ofPtr<triggerZone> addTriggerZone(int tz);

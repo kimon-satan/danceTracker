@@ -8,6 +8,7 @@
 //--------------------------------------------------------------
 void testApp::setup(){
     
+    
     ofSetFrameRate(60);
     ofEnableSmoothing();
     ofSetCircleResolution(60);
@@ -66,7 +67,7 @@ void testApp::setup(){
     cm.setPosition(0, 0, 1000);
     cm.setTarget(ofVec3f(0, 0, 500));
     
-    ambientLight.setAmbientColor(ofColor(100));
+    ambientLight.setAmbientColor(ofColor(160));
 
     topLight.setScale(0.01);
     topLight.setSpotlight();
@@ -234,6 +235,18 @@ void testApp::setupGui(){
     
     //zone c0 -------------------------------------------
     
+    float slw = 200 - OFX_UI_GLOBAL_WIDGET_SPACING - 5;
+    
+    tPosX = new ofxUISlider("T_POS_X", -5, 5, 0.0, slw, 10);
+    tPosY = new ofxUISlider("T_POS_Y", -2, 2, 0.0, slw, 10);
+    tPosZ = new ofxUISlider("T_POS_Z", 0, 10, 0.0, slw, 10);
+    
+    zoneCanvases[0]->addWidgetDown(tPosX);
+    zoneCanvases[0]->addWidgetRight(tPosY);
+    zoneCanvases[0]->addWidgetRight(tPosZ);
+    
+     zoneCanvases[0]->addSpacer();
+    
     vector<string> st;
     st.push_back("sphere");
     st.push_back("box");
@@ -264,24 +277,30 @@ void testApp::setupGui(){
     zoneCanvases[0]->addWidgetDown(loopTog);
     zoneCanvases[0]->addWidgetRight(playToEndTog);
     
+    // a bit crap
+    //sensSlider = new ofxUISlider("SENSITIVITY", 0.75, 1.0, 1.0, slw, 10);
+    //zoneCanvases[0]->addWidgetRight(sensSlider);
+    
+    repSlider = new ofxUISlider("MIN_REPLAY", 0, 5.0, 0.05, slw, 10);
+    
+    zoneCanvases[0]->addWidgetRight(repSlider);
+    
     zoneCanvases[0]->addSpacer();
     
-    float slw = 200 - OFX_UI_GLOBAL_WIDGET_SPACING - 5;
+    synthTypeDisp = new ofxUILabel(0,0,200, "SYNTH TYPE: ", OFX_UI_FONT_SMALL);
+    zoneCanvases[0]->addWidgetDown(synthTypeDisp);
     
-    sensSlider = new ofxUISlider("SENSITIVITY", 0.75, 1.0, 1.0, slw, 10);
+    ofxUILabelButton * stb = (ofxUILabelButton *)zoneCanvases[0]->addWidgetRight(new ofxUILabelButton("ST_MINUS", true, 25));
+    ofxUILabelButton * stc = (ofxUILabelButton *)zoneCanvases[0]->addWidgetRight(new ofxUILabelButton("ST_PLUS", true, 25));
     
-    zoneCanvases[0]->addWidgetDown(sensSlider);
+    stb->setLabelText("-");
+    stc->setLabelText("+");
     
-    zoneCanvases[0]->addSpacer();
+    zoneCanvases[0]->addWidgetRight(new ofxUISpacer(1,20));
     
-    tPosX = new ofxUISlider("T_POS_X", -5, 5, 0.0, slw, 10);
-    tPosY = new ofxUISlider("T_POS_Y", -2, 2, 0.0, slw, 10);
-    tPosZ = new ofxUISlider("T_POS_Z", 0, 10, 0.0, slw, 10);
+    ofxUIToggle * vParams = new ofxUIToggle("EDIT_SYNTH_PARAMS", false, 20,20,0,0, OFX_UI_FONT_SMALL);
     
-    zoneCanvases[0]->addWidgetDown(tPosX);
-    zoneCanvases[0]->addWidgetRight(tPosY);
-    zoneCanvases[0]->addWidgetRight(tPosZ);
-    
+    zoneCanvases[0]->addWidgetRight(vParams);
     
     ofAddListener(zoneCanvases[0]->newGUIEvent,this,&testApp::s2Events);
     
@@ -358,10 +377,21 @@ void testApp::setupGui(){
     
     fakeCanvas->addSlider("F_POS_X", -5, 5, fakePos.x);
     fakeCanvas->addSlider("F_POS_Y", -2, 2, fakePos.y);
-    fakeCanvas->addSlider("F_POS_Z", -5, 5, fakePos.z);
+    fakeCanvas->addSlider("F_POS_Z", 0, 10, fakePos.z);
     
     ofAddListener(fakeCanvas->newGUIEvent,this,&testApp::fEvents);
     fakeCanvas->setVisible(false);
+    
+    
+    synthCanvas = new ofxUIScrollableCanvas(ofGetWidth()/2 - tabBarWidth * 0.75 , 0, tabBarWidth * 1.5, 200);
+    synthCanvas->setColorFill(ofxUIColor(200));
+    synthCanvas->setColorFillHighlight(ofxUIColor(255));
+    synthCanvas->setColorBack(ofxUIColor(20, 20, 20, 150));
+    
+    synthCanvas->setVisible(false);
+    synthCanvas->setSnapping(false);
+    
+   
    
 }
 
@@ -433,6 +463,7 @@ void testApp::saveSettings(string fn){
                             XML.addValue("IS_PLAY_TO_END", z->getIsPlayToEnd());
                             XML.addValue("ENABLED", z->getIsEnabled());
                             XML.addValue("SENSITIVITY", z->getSensitivity());
+                            XML.addValue("MIN_REPLAY", z->getMinReplaySecs());
                         
                             //zone tag
                             XML.popTag();
@@ -539,6 +570,7 @@ void testApp::loadSettings(string fn){
                             z->setIsLoop(XML.getValue("IS_LOOP", true));
                             z->setIsEnabled(XML.getValue("ENABLED", false));
                             z->setSensitivity(XML.getValue("SENSITIVITY", 1.0));
+                            z->setMinReplaySecs(XML.getValue("MIN_REPLAY", 0.0));
                             
                             //zone tag
                             XML.popTag();
@@ -850,6 +882,7 @@ void testApp::analyseUser(){
 void testApp::draw(){
     
     ofSetColor(0);
+    ofBackground(120);
     
     ofDrawBitmapString("FPS: " +  ofToString(ofGetFrameRate(), 2), 20,20);
 
@@ -865,9 +898,9 @@ void testApp::draw(){
         
         ofNoFill();
        
-        topLight.draw();
-        ambientLight.enable();
-        topLight.enable();
+       // topLight.draw();
+       // ambientLight.enable();
+       // topLight.enable();
         
         ofPushMatrix();
             ofScale(0.05, 0.05, 0.05);
@@ -905,7 +938,8 @@ void testApp::draw(){
         
         
         if(isViewCScene){
-            currentScene->draw();
+            
+            currentScene->draw(cm.getPosition());
         }
         
         cm.end();
@@ -1456,6 +1490,16 @@ void testApp::s2Events(ofxUIEventArgs &e){
             updateZoneControls();
         }
         
+        if(name == "EDIT_SYNTH_PARAMS"){
+            
+            //make synth panel visible and populate
+            if(!synthCanvas->isVisible()){
+                populateSynthCanvas();
+            }
+            synthCanvas->toggleVisible();
+            
+        }
+        
         if(name == "RADIUS"){
             ofxUISlider *slider = (ofxUISlider *) e.widget;
             currentZone->setRadius(slider->getScaledValue());
@@ -1514,6 +1558,32 @@ void testApp::s2Events(ofxUIEventArgs &e){
         if(name == "SENSITIVITY"){
             ofxUISlider *slider = (ofxUISlider *) e.widget;
             currentZone->setSensitivity(slider->getScaledValue());
+        }
+        
+        if(name == "MIN_REPLAY"){
+            ofxUISlider *slider = (ofxUISlider *) e.widget;
+            currentZone->setMinReplaySecs(slider->getScaledValue());
+        }
+        
+        
+        if(isMouseDown){
+        
+            //buttons must go in here
+            
+            if(name == "ST_MINUS"){
+                
+                int i = max(0, currentZone->getSynthType() - 1);
+                currentZone->setSynthType(i);
+                updateZoneControls();
+            }
+            
+            if(name == "ST_PLUS"){
+                
+                int i = min(ST_COUNT - 1, currentZone->getSynthType() + 1);
+                currentZone->setSynthType(i);
+                updateZoneControls();
+                
+            }
         }
 
         
@@ -1581,10 +1651,40 @@ void testApp::updateTZGuiElements(){
     yDimSlid->setValue(currentZone->getBoxDims().y);
     zDimSlid->setValue(currentZone->getBoxDims().z);
     (currentZone->getShape() == 0) ? shapeRad->activateToggle("sphere") : shapeRad->activateToggle("box");
-    sensSlider->setValue(currentZone->getSensitivity());
+
+    //sensSlider->setValue(currentZone->getSensitivity());
+    repSlider->setValue(currentZone->getMinReplaySecs());
+    synthTypeDisp->setLabel("SYNTH_TYPE: " + synthDictionary::getSynthString(currentZone->getSynthType()));
     currentZone->setIsSelected(true);
     
     
+}
+
+void testApp::populateSynthCanvas(){
+
+    delete synthCanvas;
+    
+    synthCanvas = new ofxUIScrollableCanvas(ofGetWidth()/2 - tabBarWidth * 0.75 , 0, tabBarWidth * 1.5, 200);
+    synthCanvas->setColorFill(ofxUIColor(200));
+    synthCanvas->setColorFillHighlight(ofxUIColor(255));
+    synthCanvas->setColorBack(ofxUIColor(20, 20, 20, 150));
+    
+    synthCanvas->setVisible(false);
+    synthCanvas->setSnapping(false);
+    
+    vector<synthParam> sp =  synthDictionary::getSynthParams(currentZone->getSynthType());
+    
+    for(int i = 0; i < sp.size(); i ++){
+        
+        synthCanvas->addLabel(sp[i].name);
+        synthCanvas->addSlider(sp[i].name + "_abs_val" , sp[i].sl_min, sp[i].sl_max, sp[i].abs_val);
+        synthCanvas->addSlider(sp[i].name + "_min_val" , sp[i].sl_min, sp[i].sl_max, sp[i].min_val);
+        synthCanvas->addSlider(sp[i].name + "_max_val" , sp[i].sl_min, sp[i].sl_max, sp[i].max_val);
+        
+        synthCanvas->addSpacer();
+    
+    }
+
 }
 
 
@@ -1597,7 +1697,8 @@ void testApp::exit(){
     for(int i = 0; i < NUM_CANVASES; i ++)delete settingsCanvases[i];
     for(int i = 0; i < 2; i++)delete displayCanvases[i];
     for(int i = 0; i < 3; i++)delete zoneCanvases[i];
-    delete fakeCanvas;
+    
+    delete synthCanvas;
         
 
 }

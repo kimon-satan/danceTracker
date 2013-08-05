@@ -31,14 +31,20 @@ triggerZone::triggerZone(ofPtr<oscManager> o) : mOsc(o){
     isSelected = false;
     
     occupyCount = 0;
+    emptyCount = 0;
     
     isLoop = true;
     isPlayToEnd = false;
     
     sensitivity = 1.0;
+    minReplaySecs = 0.0;
     
     //addZone to SC
     mOsc->addZone(mIndex, mName);
+    
+    synth = ST_SIMPLE;
+    
+    synthParams = synthDictionary::getSynthParams(synth);
     
     updateAllAudio();
     
@@ -49,10 +55,12 @@ void triggerZone::updateAllAudio(){
     
     mOsc->updateZoneSettings(mIndex, "loop", isLoop);
     mOsc->updateZoneSettings(mIndex, "playToEnd", isPlayToEnd);
+    mOsc->updateZoneSettings(mIndex, "synthType", (int)synth);
+    updateSynthParams();
 
 }
 
-void triggerZone::draw(){
+void triggerZone::draw(ofVec3f camPos){
     
     
         ofPushMatrix();
@@ -60,32 +68,34 @@ void triggerZone::draw(){
             ofTranslate(center.x, center.y, center.z);
         
             ofPushMatrix();
-            (isSelected) ? ofSetColor(255,0,0) : ofSetColor(255);
+            (isSelected) ? ofSetColor(0,255,255) : ofSetColor(170);
                 ofRectangle r = font.getStringBoundingBox(mName, 0, 0);
     
-                if(shape == TZ_SPHERE)
-                    ofTranslate(- r.width/200, radius + r.height/100, 0);
-                else
-                    ofTranslate(- r.width/200, boxDims.y/2 + r.height/100, 0);
+            if(shape == TZ_SPHERE)
+                ofTranslate(0, radius * 1.5, 0);
+            else
+                ofTranslate(0, boxDims.y/2 * 1.5, 0);
     
-                ofPushMatrix();
-                    ofScale(0.01,-0.01,0.01);
-                    font.drawString(mName, 0, 0);
-                ofPopMatrix();
+                ofSetDrawBitmapMode(OF_BITMAPMODE_MODEL_BILLBOARD);
+                ofDrawBitmapString(mName, 0,0,0);
+
             ofPopMatrix();
             
             if(isEnabled){
-                (isOccupied) ? ofSetColor(255, 0, 0): ofSetColor(255, 255, 0);
+                (isOccupied) ? ofSetColor(255, 0, 0): ofSetColor(0, 150, 0);
             }else{
                 ofSetColor(60);
             }
         
                 if(shape == TZ_BOX){
                   
+                    ofPushStyle();
+                    ofSetLineWidth(3);
                     ofPushMatrix();
                     ofScale(boxDims.x, boxDims.y, boxDims.z);
                     ofBox(1);
                     ofPopMatrix();
+                    ofPopStyle();
                     
                 }else{
                     ofNoFill();
@@ -106,12 +116,15 @@ void triggerZone::draw(){
 void triggerZone::checkPoints(vector<ofVec3f> & pc){
     
     
+    numUp = pc.size();
     int targetAmt = max(1, (int)(pc.size() * (1-sensitivity)));
-    int inTotal = 0;
+    inTotal = 0;
     
     vector<ofVec3f>::iterator it;
     
     isOccupied = false;
+    
+    iCom.set(0,0,0);
     
     if(shape == TZ_SPHERE){
     
@@ -121,10 +134,10 @@ void triggerZone::checkPoints(vector<ofVec3f> & pc){
                 
                 inTotal += 1;
                 
+                iCom += (*it);
+                
                 if(inTotal >= targetAmt){
-                    intersect.set(*it);
                     isOccupied = true;
-                    break;
                 }
                 
             }
@@ -143,10 +156,10 @@ void triggerZone::checkPoints(vector<ofVec3f> & pc){
                         
                         inTotal += 1;
                         
+                        iCom += (*it);
+                        
                         if(inTotal >= targetAmt){
-                            intersect.set(*it);
                             isOccupied = true;
-                             break;
                         }
                        
                         
@@ -164,14 +177,22 @@ void triggerZone::checkPoints(vector<ofVec3f> & pc){
     
     if(isOccupied){
         
-        if(occupyCount == 0){
-           // mSound.stop();
-            mOsc->stopZone(mIndex);
-            //mSound.play();
-            mOsc->playZone(mIndex);
-        }
+        iCom /= inTotal;
         
-        occupyCount +=1;
+        if(occupyCount == 0){
+           
+            if((float)emptyCount/60.0 >= minReplaySecs){
+                // mSound.stop();
+                mOsc->stopZone(mIndex);
+                //mSound.play();
+                mOsc->playZone(mIndex);
+                emptyCount = 0;
+                occupyCount +=1;
+            }else{
+                emptyCount += 1;
+            }
+           
+        }
         
     }else{
         
@@ -187,10 +208,39 @@ void triggerZone::checkPoints(vector<ofVec3f> & pc){
 }
 
 bool triggerZone::checkInRange(ofVec3f com, float userHeight){
+   
     
-    float d = com.distance(center);
+    bool inRange;
+
+    mCom.set(com);
     
-    bool inRange = (d <= userHeight/2 + radius);
+    if(shape == TZ_SPHERE){
+        
+        float d = com.distance(center);
+        inRange = (d <= userHeight/2 + radius);
+        
+    }else{
+    
+        ofVec3f d(boxDims);
+        d += userHeight/2;
+        
+        if(com.x <= center.x + d.x/2 && com.x >= center.x - d.x/2){
+            
+            if(com.y <= center.y + d.y/2 && com.y >= center.y - d.y/2){
+                
+                if(com.z <= center.z + d.z/2 && com.z >= center.z - d.z/2){
+                    
+                    inRange = true;
+                    
+                }
+                
+            }
+            
+            
+        }
+
+    }
+    
     
     if(!inRange && isOccupied){
         
@@ -204,9 +254,102 @@ bool triggerZone::checkInRange(ofVec3f com, float userHeight){
 
 }
 
+void triggerZone::updateSynthParams(){
+
+    ofVec3f iLocal(iCom - center);
+    
+    if(shape == TZ_SPHERE){
+        
+        iLocal /= radius; //should be - 1 to + 1
+        
+    }else{
+        
+        iLocal.x /= (boxDims.x/2); //should be - 1 to + 1
+        iLocal.y /= (boxDims.y/2);
+        iLocal.z /= (boxDims.z/2);
+    }
+    
+    
+    for(int i = 0; i < synthParams.size(); i ++){
+        
+       
+        
+        float mul = 0.0;
+        
+        switch(synthParams[i].map){
+                
+            case MT_FIXED:
+                mul = 1;
+                break;
+                
+            case MT_GLOBAL_CENTER:
+                mul = center.distance(ofVec3f(0,0,5))/8.8317;
+                break;
+            case MT_GLOBAL_X:
+                mul =  (center.x + 5.0)/10.0;
+                break;
+                
+            case MT_GLOBAL_Y:
+                mul = (center.y + 1.0)/2.0;
+                break;
+                
+            case MT_GLOBAL_Z:
+                mul = center.z/10.0;
+                break;
+                
+            case MT_LOCAL_X:
+                mul = (iLocal.x + 1)/2;
+                break;
+                
+            case MT_LOCAL_Y:
+                mul = (iLocal.y + 1)/2;
+                break;
+                
+            case MT_LOCAL_Z:
+                mul = (iLocal.z + 1)/2;
+                break;
+                
+            case MT_LOCAL_CENTER:
+                mul = iLocal.distance(ofVec3f(0,0,0))/3.4641;
+                break;
+                
+            case MT_NUM_POINTS:
+                mul = (float)(inTotal/numUp);
+                break;
+                
+                
+        }
+        
+        mul = max((float)0.0, min((float)1.0, mul));
+        
+        
+        if(synthParams[i].map == MT_FIXED){
+            
+            mOsc->updateZoneSettings(mIndex, synthParams[i].name, synthParams[i].abs_val);
+            
+        }else{
+            
+            float val = mul * (synthParams[i].max_val - synthParams[i].min_val) + synthParams[i].min_val;
+            mOsc->updateZoneSettings(mIndex, synthParams[i].name, val);
+            
+        }
+        
+    }
+
+    
+    
+}
+
 void triggerZone::update(){
 
-
+    if(!isOccupied){
+      emptyCount += 1;
+    }else{
+        
+        updateSynthParams();
+        mOsc->updateSynth(mIndex);
+        
+    }
     
     
 }
@@ -257,9 +400,29 @@ float triggerZone::getRadius(){return radius;}
 
 void triggerZone::setRadius(float r){radius = r;}
 
-void triggerZone::setPosX(float x){center.x = x;}
+void triggerZone::setPosX(float x){
+
+    center.x = x;
+   /* if(!isMapPanToZ){
+        float pan = x/5;
+        pan = min(1.0, max(-1.0, pan - 1.0));
+        pan *= 0.75;
+        mOsc->updateZoneSettings(mIndex, "pan", pan);
+    }*/
+
+}
 void triggerZone::setPosY(float y){center.y = y;}
-void triggerZone::setPosZ(float z){center.z = z;}
+void triggerZone::setPosZ(float z){
+    
+    center.z = z;
+ /*   if(isMapPanToZ){
+        float pan = z/10;
+        pan = min(1.0, max(-1.0, pan - 1.0));
+        pan *= 0.75;
+        mOsc->updateZoneSettings(mIndex, "pan", pan);
+    }*/
+
+}
 
 void triggerZone::setShape(int t){shape = tzShape(t);}
 int triggerZone::getShape(){return (int)shape;}
@@ -321,4 +484,18 @@ void triggerZone::deselect(){
 void triggerZone::setSensitivity(float s){sensitivity = s;}
 float triggerZone::getSensitivity(){return sensitivity;}
 
+void triggerZone::setMinReplaySecs(float s){minReplaySecs = s;}
+float triggerZone::getMinReplaySecs(){ return minReplaySecs;}
+
+int triggerZone::getSynthType(){return (int)synth;}
+void triggerZone::setSynthType(int i){
+    
+    synth = synthType(i);
+    mOsc->updateZoneSettings(mIndex, "synthType", i);
+
+}
+
 int triggerZone::getIndex(){ return mIndex; }
+
+
+

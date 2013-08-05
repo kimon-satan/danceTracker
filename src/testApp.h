@@ -86,6 +86,8 @@ class testApp : public ofBaseApp{
     
         void updateZoneControls();
         void updateTZGuiElements();
+    
+        void populateSynthCanvas();
 
 
     
@@ -98,6 +100,7 @@ class testApp : public ofBaseApp{
         ofxUICanvas * settingsCanvases[NUM_CANVASES];
         ofxUICanvas * displayCanvases[2];
         ofxUICanvas * zoneCanvases[3];
+        ofxUIScrollableCanvas * synthCanvas;
     
         ofxUICanvas * fakeCanvas;
     
@@ -178,12 +181,14 @@ class testApp : public ofBaseApp{
     
         ofxUITextInput * sc2TextInput[3];
         ofxUIRadio * shapeRad;
-        ofxUIDropDownList * sc2DropDowns[2];
     
-        ofxUISlider * sensSlider;
+        ofxUISlider * sensSlider, * repSlider;
         ofxUISlider * radSlid, * tPosX, * tPosY, * tPosZ;
         ofxUISlider * xDimSlid, * yDimSlid, * zDimSlid;
         ofxUIToggle * eblTog, *loopTog, *playToEndTog;
+        ofxUILabel * synthTypeDisp;
+    
+    
     
     
         //displayCanvas 3d
