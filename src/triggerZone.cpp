@@ -260,11 +260,11 @@ void triggerZone::updateSynthParams(){
     
     if(shape == TZ_SPHERE){
         
-        iLocal /= radius; //should be - 1 to + 1
+        iLocal /= radius; // - 1 to + 1
         
     }else{
         
-        iLocal.x /= (boxDims.x/2); //should be - 1 to + 1
+        iLocal.x /= (boxDims.x/2); //- 1 to + 1
         iLocal.y /= (boxDims.y/2);
         iLocal.z /= (boxDims.z/2);
     }
@@ -284,6 +284,7 @@ void triggerZone::updateSynthParams(){
                 
             case MT_GLOBAL_CENTER:
                 mul = center.distance(ofVec3f(0,0,5))/8.8317;
+                mul = 1 - mul;
                 break;
             case MT_GLOBAL_X:
                 mul =  (center.x + 5.0)/10.0;
@@ -310,26 +311,28 @@ void triggerZone::updateSynthParams(){
                 break;
                 
             case MT_LOCAL_CENTER:
-                mul = iLocal.distance(ofVec3f(0,0,0))/3.4641;
+                mul = iLocal.distance(ofVec3f(0,0,0));
+                if(shape == TZ_BOX)mul /= 1.78;
+                mul = 1 - mul;
                 break;
                 
             case MT_NUM_POINTS:
-                mul = (float)(inTotal/numUp);
+                mul = (float)inTotal/(float)numUp;
                 break;
                 
                 
         }
         
         mul = max((float)0.0, min((float)1.0, mul));
-        
+    
         
         if(synthParams[i].map == MT_FIXED){
             
             mOsc->updateZoneSettings(mIndex, synthParams[i].name, synthParams[i].abs_val);
             
         }else{
-            
-            float val = mul * (synthParams[i].max_val - synthParams[i].min_val) + synthParams[i].min_val;
+  
+            float val = ofMap(mul, 0, 1, synthParams[i].min_val, synthParams[i].max_val);
             mOsc->updateZoneSettings(mIndex, synthParams[i].name, val);
             
         }
@@ -491,9 +494,14 @@ int triggerZone::getSynthType(){return (int)synth;}
 void triggerZone::setSynthType(int i){
     
     synth = synthType(i);
-    mOsc->updateZoneSettings(mIndex, "synthType", i);
+    synthParams.clear();
+    synthParams = synthDictionary::getSynthParams(synth);
+    updateAllAudio();
 
 }
+
+synthParam triggerZone::getSynthParam(int i){return synthParams[i];}
+void triggerZone::setSynthParam(int i, synthParam p){synthParams[i] = p;}
 
 int triggerZone::getIndex(){ return mIndex; }
 

@@ -88,6 +88,9 @@ public:
     
     int getSynthType();
     void setSynthType(int i);
+
+    synthParam getSynthParam(int i);
+    void setSynthParam(int i, synthParam p);
     
     int getIndex();
     

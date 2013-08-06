@@ -72,6 +72,7 @@ class synthDictionary{
 
     static vector<synthParam> getSynthParams(int sType);
     static string getSynthString(int sType);
+    static string getMapString(int mType);
 
 
 };

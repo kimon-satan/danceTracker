@@ -62,6 +62,7 @@ void testApp::setup(){
     isViewCom = false;
     isViewCScene = false;
     isViewSegPoints = false;
+    isSynthView = false;
     
     cm.reset();
     cm.setPosition(0, 0, 1000);
@@ -298,9 +299,9 @@ void testApp::setupGui(){
     
     zoneCanvases[0]->addWidgetRight(new ofxUISpacer(1,20));
     
-    ofxUIToggle * vParams = new ofxUIToggle("EDIT_SYNTH_PARAMS", false, 20,20,0,0, OFX_UI_FONT_SMALL);
+    dispSynthTog = new ofxUIToggle("EDIT_SYNTH_PARAMS", false, 20,20,0,0, OFX_UI_FONT_SMALL);
     
-    zoneCanvases[0]->addWidgetRight(vParams);
+    zoneCanvases[0]->addWidgetRight(dispSynthTog);
     
     ofAddListener(zoneCanvases[0]->newGUIEvent,this,&testApp::s2Events);
     
@@ -309,7 +310,7 @@ void testApp::setupGui(){
     
     //zone c1----------------------------------------------------
     
-    radSlid = zoneCanvases[1]->addSlider("RADIUS", 0.05, 0.5, 0.1);
+    radSlid = zoneCanvases[1]->addSlider("RADIUS", 0.05, 3.0, 0.1);
 
     ofAddListener(zoneCanvases[1]->newGUIEvent,this,&testApp::s2Events);
     
@@ -383,13 +384,7 @@ void testApp::setupGui(){
     fakeCanvas->setVisible(false);
     
     
-    synthCanvas = new ofxUIScrollableCanvas(ofGetWidth()/2 - tabBarWidth * 0.75 , 0, tabBarWidth * 1.5, 200);
-    synthCanvas->setColorFill(ofxUIColor(200));
-    synthCanvas->setColorFillHighlight(ofxUIColor(255));
-    synthCanvas->setColorBack(ofxUIColor(20, 20, 20, 150));
-    
-    synthCanvas->setVisible(false);
-    synthCanvas->setSnapping(false);
+    synthCanvas = NULL;
     
    
    
@@ -464,6 +459,30 @@ void testApp::saveSettings(string fn){
                             XML.addValue("ENABLED", z->getIsEnabled());
                             XML.addValue("SENSITIVITY", z->getSensitivity());
                             XML.addValue("MIN_REPLAY", z->getMinReplaySecs());
+                            XML.addValue("SYNTH_TYPE", z->getSynthType());
+                            
+                            vector<synthParam> defSp = synthDictionary::getSynthParams(z->getSynthType());
+                            
+                           
+                            for(int i = 0; i < defSp.size(); i++){
+                            
+                                synthParam sp = currentZone->getSynthParam(i);
+                                
+                                XML.addTag(defSp[i].name);
+                                
+                                if(XML.pushTag(defSp[i].name)){
+                                    
+                                    XML.addValue("ABS_VAL", sp.abs_val);
+                                    XML.addValue("MIN_VAL", sp.min_val);
+                                    XML.addValue("MAX_VAL", sp.max_val);
+                                    XML.addValue("MAP", (int)sp.map);
+                                    
+                                    XML.popTag();
+                                }
+                            
+                            }
+                            
+                            
                         
                             //zone tag
                             XML.popTag();
@@ -571,6 +590,31 @@ void testApp::loadSettings(string fn){
                             z->setIsEnabled(XML.getValue("ENABLED", false));
                             z->setSensitivity(XML.getValue("SENSITIVITY", 1.0));
                             z->setMinReplaySecs(XML.getValue("MIN_REPLAY", 0.0));
+                            z->setSynthType(XML.getValue("SYNTH_TYPE", 0));
+                            
+                            vector<synthParam> defSp = synthDictionary::getSynthParams(z->getSynthType());
+                            
+                            
+                            for(int i = 0; i < defSp.size(); i++){
+                            
+                                
+                                synthParam sp = defSp[i];
+                                
+                                if(XML.pushTag(defSp[i].name)){
+                                    
+                                    sp.abs_val = XML.getValue("ABS_VAL", defSp[i].abs_val);
+                                    sp.min_val = XML.getValue("MIN_VAL", defSp[i].min_val);
+                                    sp.max_val = XML.getValue("MAX_VAL", defSp[i].max_val);
+                                    sp.map = mapType(XML.getValue("MAP", defSp[i].map));
+                                   
+                                    z->setSynthParam(i, sp);
+                                    
+                                    XML.popTag();
+                                }
+                                
+                            }
+
+                            
                             
                             //zone tag
                             XML.popTag();
@@ -1176,6 +1220,7 @@ void testApp::settingsEvents(ofxUIEventArgs &e){
     }else{
     
         for(int i = 0; i < 3; i++)zoneCanvases[i]->setVisible(false);
+        hideSynthCanvas();
         
     }
     
@@ -1194,6 +1239,7 @@ void testApp::dispEvents(ofxUIEventArgs &e){
         isCamMouse = false;
         isCamMouse = false;
         for(int i = 0; i < 3; i++)zoneCanvases[i]->setVisible(false);
+        hideSynthCanvas();
         
     }
     if(name == "3D"){
@@ -1393,6 +1439,7 @@ void testApp::s2Events(ofxUIEventArgs &e){
             sc2TextInput[0]->setTextString(currentScene->getName());
             selZone = 0;
             updateZoneControls();
+            hideSynthCanvas();
             
         }
         
@@ -1404,6 +1451,7 @@ void testApp::s2Events(ofxUIEventArgs &e){
             sc2TextInput[0]->setTextString(currentScene->getName());
             selZone = 0;
             updateZoneControls();
+            hideSynthCanvas();
             
         }
         
@@ -1417,6 +1465,7 @@ void testApp::s2Events(ofxUIEventArgs &e){
             selZone = 0;
             sc2TextInput[0]->setTextString(currentScene->getName());
             updateZoneControls();
+            hideSynthCanvas();
         }
         
         if(name == "DELETE_SCENE"){
@@ -1428,6 +1477,7 @@ void testApp::s2Events(ofxUIEventArgs &e){
                 sc2TextInput[0]->setTextString(currentScene->getName());
                 selZone = 0;
                 updateZoneControls();
+                hideSynthCanvas();
                 
             }
         }
@@ -1439,6 +1489,7 @@ void testApp::s2Events(ofxUIEventArgs &e){
             currentZone = currentScene->addTriggerZone(selZone);
             selZone = min(selZone + 1, (int)currentScene->getNumTriggerZones() - 1);
             updateZoneControls();
+            hideSynthCanvas();
         }
         
         if(currentScene->getNumTriggerZones() > 0){
@@ -1449,6 +1500,7 @@ void testApp::s2Events(ofxUIEventArgs &e){
                 selZone = min(selZone + 1, (int)currentScene->getNumTriggerZones() - 1);
                 currentZone = currentScene->getTriggerZone(selZone);
                 updateZoneControls();
+                hideSynthCanvas();
                
                 
             }
@@ -1459,6 +1511,7 @@ void testApp::s2Events(ofxUIEventArgs &e){
                 selZone = max(selZone - 1, 0);
                 currentZone = currentScene->getTriggerZone(selZone);
                  updateZoneControls();
+                hideSynthCanvas();
                 
             }
         
@@ -1469,6 +1522,7 @@ void testApp::s2Events(ofxUIEventArgs &e){
                 selZone = max(selZone - 1, 0);
                 if(currentScene->getNumTriggerZones() > 0)currentZone = currentScene->getTriggerZone(selZone);
                 updateZoneControls();
+                hideSynthCanvas();
                 
             }
             
@@ -1493,10 +1547,14 @@ void testApp::s2Events(ofxUIEventArgs &e){
         if(name == "EDIT_SYNTH_PARAMS"){
             
             //make synth panel visible and populate
-            if(!synthCanvas->isVisible()){
+            if(!isSynthView){
                 populateSynthCanvas();
+                isSynthView = true;
+            }else{
+                isSynthView = false;
             }
-            synthCanvas->toggleVisible();
+            
+            synthCanvas->setVisible(isSynthView);
             
         }
         
@@ -1575,6 +1633,7 @@ void testApp::s2Events(ofxUIEventArgs &e){
                 int i = max(0, currentZone->getSynthType() - 1);
                 currentZone->setSynthType(i);
                 updateZoneControls();
+                hideSynthCanvas();
             }
             
             if(name == "ST_PLUS"){
@@ -1582,6 +1641,7 @@ void testApp::s2Events(ofxUIEventArgs &e){
                 int i = min(ST_COUNT - 1, currentZone->getSynthType() + 1);
                 currentZone->setSynthType(i);
                 updateZoneControls();
+                hideSynthCanvas();
                 
             }
         }
@@ -1618,6 +1678,45 @@ void testApp::updateZoneControls(){
     }
 
 
+}
+
+void testApp::synthEvents(ofxUIEventArgs &e){
+    
+    string name = e.widget->getName();
+    int id = e.widget->getID();
+    
+    synthParam sp = currentZone->getSynthParam(id);
+   
+    if(name == "abs_val"){
+        ofxUISlider *slider = (ofxUISlider *) e.widget;
+        sp.abs_val = slider->getScaledValue();
+    }
+    
+    if(name == "min_val"){
+        ofxUISlider *slider = (ofxUISlider *) e.widget;
+        sp.min_val = slider->getScaledValue();
+    }
+    
+    if(name == "max_val"){
+        ofxUISlider *slider = (ofxUISlider *) e.widget;
+        sp.max_val = slider->getScaledValue();
+    }
+    
+    if(isMouseDown){
+        if(name == "MINUS"){
+            sp.map = mapType(max(0, sp.map - 1));
+            mapTypeLabels[id]->setTextString("MAP_TYPE: " + synthDictionary::getMapString(sp.map));
+            
+        }
+        
+        if(name == "PLUS"){
+            sp.map = mapType(min((int)MT_COUNT - 1, (int)sp.map + 1));
+            mapTypeLabels[id]->setTextString("MAP_TYPE: " + synthDictionary::getMapString(sp.map));
+        }
+    }
+    
+    currentZone->setSynthParam(id, sp);
+        
 }
 
 void testApp::fEvents(ofxUIEventArgs &e){
@@ -1662,9 +1761,9 @@ void testApp::updateTZGuiElements(){
 
 void testApp::populateSynthCanvas(){
 
-    delete synthCanvas;
+    if(synthCanvas != NULL)delete synthCanvas;
     
-    synthCanvas = new ofxUIScrollableCanvas(ofGetWidth()/2 - tabBarWidth * 0.75 , 0, tabBarWidth * 1.5, 200);
+    synthCanvas = new ofxUIScrollableCanvas(ofGetWidth()/2 - tabBarWidth * 0.9 , 0, tabBarWidth * 1.8, 200);
     synthCanvas->setColorFill(ofxUIColor(200));
     synthCanvas->setColorFillHighlight(ofxUIColor(255));
     synthCanvas->setColorBack(ofxUIColor(20, 20, 20, 150));
@@ -1674,15 +1773,53 @@ void testApp::populateSynthCanvas(){
     
     vector<synthParam> sp =  synthDictionary::getSynthParams(currentZone->getSynthType());
     
+    mapTypeLabels.clear();
+    
     for(int i = 0; i < sp.size(); i ++){
         
-        synthCanvas->addLabel(sp[i].name);
-        synthCanvas->addSlider(sp[i].name + "_abs_val" , sp[i].sl_min, sp[i].sl_max, sp[i].abs_val);
-        synthCanvas->addSlider(sp[i].name + "_min_val" , sp[i].sl_min, sp[i].sl_max, sp[i].min_val);
-        synthCanvas->addSlider(sp[i].name + "_max_val" , sp[i].sl_min, sp[i].sl_max, sp[i].max_val);
+        synthCanvas->addLabel(sp[i].name, OFX_UI_FONT_MEDIUM);
         
+        synthParam c_sp = currentZone->getSynthParam(i);
+        
+        ofxUISlider * absl = new ofxUISlider("abs_val" , sp[i].sl_min, sp[i].sl_max, c_sp.abs_val , 100,20);
+        synthCanvas->addWidgetDown(absl);
+         absl->setID(i);
+        ofxUISlider * mvsl = new ofxUISlider("min_val" , sp[i].sl_min, sp[i].sl_max, c_sp.min_val , 100,20);
+        synthCanvas->addWidgetRight(mvsl);
+         mvsl->setID(i);
+        ofxUISlider * mxsl = new ofxUISlider("max_val" , sp[i].sl_min, sp[i].sl_max, c_sp.max_val , 100,20);
+        synthCanvas->addWidgetRight(mxsl);
+         mxsl->setID(i);
+        
+        ofxUITextArea * l = new ofxUITextArea("MAP_TYPE", "MAP_TYPE: " + synthDictionary::getMapString(c_sp.map), 180,20,0,0, OFX_UI_FONT_SMALL);
+        synthCanvas->addWidgetRight(l);
+        l->setID(i);
+         mapTypeLabels.push_back(l);
+        
+        
+        ofxUILabelButton * zb = (ofxUILabelButton *)synthCanvas->addWidgetRight(new ofxUILabelButton("MINUS", true, 25));
+        ofxUILabelButton * zc = (ofxUILabelButton *)synthCanvas->addWidgetRight(new ofxUILabelButton( "PLUS", true ,25));
+        
+        zb->setLabelText("-");
+        zc->setLabelText("+");
+        
+        zb->setID(i);
+        zc->setID(i);
+        
+        synthCanvas->addWidgetDown(new ofxUILabel("", OFX_UI_FONT_SMALL));
         synthCanvas->addSpacer();
     
+    }
+    
+      ofAddListener(synthCanvas->newGUIEvent,this,&testApp::synthEvents);
+}
+
+void testApp::hideSynthCanvas(){
+   
+    if(isSynthView){
+        isSynthView = false;
+        synthCanvas->setVisible(false);
+        dispSynthTog->setValue(false);
     }
 
 }
@@ -1698,7 +1835,7 @@ void testApp::exit(){
     for(int i = 0; i < 2; i++)delete displayCanvases[i];
     for(int i = 0; i < 3; i++)delete zoneCanvases[i];
     
-    delete synthCanvas;
+    if(synthCanvas != NULL)delete synthCanvas;
         
 
 }

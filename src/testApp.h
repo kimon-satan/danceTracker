@@ -64,6 +64,7 @@ class testApp : public ofBaseApp{
         void s2Events(ofxUIEventArgs &e);
     
         void fEvents(ofxUIEventArgs &e);
+        void synthEvents(ofxUIEventArgs &e);
     
         void exit();
     
@@ -88,7 +89,7 @@ class testApp : public ofBaseApp{
         void updateTZGuiElements();
     
         void populateSynthCanvas();
-
+        void hideSynthCanvas();
 
     
         //variables
@@ -112,7 +113,7 @@ class testApp : public ofBaseApp{
 
         dtDisplayMode       displayMode;
     
-        bool isViewCom, isViewCScene, isViewSegPoints;
+        bool isViewCom, isViewCScene, isViewSegPoints, isSynthView;
     
         int pointCloudRotation;
         float pitch, roll;
@@ -185,11 +186,13 @@ class testApp : public ofBaseApp{
         ofxUISlider * sensSlider, * repSlider;
         ofxUISlider * radSlid, * tPosX, * tPosY, * tPosZ;
         ofxUISlider * xDimSlid, * yDimSlid, * zDimSlid;
-        ofxUIToggle * eblTog, *loopTog, *playToEndTog;
+        ofxUIToggle * eblTog, *loopTog, *playToEndTog, *dispSynthTog;
         ofxUILabel * synthTypeDisp;
     
     
+        //synthCanvas
     
+        vector<ofxUITextArea *> mapTypeLabels;
     
         //displayCanvas 3d
     
