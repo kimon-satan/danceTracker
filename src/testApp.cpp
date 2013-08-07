@@ -21,7 +21,7 @@ void testApp::setup(){
         kinect.setVerbose(true);
         kinect.open();
         
-
+        
         if(kinect.isConnected()){
             // zero the tilt on startup
             kinectAngle = 0;
@@ -57,7 +57,6 @@ void testApp::setup(){
     fakePos.set(0,0,5);
     fakeRadius = 0.25;
     numFakePoints = 1000;
-
     
     isViewCom = false;
     isViewCScene = false;
@@ -68,16 +67,8 @@ void testApp::setup(){
     cm.setPosition(0, 0, 1000);
     cm.setTarget(ofVec3f(0, 0, 500));
     
-    ambientLight.setAmbientColor(ofColor(160));
-
-    topLight.setScale(0.01);
-    topLight.setSpotlight();
-    topLight.setSpotConcentration(10);
-    topLight.setPosition(0, 3, -5);
-    setLightOri(topLight, ofVec3f(50, 0, 0));
+    isCamMouse = false; isCamKey = true; isTextFocus = false, isMouseDown = false, isPerfMode = false;
     
-    isCamMouse = false; isCamKey = true; isTextFocus = false;
-
     cm.disableMouseInput();
     
     ofPtr<scene>  s = ofPtr<scene>(new scene(mOsc));
@@ -85,34 +76,21 @@ void testApp::setup(){
     currentScene = s;
     
     ofPtr<bank> b = ofPtr<bank>(new bank());
-    b->name = "all_scenes";
     allBanks.push_back(b);
     currentBank = b;
     
     setupGui();
-    updateZoneControls(); 
+    updateZoneControls();
     
     isFakeUser = false;
-
+    selBank = 0; selZone = 0; selScene = 0; bSelScene = 0;
+    
 }
-
-
-void testApp::setLightOri(ofLight &light, ofVec3f rot){
-    ofVec3f xax(1, 0, 0);
-    ofVec3f yax(0, 1, 0);
-    ofVec3f zax(0, 0, 1);
-    ofQuaternion q;
-    q.makeRotate(rot.x, xax, rot.y, yax, rot.z, zax);
-    light.setOrientation(q);
-}
-
-
-
 
 void testApp::setupGui(){
-
+    
     tabBarWidth = 320;
-    tabBarHeight = 100;
+    tabBarHeight = 120;
     
     isSettingsGui = true;
     isDisplayGui = true;
@@ -137,7 +115,7 @@ void testApp::setupGui(){
     
     synthCanvas = NULL;
     
-   
+    
 }
 
 void testApp::setupGeneralSettings(){
@@ -269,16 +247,16 @@ void testApp::setupGeneralSettings(){
     
     settingsCanvases[3]->addWidgetRight(new ofxUIButton("CREATE_BANK", false, 20,20));
     settingsCanvases[3]->addWidgetRight(new ofxUIButton("DELETE_BANK", false, 20,20));
-
+    
     
     settingsCanvases[3]->addSpacer();
     
     settingsCanvases[3]->addLabel("SELECTED SCENE: ", OFX_UI_FONT_SMALL);
     
-    ofxUITextArea * sceneText = new ofxUITextArea("SCENE_TEXT", "none", 200, 20,0,0,OFX_UI_FONT_SMALL);
+    sceneText = new ofxUITextArea("SCENE_TEXT", "none", 200, 20,0,0,OFX_UI_FONT_SMALL);
     
     sceneText->setDrawBack(true);
-
+    
     settingsCanvases[3]->addWidgetRight(sceneText);
     
     ofxUILabelButton * sbb = (ofxUILabelButton *)settingsCanvases[3]->addWidgetDown(new ofxUILabelButton("B_SCENE_MINUS", true, 25));
@@ -289,24 +267,65 @@ void testApp::setupGeneralSettings(){
     
     settingsCanvases[3]->addWidgetRight(new ofxUIButton("ADD_SCENE_TO_BANK", false, 20,20));
     
-    ofxUITextArea * bankText = new ofxUITextArea("BANK_TEXT", "bank items here", tabBarWidth, 300, 0,0,  OFX_UI_FONT_SMALL);
+    bankText = new ofxUITextArea("BANK_TEXT", "bank items here", tabBarWidth, 200, 0,0,  OFX_UI_FONT_SMALL);
     
     bankText->setDrawOutlineHighLight(true);
     
     settingsCanvases[3]->addWidgetDown(bankText);
-
-    ofxUILabelButton * sbb2 = (ofxUILabelButton *)settingsCanvases[3]->addWidgetDown(new ofxUILabelButton("B_ITEM_MINUS", true, 25));
-    ofxUILabelButton * sbc2 = (ofxUILabelButton *)settingsCanvases[3]->addWidgetRight(new ofxUILabelButton("B_ITEM_PLUS", true, 25));
     
-    sbb2->setLabelText("-");
-    sbc2->setLabelText("+");
+    ofxUILabelButton * sbb2 = (ofxUILabelButton *)settingsCanvases[3]->addWidgetRight(new ofxUILabelButton("B_ITEM_MINUS", true, 25));
+    ofxUILabelButton * sbc2 = (ofxUILabelButton *)settingsCanvases[3]->addWidgetSouthOf(new ofxUILabelButton("B_ITEM_PLUS", true, 25), "B_ITEM_MINUS");
     
-    settingsCanvases[3]->addWidgetRight(new ofxUIButton("REMOVE_ITEM", false, 20,20));
+    sbb2->setLabelText("+");
+    sbc2->setLabelText("-");
+    
+    settingsCanvases[3]->addWidgetSouthOf(new ofxUIButton("REMOVE_ITEM", false, 20,20), "BANK_TEXT");
     
     ofAddListener(settingsCanvases[3]->newGUIEvent,this,&testApp::s3Events);
     settingsTabBar->addCanvas(settingsCanvases[3]);
     settingsCanvases[3]->autoSizeToFitWidgets();
+    
+    //----------------------------PERFORMANCE CANVAS ----------------------//
+    
+    settingsCanvases[4]->setName("Performance Mode");
+    
+    settingsCanvases[4]->addLabel("Performance Mode");
+    
+    
+    settingsCanvases[4]->addLabel("CURRENT BANK: ", OFX_UI_FONT_SMALL);
+    perfBankText = new ofxUITextArea ("PERF_BANK_TEXT", "none", 150, 20, 0,0,  OFX_UI_FONT_SMALL);
+    perfBankText->setDrawBack(true);
+    
+    settingsCanvases[4]->addWidgetRight(perfBankText);
+    
+    ofxUILabelButton * bplus = (ofxUILabelButton *)settingsCanvases[4]->addWidgetDown(new ofxUILabelButton("BANK_MINUS", true, 25));
+    ofxUILabelButton * bmin = (ofxUILabelButton *)settingsCanvases[4]->addWidgetRight(new ofxUILabelButton("BANK_PLUS", true, 25));
+    
+    bplus->setLabelText("-");
+    bmin->setLabelText("+");
+    
+    
+    settingsCanvases[4]->addSpacer();
+    
+    perfSceneText = new ofxUITextArea("BANK_TEXT", "bank items here", tabBarWidth, 200, 0,0,  OFX_UI_FONT_SMALL);
+    perfSceneText->setDrawOutlineHighLight(true);
+    
+    settingsCanvases[4]->addWidgetDown(perfSceneText);
+    
+    bplus = (ofxUILabelButton *)settingsCanvases[4]->addWidgetRight(new ofxUILabelButton("B_ITEM_MINUS", true, 25));
+    bmin = (ofxUILabelButton *)settingsCanvases[4]->addWidgetSouthOf(new ofxUILabelButton("B_ITEM_PLUS", true, 25), "B_ITEM_MINUS");
+    
+    bplus->setLabelText("+");
+    bmin->setLabelText("-");
+    
 
+    
+    ofAddListener(settingsCanvases[4]->newGUIEvent,this,&testApp::s4Events);
+    settingsTabBar->addCanvas(settingsCanvases[4]);
+    settingsCanvases[4]->autoSizeToFitWidgets();
+
+    
+  
     
 }
 
@@ -469,14 +488,14 @@ void testApp::setupDisplaySettings(){
     displayCanvases[1]->autoSizeToFitWidgets();
     ofAddListener(displayCanvases[1]->newGUIEvent,this,&testApp::dispEvents);
     displayTabBar->addCanvas(displayCanvases[1]);
-
+    
     
 }
 
-
+//--------------------------------------------------------------
 
 void testApp::saveSettings(string fn){
-
+    
     ofxXmlSettings XML;
     
     if(fn.substr(fn.length()-4, 4) != ".xml")fn += ".xml";
@@ -486,7 +505,7 @@ void testApp::saveSettings(string fn){
     XML.addTag("DANCE_TRACKER");
     
     if(XML.pushTag("DANCE_TRACKER")){
-    
+        
         XML.addTag("MAIN_SETTINGS");
         
         if(XML.pushTag("MAIN_SETTINGS")){
@@ -506,9 +525,9 @@ void testApp::saveSettings(string fn){
         XML.addTag("SCENE_SETTINGS");
         
         if(XML.pushTag("SCENE_SETTINGS")){
-        
-            for(int sn = 0; sn < allScenes.size(); sn++){
             
+            for(int sn = 0; sn < allScenes.size(); sn++){
+                
                 XML.addTag("SCENE");
                 
                 if(XML.pushTag("SCENE", sn)){
@@ -524,7 +543,7 @@ void testApp::saveSettings(string fn){
                         XML.addTag("ZONE");
                         
                         if(XML.pushTag("ZONE", tz)){
-                        
+                            
                             XML.addValue("NAME", z->getName());
                             
                             
@@ -549,9 +568,9 @@ void testApp::saveSettings(string fn){
                             
                             vector<synthParam> defSp = synthDictionary::getSynthParams(z->getSynthType());
                             
-                           
-                            for(int i = 0; i < defSp.size(); i++){
                             
+                            for(int i = 0; i < defSp.size(); i++){
+                                
                                 synthParam sp = z->getSynthParam(i);
                                 
                                 XML.addTag(defSp[i].name);
@@ -565,25 +584,25 @@ void testApp::saveSettings(string fn){
                                     
                                     XML.popTag();
                                 }
-                            
+                                
                             }
                             
                             
-                        
+                            
                             //zone tag
                             XML.popTag();
                         }
                         
-                    
+                        
                     }
                     
                     //scene tag
                     XML.popTag();
                 }
                 
-            
+                
             }
-         
+            
             //scene settings tag
             XML.popTag();
         }
@@ -597,7 +616,7 @@ void testApp::saveSettings(string fn){
 }
 
 void testApp::loadSettings(string fn){
-
+    
     ofxXmlSettings XML;
     
     if(fn.substr(fn.length()-4, 4) != ".xml")fn += ".xml";
@@ -605,7 +624,7 @@ void testApp::loadSettings(string fn){
     string filePath = "XMLs/" + fn;
     
     if(XML.loadFile(filePath)){
-    
+        
         if(XML.pushTag("DANCE_TRACKER")){
             
             if(XML.pushTag("MAIN_SETTINGS")){
@@ -638,107 +657,107 @@ void testApp::loadSettings(string fn){
                 XML.popTag();
             }
             
-               
-        if(XML.pushTag("SCENE_SETTINGS")){
             
-            allScenes.clear();
-            
-            int numScenes = XML.getNumTags("SCENE");
-            
-            for(int sn = 0; sn < numScenes; sn++){
+            if(XML.pushTag("SCENE_SETTINGS")){
                 
-                if(XML.pushTag("SCENE", sn)){
+                allScenes.clear();
+                
+                int numScenes = XML.getNumTags("SCENE");
+                
+                for(int sn = 0; sn < numScenes; sn++){
                     
-                    ofPtr<scene> nScene = ofPtr<scene>(new scene(mOsc));
-                    
-                    nScene->setName(XML.getValue("NAME", ""));
-                    
-                    int numZones = XML.getNumTags("ZONE");
-                    
-                    for(int tz = 0; tz < numZones; tz++){
+                    if(XML.pushTag("SCENE", sn)){
                         
-                        if(XML.pushTag("ZONE", tz)){
+                        ofPtr<scene> nScene = ofPtr<scene>(new scene(mOsc));
+                        
+                        nScene->setName(XML.getValue("NAME", ""));
+                        
+                        int numZones = XML.getNumTags("ZONE");
+                        
+                        for(int tz = 0; tz < numZones; tz++){
                             
-                            ofPtr<triggerZone> z = nScene->addTriggerZone(max(0,tz - 1));
-                            
-                            z->setName(XML.getValue("NAME", ""));
-                            z->setShape(XML.getValue("SHAPE", 0));
-                            z->setPosX(XML.getValue("POS_X", 0.0));
-                            z->setPosY(XML.getValue("POS_Y", 0.0));
-                            z->setPosZ(XML.getValue("POS_Z", 0.0));
-                            z->setBoxDimsX( XML.getValue("DIM_X", 0.5));
-                            z->setBoxDimsY( XML.getValue("DIM_Y", 0.5));
-                            z->setBoxDimsZ( XML.getValue("DIM_Z", 0.5));
-                            z->setRadius(XML.getValue("RADIUS",1.0));
-                            z->setSoundFile(XML.getValue("SOUNDFILE", ""));
-                            z->setIsPlayToEnd(XML.getValue("IS_PLAY_TO_END", false));
-                            z->setIsInverted(XML.getValue("INVERTED", false));
-                            z->setIsLoop(XML.getValue("IS_LOOP", true));
-                            z->setIsEnabled(XML.getValue("ENABLED", false));
-                            //z->setSensitivity(XML.getValue("SENSITIVITY", 1.0));
-                            z->setMinReplaySecs(XML.getValue("MIN_REPLAY", 0.0));
-                            z->setSynthType(XML.getValue("SYNTH_TYPE", 0));
-                            
-                            vector<synthParam> defSp = synthDictionary::getSynthParams(z->getSynthType());
-                            
-                            
-                            for(int i = 0; i < defSp.size(); i++){
-                            
+                            if(XML.pushTag("ZONE", tz)){
                                 
-                                synthParam sp = defSp[i];
+                                ofPtr<triggerZone> z = nScene->addTriggerZone(max(0,tz - 1));
                                 
-                                if(XML.pushTag(defSp[i].name)){
+                                z->setName(XML.getValue("NAME", ""));
+                                z->setShape(XML.getValue("SHAPE", 0));
+                                z->setPosX(XML.getValue("POS_X", 0.0));
+                                z->setPosY(XML.getValue("POS_Y", 0.0));
+                                z->setPosZ(XML.getValue("POS_Z", 0.0));
+                                z->setBoxDimsX( XML.getValue("DIM_X", 0.5));
+                                z->setBoxDimsY( XML.getValue("DIM_Y", 0.5));
+                                z->setBoxDimsZ( XML.getValue("DIM_Z", 0.5));
+                                z->setRadius(XML.getValue("RADIUS",1.0));
+                                z->setSoundFile(XML.getValue("SOUNDFILE", ""));
+                                z->setIsPlayToEnd(XML.getValue("IS_PLAY_TO_END", false));
+                                z->setIsInverted(XML.getValue("INVERTED", false));
+                                z->setIsLoop(XML.getValue("IS_LOOP", true));
+                                z->setIsEnabled(XML.getValue("ENABLED", false));
+                                //z->setSensitivity(XML.getValue("SENSITIVITY", 1.0));
+                                z->setMinReplaySecs(XML.getValue("MIN_REPLAY", 0.0));
+                                z->setSynthType(XML.getValue("SYNTH_TYPE", 0));
+                                
+                                vector<synthParam> defSp = synthDictionary::getSynthParams(z->getSynthType());
+                                
+                                
+                                for(int i = 0; i < defSp.size(); i++){
                                     
-                                    sp.abs_val = XML.getValue("ABS_VAL", defSp[i].abs_val);
-                                    sp.min_val = XML.getValue("MIN_VAL", defSp[i].min_val);
-                                    sp.max_val = XML.getValue("MAX_VAL", defSp[i].max_val);
-                                    sp.map = mapType(XML.getValue("MAP", defSp[i].map));
-                                   
-                                    z->setSynthParam(i, sp);
                                     
-                                    XML.popTag();
+                                    synthParam sp = defSp[i];
+                                    
+                                    if(XML.pushTag(defSp[i].name)){
+                                        
+                                        sp.abs_val = XML.getValue("ABS_VAL", defSp[i].abs_val);
+                                        sp.min_val = XML.getValue("MIN_VAL", defSp[i].min_val);
+                                        sp.max_val = XML.getValue("MAX_VAL", defSp[i].max_val);
+                                        sp.map = mapType(XML.getValue("MAP", defSp[i].map));
+                                        
+                                        z->setSynthParam(i, sp);
+                                        
+                                        XML.popTag();
+                                    }
+                                    
                                 }
                                 
+                                
+                                
+                                //zone tag
+                                XML.popTag();
+                                
+                                
                             }
-
-                            
-                            
-                            //zone tag
-                            XML.popTag();
                             
                             
                         }
                         
                         
+                        allScenes.push_back(nScene);
+                        
+                        //scene tag
+                        XML.popTag();
                     }
                     
                     
-                    allScenes.push_back(nScene);
-                    
-                    //scene tag
-                    XML.popTag();
                 }
                 
+                selScene = 0;
+                currentScene = allScenes[selScene];
+                sc2TextInput[0]->setTextString(currentScene->getName());
+                //there will probably be more to update here later
                 
-            }
-            
-            selScene = 0;
-            currentScene = allScenes[selScene];
-            sc2TextInput[0]->setTextString(currentScene->getName());
-            //there will probably be more to update here later
-            
-            if(currentScene->getNumTriggerZones() > 0){
-                selZone = 0;
-                currentZone = currentScene->getTriggerZone(selZone);
-                updateTZGuiElements();
-            }else{
-                //potentially refactor into a disableZoneElements
+                if(currentScene->getNumTriggerZones() > 0){
+                    selZone = 0;
+                    currentZone = currentScene->getTriggerZone(selZone);
+                    updateTZGuiElements();
+                }else{
+                    //potentially refactor into a disableZoneElements
+                    
+                    selZone = 0;
+                    sc2TextInput[1]->setTextString("none");
+                    sc2TextInput[2]->setTextString("none");
+                }
                 
-                selZone = 0;
-                sc2TextInput[1]->setTextString("none");
-                sc2TextInput[2]->setTextString("none");
-            }
-            
                 //scene settings tag
                 XML.popTag();
             }
@@ -747,12 +766,12 @@ void testApp::loadSettings(string fn){
             XML.popTag();
         }
         
-
         
         
-    
+        
+        
     }else{
-    
+        
         cout << "failed /n";
         
     }
@@ -807,7 +826,7 @@ void testApp::update(){
                 currentScene->deselectAll();
             }
         }
-       
+        
     }else if(isFakeUser){
         
         userPixels.clear();
@@ -821,20 +840,19 @@ void testApp::update(){
         
         
         currentScene->update(fakePos, fakeRadius * 3, userPixels);
-    
-    
+        
+        
     }
     
     
-
-
+    
+    
     
 }
 
-
 void testApp::calcQ(){
     
-   
+    
     float cPitch = -ofRadToDeg(asin(kinect.getMksAccel().z/OFX_KINECT_GRAVITY));
     float cRoll = -ofRadToDeg(asin(kinect.getMksAccel().x/OFX_KINECT_GRAVITY));
     
@@ -854,7 +872,7 @@ void testApp::calcQ(){
     pRange = tPitches[tPitches.size()-1] - tPitches[0];
     
     if(ofGetFrameNum() < 10){
-    
+        
         roll = cRoll;
         pitch = cPitch;
     }
@@ -875,7 +893,7 @@ void testApp::calcQ(){
     
     qt.getRotate(qangle, qaxis);
     
-
+    
 }
 
 void testApp::recordBg(){
@@ -886,17 +904,17 @@ void testApp::recordBg(){
     float cFloor = 10;
     
     for(int i = 0 ; i < bgDepths.size(); i ++){
-    
-       if(bgDepths[i].z > nearThresh && bgDepths[i].z < farThresh){
-           
-           if(bgDepths[i].y < cFloor){
-               cFloor = bgDepths[i].y;
-           }
-       }
+        
+        if(bgDepths[i].z > nearThresh && bgDepths[i].z < farThresh){
+            
+            if(bgDepths[i].y < cFloor){
+                cFloor = bgDepths[i].y;
+            }
+        }
     }
     
     floorY = cFloor;
-
+    
 }
 
 void testApp::segment(){
@@ -908,25 +926,25 @@ void testApp::segment(){
     int counter = 0;
     
 	for(int i = 0; i < curDepths.size(); i ++) {
-
-            if(curDepths[i].z > nearThresh && curDepths[i].z < farThresh){
-                
-                //is inside range
-                
-                if(curDepths[i].z == 0){ //curDepth didn't record data
-                    s_pix[i] = 0;
-                }else if(bgDepths[i].z == 0){ // bgDepth didn't record data
-                    s_pix[i] = 255;
-                }else if(curDepths[i].z < bgDepths[i].z - segThresh){ //meets difference threshold
-                    s_pix[i] = 255;
-                }else{
-                    s_pix[i] = 0; // doesn't meet thresholds
-                }
-                
-            }else{
+        
+        if(curDepths[i].z > nearThresh && curDepths[i].z < farThresh){
+            
+            //is inside range
+            
+            if(curDepths[i].z == 0){ //curDepth didn't record data
                 s_pix[i] = 0;
+            }else if(bgDepths[i].z == 0){ // bgDepth didn't record data
+                s_pix[i] = 255;
+            }else if(curDepths[i].z < bgDepths[i].z - segThresh){ //meets difference threshold
+                s_pix[i] = 255;
+            }else{
+                s_pix[i] = 0; // doesn't meet thresholds
             }
             
+        }else{
+            s_pix[i] = 0;
+        }
+        
     }
     
     segImg.erode();
@@ -949,7 +967,7 @@ void testApp::segment(){
         CvPoint pts[cfFinder.blobs[0].nPts];
         
         for(int i = 0; i < cfFinder.blobs[0].nPts; i ++){
-        
+            
             pts[i].x = cfFinder.blobs[0].pts[i].x;
             pts[i].y = cfFinder.blobs[0].pts[i].y;
             
@@ -960,15 +978,13 @@ void testApp::segment(){
         int ppt_size[1] = { cfFinder.blobs[0].nPts };
         
         cvFillPoly(segMask.getCvImage(), ppt, ppt_size , 1, cvScalarAll(255));
-    
+        
     }else{
         isUser = false;
     }
-  
+    
     
 }
-
-//--------------------------------------------------------------
 
 void testApp::analyseUser(){
     
@@ -1000,303 +1016,16 @@ void testApp::analyseUser(){
     
     com = total/userPixels.size();
     
-   
+    
     
     vector<ofVec3f>::iterator it = remove_if(userPixels.begin(), userPixels.end(),findOutliers(com, userHeight));
     
     userPixels.erase(it, userPixels.end());
-
-
-}
-
-
-
-//--------------------------------------------------------------
-void testApp::draw(){
-    
-    ofSetColor(0);
-    ofBackground(120);
-    
-    ofDrawBitmapString("FPS: " +  ofToString(ofGetFrameRate(), 2), 20,20);
-
-    
-    if(displayMode == DT_DM_3D){
-    
-        cm.begin();
-        
-        
-        glEnable(GL_DEPTH_TEST);
-        
-        ofScale(-100,100,100);
-        
-        ofNoFill();
-       
-       // topLight.draw();
-       // ambientLight.enable();
-       // topLight.enable();
-        
-        ofPushMatrix();
-            ofScale(0.05, 0.05, 0.05);
-            ofDrawGrid();
-        ofPopMatrix();
-
-        
-        ofPushMatrix();
-            ofTranslate(0, floorY, 0);
-            drawFloor();
-        ofPopMatrix();
-        
-            
-        ofNoFill();
-        ofSetColor(255,255,0);
-        
-        ofPushMatrix();
-            ofRotate(qangle, qaxis.x, qaxis.y, qaxis.z);
-            ofScale(2,0.5,0.5);
-            ofBox(0.15);
-        ofPopMatrix();
-        
-        
-        if(isViewSegPoints){
-            if(isUser || isFakeUser)drawUserPointCloud();
-        }else{
-            drawScenePointCloud();
-        }
-        
-        if(isViewCom){
-            ofNoFill();
-            ofSetColor(0, 255, 255);
-            ofSphere(com.x, com.y, com.z, userHeight/2);
-        }
-        
-        
-        if(isViewCScene){
-            
-            currentScene->draw(cm.getPosition());
-        }
-        
-        cm.end();
-        
-        glDisable(GL_DEPTH_TEST);
-        
-    }
-    
-    
-    if(displayMode == DT_DM_2D){
-    
-        ofSetColor(255);
-        
-        ofPushMatrix();
-            ofTranslate(ofGetWidth() - 750, 50);
-            liveImg.draw(0,0,320,240);
-            ofTranslate(0, 260);
-            ofDrawBitmapString("live depthMap", 0,0);
-            ofTranslate(0, 40);
-            segMask.draw(0,0,320,240);
-            ofTranslate(0, 260);
-            ofDrawBitmapString("segmented depthMap", 0,0);
-            ofTranslate(0, 40);
-        
-        ofPopMatrix();
-        
-        ofPushMatrix();
-            ofTranslate(ofGetWidth() - 360, 50);
-            ofFill();
-            ofSetColor(50);
-            ofRect(0,0,320,240);
-            cfFinder.draw(0,0,320,240);
-            ofTranslate(0, 260);
-            ofSetColor(255);
-            ofDrawBitmapString("contour analysis", 0,0);
-        ofPopMatrix();
-        
-    }
-
-}
-
-void testApp::drawScenePointCloud() {
-    
-	glBegin(GL_POINTS);
-    glColor3ub(0, 0, 0);
-	    
-    for(int i = 0; i < curDepths.size(); i ++){
-        
-        glVertex3f(curDepths[i].x, curDepths[i].y, curDepths[i].z);
- 
-    }
-    
-	glEnd();
-}
-
-
-void testApp::drawUserPointCloud() {
-    
-	glBegin(GL_POINTS);
-    glColor3ub(0, 0, 0);
-    
-    
-    for(int i = 0; i < userPixels.size(); i ++){
-        
-        glVertex3f(userPixels[i].x, userPixels[i].y, userPixels[i].z);
-        
-	}
-    
-	glEnd();
-    
     
     
 }
 
-
-void testApp::drawFloor(){
-    
-    ofSetColor(0);
-    
-    float spacing = 0.5;
-    float numLines = 20;
-    float sx = -spacing * numLines * 0.5;
-    float sz = 0;
-    
-    for(int i = 0; i < numLines; i ++){
-    
-        ofLine(sx + spacing * i, 0, 0, sx + spacing * i, 0, 10); //across the x -axis
-        ofLine(-5, 0 , sz + spacing * i ,5, 0, sz + spacing * i ); //across the z -axis
-        
-    }
-
-
-
-}
-
-//--------------------------------------------------------------
-void testApp::keyPressed(int key){
-    
-    if(isTextFocus)return; //no key events whilst textFocus
-    
-    switch(key){
-            
-        case ' ':
-            settingsTabBar->toggleVisible();
-            isSettingsGui = !isSettingsGui;
-            if(!isSettingsGui)
-                for(int i = 0; i < 3; i++)zoneCanvases[i]->setVisible(false);
-            else
-                if(settingsTabBar->getActiveCanvas()->getName() == "Scene Setup")updateZoneControls();
-        break;
-            
-        case OF_KEY_RETURN:
-            displayTabBar->toggleVisible();
-            isDisplayGui = !isDisplayGui;
-        break;
-            
-        case 'F':
-            isFakeUser = !isFakeUser;
-            fakeCanvas->setVisible(isFakeUser);
-        break;
-        
-                     
-    }
-
-
-    if(isCamKey) {
-        
-        switch(key){
-                
-            case 'a':
-            {
-              
-                cm.truck(-10);
-
-                
-            }
-                break;
-                
-            case 's':
-            {
-               
-                cm.truck(10);
-                
-            }
-                break;
-                
-            
-            case 'z':
-            {
-                
-                cm.dolly(10);
-                
-            }
-            break;
-                
-                
-            case 'x':
-            {
-                
-                cm.dolly(-10);
-                
-            }
-                break;
-            
-                
-                
-        }
-    
-    
-    }
-    
-}
-
-//--------------------------------------------------------------
-void testApp::keyReleased(int key){
-
-}
-
-//--------------------------------------------------------------
-void testApp::mouseMoved(int x, int y ){
-
-}
-
-//--------------------------------------------------------------
-void testApp::mouseDragged(int x, int y, int button){
-
-}
-
-//--------------------------------------------------------------
-void testApp::mousePressed(int x, int y, int button){
-
-    isMouseDown = true;
-    
-}
-
-//--------------------------------------------------------------
-void testApp::mouseReleased(int x, int y, int button){
-    
-    isMouseDown = false;
-}
-
-//--------------------------------------------------------------
-void testApp::windowResized(int w, int h){
-    
-    displayTabBar->setPosition(ofGetWidth() - 100 ,ofGetHeight() - tabBarHeight);
-    settingsTabBar->setPosition(0,ofGetHeight() - tabBarHeight);
-    
-    for(int i = 0; i < 2; i ++){
-
-        displayCanvases[i]->setPosition(ofGetWidth() - tabBarWidth, 0);
-        
-    }
-
-}
-
-//--------------------------------------------------------------
-void testApp::gotMessage(ofMessage msg){
-
-}
-
-//--------------------------------------------------------------
-void testApp::dragEvent(ofDragInfo dragInfo){
-
-}
+//---------------------------------------------------------------
 
 void testApp::settingsEvents(ofxUIEventArgs &e){
     
@@ -1307,11 +1036,26 @@ void testApp::settingsEvents(ofxUIEventArgs &e){
         updateZoneControls();
         
     }else{
-    
+        
         for(int i = 0; i < 3; i++)zoneCanvases[i]->setVisible(false);
         hideSynthCanvas();
         
     }
+    
+    if(name == "Setup Banks"){
+        
+        updateBankElements();
+    
+    }
+    
+    if(name == "Performance Mode"){
+        updateBankElements();
+        isPerfMode = true;
+    }else{
+    
+        isPerfMode = false;
+    }
+    
     
     
 }
@@ -1341,7 +1085,7 @@ void testApp::dispEvents(ofxUIEventArgs &e){
             if(settingsTabBar->getActiveCanvas()->getName() == "Scene Setup")updateZoneControls();
         }
     }
-
+    
     
     if(name == "MOUSE_INPUT"){
         (isCamMouse)? cm.disableMouseInput(): cm.enableMouseInput();
@@ -1353,23 +1097,23 @@ void testApp::dispEvents(ofxUIEventArgs &e){
         cm.reset();
         cm.setTarget(ofVec3f(0, 0, 500));
         cm.setDistance(500);
-      
+        
         
     }
     
     
     if(name == "OVERHEAD"){
-    
+        
         cm.setPosition(1, 500, 500);
         cm.setTarget(ofVec3f(0, 0, 500));
     }
-
+    
     
     if(name == "FROM_LEFT"){
         
         cm.setPosition(-500, 200, 500);
         cm.setTarget(ofVec3f(0, 0, 500));
-    
+        
     }
     
     if(name == "FROM_RIGHT"){
@@ -1378,14 +1122,14 @@ void testApp::dispEvents(ofxUIEventArgs &e){
         cm.setTarget(ofVec3f(0, 0, 500));
         
     }
-
     
-
+    
+    
     if(name == "VIEW_USER"){
         ofxUIToggle *tog = (ofxUIToggle *) e.widget;
         isViewSegPoints = tog->getValue();
     }
-
+    
     if(name == "VIEW_COM"){
         ofxUIToggle *tog = (ofxUIToggle *) e.widget;
         isViewCom = tog->getValue();
@@ -1395,25 +1139,22 @@ void testApp::dispEvents(ofxUIEventArgs &e){
         ofxUIToggle *tog = (ofxUIToggle *) e.widget;
         isViewCScene = tog->getValue();
     }
-
+    
     
     
 }
 
-
-
 void testApp::s0Events(ofxUIEventArgs &e){
     
-     string name = e.widget->getName();
-
+    string name = e.widget->getName();
+    
     if(isMouseDown){
-            if(name == "SAVE")saveSettings(fileNameInput->getTextString());
-            if(name == "LOAD")loadSettings(fileNameInput->getTextString());
+        if(name == "SAVE")saveSettings(fileNameInput->getTextString());
+        if(name == "LOAD")loadSettings(fileNameInput->getTextString());
     }
     
 	
 }
-
 
 void testApp::s1Events(ofxUIEventArgs &e){
     
@@ -1439,12 +1180,12 @@ void testApp::s1Events(ofxUIEventArgs &e){
         ofxUISlider *slider = (ofxUISlider *) e.widget;
         farThresh = slider->getScaledValue();
     }
-
+    
     if(name == "MIN_BLOB"){
         ofxUISlider *slider = (ofxUISlider *) e.widget;
         minBlob = slider->getScaledValue();
     }
-
+    
     if(name == "MAX_BLOB"){
         ofxUISlider *slider = (ofxUISlider *) e.widget;
         maxBlob = slider->getScaledValue();
@@ -1468,9 +1209,9 @@ void testApp::s1Events(ofxUIEventArgs &e){
     if(name == "RECORD_BACKGROUND"){
         recordBg();
     }
-
     
-
+    
+    
 }
 
 void testApp::s2Events(ofxUIEventArgs &e){
@@ -1485,10 +1226,10 @@ void testApp::s2Events(ofxUIEventArgs &e){
         
         if(t->getTriggerType() == OFX_UI_TEXTINPUT_ON_FOCUS){
             t->setTriggerType(OFX_UI_TEXTINPUT_ON_UNFOCUS);
-             isTextFocus = true;
+            isTextFocus = true;
         }else{
-             t->setTriggerType(OFX_UI_TEXTINPUT_ON_FOCUS);
-             isTextFocus = false;
+            t->setTriggerType(OFX_UI_TEXTINPUT_ON_FOCUS);
+            isTextFocus = false;
             
             if(name == "S_NAME"){
                 currentScene->setName(t->getTextString());
@@ -1514,12 +1255,12 @@ void testApp::s2Events(ofxUIEventArgs &e){
             
             
         }
-       
+        
         
     }
     
     if(isMouseDown){
-    
+        
         if(name == "SCENE_PLUS"){
             
             currentScene->deselectAll();
@@ -1534,7 +1275,7 @@ void testApp::s2Events(ofxUIEventArgs &e){
         
         if(name == "SCENE_MINUS"){
             
-             currentScene->deselectAll();
+            currentScene->deselectAll();
             selScene = max(selScene - 1, 0);
             currentScene = allScenes[selScene];
             sc2TextInput[0]->setTextString(currentScene->getName());
@@ -1558,7 +1299,7 @@ void testApp::s2Events(ofxUIEventArgs &e){
         }
         
         if(name == "DELETE_SCENE"){
-        
+            
             if(allScenes.size() > 1){
                 allScenes.erase(remove(allScenes.begin(), allScenes.end(), currentScene));
                 selScene = max(selScene - 1, 0);
@@ -1590,7 +1331,7 @@ void testApp::s2Events(ofxUIEventArgs &e){
                 currentZone = currentScene->getTriggerZone(selZone);
                 updateZoneControls();
                 hideSynthCanvas();
-               
+                
                 
             }
             
@@ -1599,11 +1340,11 @@ void testApp::s2Events(ofxUIEventArgs &e){
                 currentZone->setIsSelected(false);
                 selZone = max(selZone - 1, 0);
                 currentZone = currentScene->getTriggerZone(selZone);
-                 updateZoneControls();
+                updateZoneControls();
                 hideSynthCanvas();
                 
             }
-        
+            
             
             if(name == "DELETE_ZONE"){
                 
@@ -1615,14 +1356,14 @@ void testApp::s2Events(ofxUIEventArgs &e){
                 
             }
             
-                       
+            
         }
-    
+        
         
     }
     
     if(currentScene->getNumTriggerZones() > 0 ){
-    
+        
         if(name == "sphere"){
             currentZone->setShape(0);
             updateZoneControls();
@@ -1699,7 +1440,7 @@ void testApp::s2Events(ofxUIEventArgs &e){
         
         if(name == "PLAY_TO_END"){
             ofxUIToggle *tog = (ofxUIToggle *) e.widget;
-            currentZone->setIsPlayToEnd(tog->getValue());        
+            currentZone->setIsPlayToEnd(tog->getValue());
         }
         
         if(name == "INVERTED"){
@@ -1719,7 +1460,7 @@ void testApp::s2Events(ofxUIEventArgs &e){
         
         
         if(isMouseDown){
-        
+            
             //buttons must go in here
             
             if(name == "ST_MINUS"){
@@ -1739,39 +1480,11 @@ void testApp::s2Events(ofxUIEventArgs &e){
                 
             }
         }
-
+        
         
     }
-
-
-}
-
-void testApp::updateZoneControls(){
     
-    if(currentScene->getNumTriggerZones() > 0){
-        
-        if(displayMode == DT_DM_3D){
-        
-            zoneCanvases[0]->setVisible(true);
-            
-            currentZone = currentScene->getTriggerZone(selZone);
-            if(currentZone->getShape() == 0){
-                zoneCanvases[1]->setVisible(true);
-                zoneCanvases[2]->setVisible(false);
-            }else{
-                zoneCanvases[1]->setVisible(false);
-                zoneCanvases[2]->setVisible(true);
-            }
-        }
-        
-        updateTZGuiElements();
-        
-    }else{
-        for(int i = 0; i < 3; i++)zoneCanvases[i]->setVisible(false);
-        sc2TextInput[1]->setTextString("none");
-    }
-
-
+    
 }
 
 void testApp::s3Events(ofxUIEventArgs &e){
@@ -1801,7 +1514,113 @@ void testApp::s3Events(ofxUIEventArgs &e){
         
         
     }
+    
+    if(isMouseDown){
+    
+        if(name == "BANK_MINUS"){
+            
+            selBank = max(selBank - 1, 0);
+            currentBank = allBanks[selBank];
+            bSelScene = 0;
+            updateBankElements();
+        
+        }
+        
+        if(name == "BANK_PLUS"){
+            
+            selBank = min((int)allBanks.size() -1, selBank + 1);
+            currentBank = allBanks[selBank];
+            bSelScene = 0;
+            updateBankElements();
+        }
+        
+        if(name == "CREATE_BANK"){
+            ofPtr<bank> b = ofPtr<bank>(new bank());
+            allBanks.insert(allBanks.begin() + selBank + 1, b);
+            currentBank = b;
+            selBank += 1;
+            bSelScene = 0;
+            updateBankElements();
+        }
+        
+        if(name == "DELETE_BANK"){
+        
+            if(allBanks.size() > 1){
+                allBanks.erase(remove(allBanks.begin(), allBanks.end(), currentBank));
+                selBank -= 1;
+                currentBank = allBanks[selBank];
+                bSelScene = 0;
+                updateBankElements();
+            }
+        }
+        
+        if(name == "B_SCENE_PLUS"){
+            
+            currentScene->deselectAll();
+            selScene = min(selScene + 1, (int)allScenes.size() - 1);
+            currentScene = allScenes[selScene];
+            selZone = 0;
+            updateBankElements();
+        
+        }
+        
+        if(name == "B_SCENE_MINUS"){
+        
+            currentScene->deselectAll();
+            selScene = max(selScene - 1, 0);
+            currentScene = allScenes[selScene];
+            selZone = 0;
+            updateBankElements();
 
+        }
+        
+        if(name == "ADD_SCENE_TO_BANK"){
+        
+            if(currentBank->scenes.size() > 0){
+                currentBank->scenes.insert(currentBank->scenes.begin() + bSelScene + 1, currentScene);
+                bSelScene += 1;
+            }else{
+                currentBank->scenes.push_back(currentScene);
+            }
+            updateBankElements();
+        }
+        
+        if(name == "B_ITEM_MINUS"){
+        
+            bSelScene = max(0, bSelScene - 1);
+             updateBankElements();
+        }
+        
+        if(name == "B_ITEM_PLUS"){
+            
+            bSelScene = min((int)currentBank->scenes.size()- 1, bSelScene + 1);
+             updateBankElements();
+        
+        }
+        
+        if(name == "REMOVE_ITEM"){
+        
+            if(currentBank->scenes.size() > 0){
+            
+                currentBank->scenes.erase(currentBank->scenes.begin()+ bSelScene);
+                bSelScene = max(0, bSelScene - 1);
+                updateBankElements();
+            }
+            
+        }
+        
+        
+    }
+    
+}
+
+void testApp::s4Events(ofxUIEventArgs &e){
+
+    string name = e.widget->getName();
+    
+    if(isMouseDown)perfChange(name);
+    
+    
 }
 
 void testApp::synthEvents(ofxUIEventArgs &e){
@@ -1810,7 +1629,7 @@ void testApp::synthEvents(ofxUIEventArgs &e){
     int id = e.widget->getID();
     
     synthParam sp = currentZone->getSynthParam(id);
-   
+    
     if(name == "abs_val"){
         ofxUISlider *slider = (ofxUISlider *) e.widget;
         sp.abs_val = slider->getScaledValue();
@@ -1840,24 +1659,54 @@ void testApp::synthEvents(ofxUIEventArgs &e){
     }
     
     currentZone->setSynthParam(id, sp);
-        
+    
 }
 
 void testApp::fEvents(ofxUIEventArgs &e){
-
+    
     string name = e.widget->getName();
     ofxUISlider *slider = (ofxUISlider *) e.widget;
     
     if(name == "F_POS_X")fakePos.x = slider->getScaledValue();
     if(name == "F_POS_Y")fakePos.y = slider->getScaledValue();
     if(name == "F_POS_Z")fakePos.z = slider->getScaledValue();
+    
+    
+}
 
+//-----------------------------------------------------
+
+void testApp::updateZoneControls(){
+    
+    if(currentScene->getNumTriggerZones() > 0){
         
+        if(displayMode == DT_DM_3D){
+            
+            zoneCanvases[0]->setVisible(true);
+            
+            currentZone = currentScene->getTriggerZone(selZone);
+            if(currentZone->getShape() == 0){
+                zoneCanvases[1]->setVisible(true);
+                zoneCanvases[2]->setVisible(false);
+            }else{
+                zoneCanvases[1]->setVisible(false);
+                zoneCanvases[2]->setVisible(true);
+            }
+        }
+        
+        updateTZGuiElements();
+        
+    }else{
+        for(int i = 0; i < 3; i++)zoneCanvases[i]->setVisible(false);
+        sc2TextInput[1]->setTextString("none");
+    }
+    
+    
 }
 
 void testApp::updateTZGuiElements(){
     
-   sc2TextInput[1]->setTextString(currentZone->getName());
+    sc2TextInput[1]->setTextString(currentZone->getName());
     sc2TextInput[2]->setTextString(currentZone->getSoundFileName());
     
     ofVec3f tp = currentZone->getPos();
@@ -1875,7 +1724,7 @@ void testApp::updateTZGuiElements(){
     yDimSlid->setValue(currentZone->getBoxDims().y);
     zDimSlid->setValue(currentZone->getBoxDims().z);
     (currentZone->getShape() == 0) ? shapeRad->activateToggle("sphere") : shapeRad->activateToggle("box");
-
+    
     //sensSlider->setValue(currentZone->getSensitivity());
     repSlider->setValue(currentZone->getMinReplaySecs());
     synthTypeDisp->setLabel("SYNTH_TYPE: " + synthDictionary::getSynthString(currentZone->getSynthType()));
@@ -1885,7 +1734,7 @@ void testApp::updateTZGuiElements(){
 }
 
 void testApp::populateSynthCanvas(){
-
+    
     if(synthCanvas != NULL)delete synthCanvas;
     
     synthCanvas = new ofxUIScrollableCanvas(ofGetWidth()/2 - tabBarWidth * 0.9 , 0, tabBarWidth * 1.8, 200);
@@ -1908,18 +1757,18 @@ void testApp::populateSynthCanvas(){
         
         ofxUISlider * absl = new ofxUISlider("abs_val" , sp[i].sl_min, sp[i].sl_max, c_sp.abs_val , 100,20);
         synthCanvas->addWidgetDown(absl);
-         absl->setID(i);
+        absl->setID(i);
         ofxUISlider * mvsl = new ofxUISlider("min_val" , sp[i].sl_min, sp[i].sl_max, c_sp.min_val , 100,20);
         synthCanvas->addWidgetRight(mvsl);
-         mvsl->setID(i);
+        mvsl->setID(i);
         ofxUISlider * mxsl = new ofxUISlider("max_val" , sp[i].sl_min, sp[i].sl_max, c_sp.max_val , 100,20);
         synthCanvas->addWidgetRight(mxsl);
-         mxsl->setID(i);
+        mxsl->setID(i);
         
         ofxUITextArea * l = new ofxUITextArea("MAP_TYPE", "MAP_TYPE: " + synthDictionary::getMapString(c_sp.map), 180,20,0,0, OFX_UI_FONT_SMALL);
         synthCanvas->addWidgetRight(l);
         l->setID(i);
-         mapTypeLabels.push_back(l);
+        mapTypeLabels.push_back(l);
         
         
         ofxUILabelButton * zb = (ofxUILabelButton *)synthCanvas->addWidgetRight(new ofxUILabelButton("MINUS", true, 25));
@@ -1933,21 +1782,384 @@ void testApp::populateSynthCanvas(){
         
         synthCanvas->addWidgetDown(new ofxUILabel("", OFX_UI_FONT_SMALL));
         synthCanvas->addSpacer();
-    
+        
     }
     
-      ofAddListener(synthCanvas->newGUIEvent,this,&testApp::synthEvents);
+    ofAddListener(synthCanvas->newGUIEvent,this,&testApp::synthEvents);
 }
 
 void testApp::hideSynthCanvas(){
-   
+    
     if(isSynthView){
         isSynthView = false;
         synthCanvas->setVisible(false);
         dispSynthTog->setValue(false);
     }
+    
+}
+
+void testApp::updateBankElements(){
+
+    sc3TextInput->setTextString(currentBank->name);
+    perfBankText->setTextString(currentBank->name);
+    sceneText->setTextString(currentScene->getName());
+    
+    string b_str = "\n\n";
+    
+    for(int i = 0; i < currentBank->scenes.size(); i++){
+        
+        b_str += "   " + currentBank->scenes[i]->getName();
+        b_str += (i == bSelScene) ? "   <--- \n\n" : "\n\n";
+    
+    }
+    
+    bankText->setTextString(b_str);
+    perfSceneText->setTextString(b_str);
+        
 
 }
+
+void testApp::perfChange(string name){
+
+    if(name == "BANK_MINUS"){
+        
+        selBank = max(selBank - 1, 0);
+        
+        if(currentBank != allBanks[selBank]){
+            currentBank = allBanks[selBank];
+            bSelScene = 0;
+            if(currentBank->scenes.size() > 0){
+                currentScene = currentBank->scenes[bSelScene];
+            }
+            updateBankElements();
+        }
+        
+    }
+    
+    if(name == "BANK_PLUS"){
+        
+        selBank = min((int)allBanks.size() -1, selBank + 1);
+        
+        if(currentBank != allBanks[selBank]){
+            currentBank = allBanks[selBank];
+            bSelScene = 0;
+            if(currentBank->scenes.size() > 0){
+                currentScene = currentBank->scenes[bSelScene];
+            }
+            updateBankElements();
+        }
+    }
+    
+    if(name == "B_ITEM_MINUS"){
+        
+        bSelScene = max(0, bSelScene - 1);
+        if(currentBank->scenes.size() > 0){
+            currentScene = currentBank->scenes[bSelScene];
+        }
+        updateBankElements();
+    }
+    
+    if(name == "B_ITEM_PLUS"){
+        
+        bSelScene = min((int)currentBank->scenes.size()- 1, bSelScene + 1);
+        if(currentBank->scenes.size() > 0){
+            currentScene = currentBank->scenes[bSelScene];
+        }
+        updateBankElements();
+        
+    }
+
+}
+
+//--------------------------------------------------------------
+void testApp::draw(){
+    
+    ofSetColor(0);
+    ofBackground(120);
+    
+    ofDrawBitmapString("FPS: " +  ofToString(ofGetFrameRate(), 2), 20,20);
+    
+    
+    if(displayMode == DT_DM_3D){
+        
+        cm.begin();
+        
+        
+        glEnable(GL_DEPTH_TEST);
+        
+        ofScale(-100,100,100);
+        
+        ofNoFill();
+        
+        // topLight.draw();
+        // ambientLight.enable();
+        // topLight.enable();
+        
+        ofPushMatrix();
+        ofScale(0.05, 0.05, 0.05);
+        ofDrawGrid();
+        ofPopMatrix();
+        
+        
+        ofPushMatrix();
+        ofTranslate(0, floorY, 0);
+        drawFloor();
+        ofPopMatrix();
+        
+        
+        ofNoFill();
+        ofSetColor(255,255,0);
+        
+        ofPushMatrix();
+        ofRotate(qangle, qaxis.x, qaxis.y, qaxis.z);
+        ofScale(2,0.5,0.5);
+        ofBox(0.15);
+        ofPopMatrix();
+        
+        
+        if(isViewSegPoints){
+            if(isUser || isFakeUser)drawUserPointCloud();
+        }else{
+            drawScenePointCloud();
+        }
+        
+        if(isViewCom){
+            ofNoFill();
+            ofSetColor(0, 255, 255);
+            ofSphere(com.x, com.y, com.z, userHeight/2);
+        }
+        
+        
+        if(isViewCScene){
+            
+            currentScene->draw(cm.getPosition());
+        }
+        
+        cm.end();
+        
+        glDisable(GL_DEPTH_TEST);
+        
+    }
+    
+    
+    if(displayMode == DT_DM_2D){
+        
+        ofSetColor(255);
+        
+        ofPushMatrix();
+        ofTranslate(ofGetWidth() - 750, 50);
+        liveImg.draw(0,0,320,240);
+        ofTranslate(0, 260);
+        ofDrawBitmapString("live depthMap", 0,0);
+        ofTranslate(0, 40);
+        segMask.draw(0,0,320,240);
+        ofTranslate(0, 260);
+        ofDrawBitmapString("segmented depthMap", 0,0);
+        ofTranslate(0, 40);
+        
+        ofPopMatrix();
+        
+        ofPushMatrix();
+        ofTranslate(ofGetWidth() - 360, 50);
+        ofFill();
+        ofSetColor(50);
+        ofRect(0,0,320,240);
+        cfFinder.draw(0,0,320,240);
+        ofTranslate(0, 260);
+        ofSetColor(255);
+        ofDrawBitmapString("contour analysis", 0,0);
+        ofPopMatrix();
+        
+    }
+    
+}
+
+void testApp::drawScenePointCloud() {
+    
+	glBegin(GL_POINTS);
+    glColor3ub(0, 0, 0);
+    
+    for(int i = 0; i < curDepths.size(); i ++){
+        
+        glVertex3f(curDepths[i].x, curDepths[i].y, curDepths[i].z);
+        
+    }
+    
+	glEnd();
+}
+
+void testApp::drawUserPointCloud() {
+    
+	glBegin(GL_POINTS);
+    glColor3ub(0, 0, 0);
+    
+    
+    for(int i = 0; i < userPixels.size(); i ++){
+        
+        glVertex3f(userPixels[i].x, userPixels[i].y, userPixels[i].z);
+        
+	}
+    
+	glEnd();
+    
+    
+    
+}
+
+void testApp::drawFloor(){
+    
+    ofSetColor(0);
+    
+    float spacing = 0.5;
+    float numLines = 20;
+    float sx = -spacing * numLines * 0.5;
+    float sz = 0;
+    
+    for(int i = 0; i < numLines; i ++){
+        
+        ofLine(sx + spacing * i, 0, 0, sx + spacing * i, 0, 10); //across the x -axis
+        ofLine(-5, 0 , sz + spacing * i ,5, 0, sz + spacing * i ); //across the z -axis
+        
+    }
+    
+    
+    
+}
+
+//--------------------------------------------------------------
+void testApp::keyPressed(int key){
+    
+    if(isTextFocus)return; //no key events whilst textFocus
+    
+    switch(key){
+            
+        case ' ':
+            settingsTabBar->toggleVisible();
+            isSettingsGui = !isSettingsGui;
+            if(!isSettingsGui)
+                for(int i = 0; i < 3; i++)zoneCanvases[i]->setVisible(false);
+            else
+                if(settingsTabBar->getActiveCanvas()->getName() == "Scene Setup")updateZoneControls();
+            break;
+            
+        case OF_KEY_RETURN:
+            displayTabBar->toggleVisible();
+            isDisplayGui = !isDisplayGui;
+            break;
+            
+        case 'F':
+            isFakeUser = !isFakeUser;
+            fakeCanvas->setVisible(isFakeUser);
+            break;
+            
+            
+    }
+    
+    
+    if(isCamKey) {
+        
+        switch(key){
+                
+            case 'a':
+            {
+                
+                cm.truck(-10);
+                
+                
+            }
+                break;
+                
+            case 's':
+            {
+                
+                cm.truck(10);
+                
+            }
+                break;
+                
+                
+            case 'z':
+            {
+                
+                cm.dolly(10);
+                
+            }
+                break;
+                
+                
+            case 'x':
+            {
+                
+                cm.dolly(-10);
+                
+            }
+                break;
+                
+                
+                
+        }
+        
+        
+    }
+    
+    if(isPerfMode){
+    
+        if(key == OF_KEY_UP)perfChange("B_ITEM_MINUS");
+        
+        if(key == OF_KEY_DOWN)perfChange("B_ITEM_PLUS");
+        
+        if(key == OF_KEY_LEFT)perfChange("BANK_MINUS");
+        
+        if(key == OF_KEY_RIGHT)perfChange("BANK_PLUS");
+            
+    }
+    
+}
+
+void testApp::keyReleased(int key){
+    
+}
+
+void testApp::mouseMoved(int x, int y ){
+    
+}
+
+void testApp::mouseDragged(int x, int y, int button){
+    
+}
+
+void testApp::mousePressed(int x, int y, int button){
+    
+    isMouseDown = true;
+    
+}
+
+void testApp::mouseReleased(int x, int y, int button){
+    
+    isMouseDown = false;
+}
+
+void testApp::windowResized(int w, int h){
+    
+    displayTabBar->setPosition(ofGetWidth() - 100 ,ofGetHeight() - tabBarHeight);
+    settingsTabBar->setPosition(0,ofGetHeight() - tabBarHeight);
+    
+    for(int i = 0; i < 2; i ++){
+        
+        displayCanvases[i]->setPosition(ofGetWidth() - tabBarWidth, 0);
+        
+    }
+    
+}
+
+void testApp::gotMessage(ofMessage msg){
+    
+}
+
+void testApp::dragEvent(ofDragInfo dragInfo){
+    
+}
+
 
 
 void testApp::exit(){
@@ -1963,6 +2175,6 @@ void testApp::exit(){
     if(synthCanvas != NULL)delete synthCanvas;
     
     mOsc->sendExit();
-
+    
 }
 

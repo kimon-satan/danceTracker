@@ -17,12 +17,16 @@ class bank{
     
     bank(){
         
-        name = "default";
+        mIndex = index;
+        name = "bank_" + ofToString(index,0);
+        index += 1;
     
     };
     
     vector<ofPtr<scene> > scenes;
     string name;
+    static int index;
+    int mIndex;
 
 };
 
