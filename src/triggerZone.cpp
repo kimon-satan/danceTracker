@@ -29,12 +29,14 @@ triggerZone::triggerZone(ofPtr<oscManager> o) : mOsc(o){
     index += 1;
     
     isSelected = false;
+    isSound = false;
     
     occupyCount = 0;
     emptyCount = 0;
     
     isLoop = true;
     isPlayToEnd = false;
+    isInverted = false;
     
     sensitivity = 1.0;
     minReplaySecs = 0.0;
@@ -182,13 +184,21 @@ void triggerZone::checkPoints(vector<ofVec3f> & pc){
         if(occupyCount == 0){
            
             if((float)emptyCount/60.0 >= minReplaySecs){
-                // mSound.stop();
-                mOsc->stopZone(mIndex);
-                //mSound.play();
-                mOsc->playZone(mIndex);
+                
+                if(!isInverted){
+                    mOsc->playZone(mIndex);
+                    isSound = true;
+                }else{
+                    mOsc->stopZone(mIndex);
+                    isSound = false;
+                }
+                
                 emptyCount = 0;
                 occupyCount +=1;
+                
             }else{
+                
+                isOccupied = false;
                 emptyCount += 1;
             }
            
@@ -197,7 +207,13 @@ void triggerZone::checkPoints(vector<ofVec3f> & pc){
     }else{
         
         if(occupyCount > 0){
-            mOsc->stopZone(mIndex);
+            if(isInverted){
+                mOsc->playZone(mIndex);
+                isSound = true;
+            }else{
+                mOsc->stopZone(mIndex);
+                isSound = false;
+            }
             occupyCount = 0;
         }
         
@@ -244,9 +260,17 @@ bool triggerZone::checkInRange(ofVec3f com, float userHeight){
     
     if(!inRange && isOccupied){
         
-        mOsc->stopZone(mIndex);
+        if(isInverted){
+            mOsc->playZone(mIndex);
+            isSound = true;
+        }else{
+            mOsc->stopZone(mIndex);
+            isSound = false;
+        }
+        
         isOccupied = false;
         occupyCount = 0;
+        emptyCount = 0;
         
     }
     
@@ -346,12 +370,19 @@ void triggerZone::updateSynthParams(){
 void triggerZone::update(){
 
     if(!isOccupied){
-      emptyCount += 1;
-    }else{
         
+        if(emptyCount == 0 && isInverted){
+            mOsc->playZone(mIndex);
+            isSound = true;
+        }
+        
+        emptyCount += 1;
+        
+    }
+    
+    if(isSound){
         updateSynthParams();
         mOsc->updateSynth(mIndex);
-        
     }
     
     
@@ -392,7 +423,10 @@ string triggerZone::getSoundFileName(){return mSoundFileName;}
 void triggerZone::setIsEnabled(bool b){
 
     isEnabled = b;
-    if(!isEnabled)mOsc->stopZone(mIndex);
+    if(!isEnabled){
+        mOsc->stopZone(mIndex);
+        isSound = false;
+    }
 
 }
 bool triggerZone::getIsEnabled(){return isEnabled;}
@@ -403,29 +437,9 @@ float triggerZone::getRadius(){return radius;}
 
 void triggerZone::setRadius(float r){radius = r;}
 
-void triggerZone::setPosX(float x){
-
-    center.x = x;
-   /* if(!isMapPanToZ){
-        float pan = x/5;
-        pan = min(1.0, max(-1.0, pan - 1.0));
-        pan *= 0.75;
-        mOsc->updateZoneSettings(mIndex, "pan", pan);
-    }*/
-
-}
+void triggerZone::setPosX(float x){center.x = x;}
 void triggerZone::setPosY(float y){center.y = y;}
-void triggerZone::setPosZ(float z){
-    
-    center.z = z;
- /*   if(isMapPanToZ){
-        float pan = z/10;
-        pan = min(1.0, max(-1.0, pan - 1.0));
-        pan *= 0.75;
-        mOsc->updateZoneSettings(mIndex, "pan", pan);
-    }*/
-
-}
+void triggerZone::setPosZ(float z){center.z = z;}
 
 void triggerZone::setShape(int t){shape = tzShape(t);}
 int triggerZone::getShape(){return (int)shape;}
@@ -478,8 +492,20 @@ bool triggerZone::getIsAudioLoaded(){
 
 void triggerZone::deselect(){
     
-    if(isOccupied)mOsc->stopZone(mIndex);
+    if(!isInverted){
+        if(isOccupied){
+            mOsc->stopZone(mIndex);
+            isSound = false;
+        }
+    }else{
+        if(!isOccupied){
+           mOsc->stopZone(mIndex);
+            isSound = false;
+        }
+        
+    }
     isOccupied = false;
+    emptyCount = 0;
     occupyCount = 0;
     
 }
@@ -502,6 +528,26 @@ void triggerZone::setSynthType(int i){
 
 synthParam triggerZone::getSynthParam(int i){return synthParams[i];}
 void triggerZone::setSynthParam(int i, synthParam p){synthParams[i] = p;}
+
+bool triggerZone::getIsInverted(){return isInverted;}
+void triggerZone::setIsInverted(bool b){
+    
+    if(!isInverted){
+        if(isOccupied){
+            mOsc->stopZone(mIndex);
+            isSound = false;
+        }
+    }else{
+        if(!isOccupied){
+            mOsc->stopZone(mIndex);
+            isSound = false;
+        }
+    }
+    
+    isInverted = b;
+    occupyCount = 0;
+    emptyCount = 0;
+}
 
 int triggerZone::getIndex(){ return mIndex; }
 

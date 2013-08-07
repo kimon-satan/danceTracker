@@ -38,6 +38,8 @@ class oscManager{
     
     void printMessage(ofxOscMessage & m);
     
+    void sendExit();
+    
     private:
     
     bool isGreeted;

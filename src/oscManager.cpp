@@ -182,3 +182,12 @@ void oscManager::updateSynth(int index){
     sender.sendMessage(m);
     
 }
+
+void oscManager::sendExit(){
+    
+    ofxOscMessage m;
+    m.setAddress("/exit");
+    
+    sender.sendMessage(m);
+    
+}

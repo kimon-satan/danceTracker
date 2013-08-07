@@ -84,6 +84,11 @@ void testApp::setup(){
     allScenes.push_back(s);
     currentScene = s;
     
+    ofPtr<bank> b = ofPtr<bank>(new bank());
+    b->name = "all_scenes";
+    allBanks.push_back(b);
+    currentBank = b;
+    
     setupGui();
     updateZoneControls(); 
     
@@ -102,19 +107,43 @@ void testApp::setLightOri(ofLight &light, ofVec3f rot){
 }
 
 
+
+
 void testApp::setupGui(){
 
     tabBarWidth = 320;
     tabBarHeight = 100;
     
-    float dim  = 24;
-    
-    float xInit = OFX_UI_GLOBAL_WIDGET_SPACING;
-    float length = tabBarWidth - xInit;
-    
-    
     isSettingsGui = true;
     isDisplayGui = true;
+    
+    setupGeneralSettings();
+    setupZonePanels();
+    setupDisplaySettings();
+    
+    
+    fakeCanvas = new ofxUICanvas(ofGetWidth() - tabBarWidth, 450, tabBarWidth, 125);
+    fakeCanvas->setColorFill(ofxUIColor(200));
+    fakeCanvas->setColorFillHighlight(ofxUIColor(255));
+    fakeCanvas->setColorBack(ofxUIColor(20, 20, 20, 150));
+    
+    fakeCanvas->addSlider("F_POS_X", -5, 5, fakePos.x);
+    fakeCanvas->addSlider("F_POS_Y", -2, 2, fakePos.y);
+    fakeCanvas->addSlider("F_POS_Z", 0, 10, fakePos.z);
+    
+    ofAddListener(fakeCanvas->newGUIEvent,this,&testApp::fEvents);
+    fakeCanvas->setVisible(false);
+    
+    
+    synthCanvas = NULL;
+    
+   
+}
+
+void testApp::setupGeneralSettings(){
+    
+    float slHeight  = 24;
+    float slLength = tabBarWidth - OFX_UI_GLOBAL_WIDGET_SPACING * 2;
     
     // ---
     settingsTabBar = new ofxUITabBar();
@@ -125,9 +154,9 @@ void testApp::setupGui(){
     settingsTabBar->setColorBack(ofxUIColor(255, 20, 20, 150));
     
     ofAddListener(settingsTabBar->newGUIEvent,this,&testApp::settingsEvents);
-   
-    for(int i = 0; i < NUM_CANVASES; i ++){
     
+    for(int i = 0; i < NUM_SETTINGS_CANVASES; i ++){
+        
         settingsCanvases[i] = new ofxUICanvas(0, 0, tabBarWidth, 500);
         settingsCanvases[i]->setColorFill(ofxUIColor(200));
         settingsCanvases[i]->setColorFillHighlight(ofxUIColor(255));
@@ -135,7 +164,7 @@ void testApp::setupGui(){
         
     }
     
-   
+    
     //--------------------------------------------
     
     settingsCanvases[0]->setName("Save/Load");
@@ -150,12 +179,13 @@ void testApp::setupGui(){
     
     ofAddListener(settingsCanvases[0]->newGUIEvent,this,&testApp::s0Events);
     settingsTabBar->addCanvas(settingsCanvases[0]);
+    settingsCanvases[0]->autoSizeToFitWidgets();
     
     //---------------------------
     
 	settingsCanvases[1]->setName("Initial Setup");
     
-    sc1Sliders[0] = settingsCanvases[1]->addSlider("KN_TILT", -30, 30, kinectAngle, length-xInit, dim);
+    sc1Sliders[0] = settingsCanvases[1]->addSlider("KN_TILT", -30, 30, kinectAngle, slLength, slHeight);
     
     settingsCanvases[1]->addSpacer();
     
@@ -163,41 +193,42 @@ void testApp::setupGui(){
     
     settingsCanvases[1]->addSpacer();
     
-    sc1Sliders[1] = settingsCanvases[1]->addSlider("NEAR_THRESH", 0, 2, nearThresh, length-xInit, dim);
-    sc1Sliders[2] = settingsCanvases[1]->addSlider("FAR_THRESH", 5, 15, farThresh, length-xInit, dim);
-    sc1Sliders[3] =  settingsCanvases[1]->addSlider("SEG_THRESH", 0, 1, segThresh, length-xInit, dim);
-    sc1Sliders[4] = settingsCanvases[1]->addSlider("MIN_BLOB", 0, 0.1, minBlob, length-xInit, dim);
-    sc1Sliders[5] = settingsCanvases[1]->addSlider("MAX_BLOB", 0.25, 1, maxBlob, length-xInit, dim);
-     
+    sc1Sliders[1] = settingsCanvases[1]->addSlider("NEAR_THRESH", 0, 2, nearThresh, slLength, slHeight);
+    sc1Sliders[2] = settingsCanvases[1]->addSlider("FAR_THRESH", 5, 15, farThresh, slLength, slHeight);
+    sc1Sliders[3] =  settingsCanvases[1]->addSlider("SEG_THRESH", 0, 1, segThresh, slLength, slHeight);
+    sc1Sliders[4] = settingsCanvases[1]->addSlider("MIN_BLOB", 0, 0.1, minBlob, slLength, slHeight);
+    sc1Sliders[5] = settingsCanvases[1]->addSlider("MAX_BLOB", 0.25, 1, maxBlob, slLength, slHeight);
+    
     
     settingsCanvases[1]->addSpacer();
-    sc1Sliders[6] = settingsCanvases[1]->addSlider("FLOOR_Y", -10, -0.5, floorY, length-xInit, dim);
-    sc1Sliders[7] = settingsCanvases[1]->addSlider("USER_HEIGHT", 1, 2, userHeight, length-xInit, dim);
-   
-  
+    sc1Sliders[6] = settingsCanvases[1]->addSlider("FLOOR_Y", -10, -0.5, floorY, slLength, slHeight);
+    sc1Sliders[7] = settingsCanvases[1]->addSlider("USER_HEIGHT", 1, 2, userHeight, slLength, slHeight);
+    
+    
     ofAddListener(settingsCanvases[1]->newGUIEvent,this,&testApp::s1Events);
     settingsTabBar->addCanvas(settingsCanvases[1]);
+    settingsCanvases[1]->autoSizeToFitWidgets();
     
     //------------------------
     
     
 	settingsCanvases[2]->setName("Scene Setup");
- 
-
+    
+    
     settingsCanvases[2]->addLabel("SELECTED SCENE");
     sc2TextInput[0] = settingsCanvases[2]->addTextInput("S_NAME", "");
     sc2TextInput[0]->setTextString(currentScene->getName());
     
     ofxUILabelButton * sb = (ofxUILabelButton *)settingsCanvases[2]->addWidgetDown(new ofxUILabelButton("SCENE_MINUS", true, 25));
     ofxUILabelButton * sc = (ofxUILabelButton *)settingsCanvases[2]->addWidgetRight(new ofxUILabelButton("SCENE_PLUS", true, 25));
-  
+    
     sb->setLabelText("-");
     sc->setLabelText("+");
-
+    
     
     settingsCanvases[2]->addButton("CREATE_SCENE", false);
     settingsCanvases[2]->addButton("DELETE_SCENE", false);
-
+    
     
     settingsCanvases[2]->addSpacer();
     
@@ -217,9 +248,72 @@ void testApp::setupGui(){
     ofAddListener(settingsCanvases[2]->newGUIEvent,this,&testApp::s2Events);
     settingsTabBar->addCanvas(settingsCanvases[2]);
     settingsCanvases[2]->autoSizeToFitWidgets();
+    
+    //----------------------------BANKS CANVASES ----------------------//
+    
+    settingsCanvases[3]->setName("Setup Banks");
+    
+    settingsCanvases[3]->addLabel("Setup Banks");
+    
+    
+    settingsCanvases[3]->addLabel("CURRENT BANK: ", OFX_UI_FONT_SMALL);
+    sc3TextInput = new ofxUITextInput ("B_NAME", "all scenes", 200);
+    
+    settingsCanvases[3]->addWidgetRight(sc3TextInput);
+    
+    ofxUILabelButton * bb = (ofxUILabelButton *)settingsCanvases[3]->addWidgetDown(new ofxUILabelButton("BANK_MINUS", true, 25));
+    ofxUILabelButton * bc = (ofxUILabelButton *)settingsCanvases[3]->addWidgetRight(new ofxUILabelButton("BANK_PLUS", true, 25));
+    
+    bb->setLabelText("-");
+    bc->setLabelText("+");
+    
+    settingsCanvases[3]->addWidgetRight(new ofxUIButton("CREATE_BANK", false, 20,20));
+    settingsCanvases[3]->addWidgetRight(new ofxUIButton("DELETE_BANK", false, 20,20));
 
+    
+    settingsCanvases[3]->addSpacer();
+    
+    settingsCanvases[3]->addLabel("SELECTED SCENE: ", OFX_UI_FONT_SMALL);
+    
+    ofxUITextArea * sceneText = new ofxUITextArea("SCENE_TEXT", "none", 200, 20,0,0,OFX_UI_FONT_SMALL);
+    
+    sceneText->setDrawBack(true);
+
+    settingsCanvases[3]->addWidgetRight(sceneText);
+    
+    ofxUILabelButton * sbb = (ofxUILabelButton *)settingsCanvases[3]->addWidgetDown(new ofxUILabelButton("B_SCENE_MINUS", true, 25));
+    ofxUILabelButton * sbc = (ofxUILabelButton *)settingsCanvases[3]->addWidgetRight(new ofxUILabelButton("B_SCENE_PLUS", true, 25));
+    
+    sbb->setLabelText("-");
+    sbc->setLabelText("+");
+    
+    settingsCanvases[3]->addWidgetRight(new ofxUIButton("ADD_SCENE_TO_BANK", false, 20,20));
+    
+    ofxUITextArea * bankText = new ofxUITextArea("BANK_TEXT", "bank items here", tabBarWidth, 300, 0,0,  OFX_UI_FONT_SMALL);
+    
+    bankText->setDrawOutlineHighLight(true);
+    
+    settingsCanvases[3]->addWidgetDown(bankText);
+
+    ofxUILabelButton * sbb2 = (ofxUILabelButton *)settingsCanvases[3]->addWidgetDown(new ofxUILabelButton("B_ITEM_MINUS", true, 25));
+    ofxUILabelButton * sbc2 = (ofxUILabelButton *)settingsCanvases[3]->addWidgetRight(new ofxUILabelButton("B_ITEM_PLUS", true, 25));
+    
+    sbb2->setLabelText("-");
+    sbc2->setLabelText("+");
+    
+    settingsCanvases[3]->addWidgetRight(new ofxUIButton("REMOVE_ITEM", false, 20,20));
+    
+    ofAddListener(settingsCanvases[3]->newGUIEvent,this,&testApp::s3Events);
+    settingsTabBar->addCanvas(settingsCanvases[3]);
+    settingsCanvases[3]->autoSizeToFitWidgets();
+
+    
+}
+
+void testApp::setupZonePanels(){
+    
     //----------------------ZONE CANVASES --------------//
-
+    
     for(int i = 0; i < 3; i ++){
         
         if(i == 0)
@@ -230,7 +324,7 @@ void testApp::setupGui(){
         zoneCanvases[i]->setColorFill(ofxUIColor(200));
         zoneCanvases[i]->setColorFillHighlight(ofxUIColor(255));
         zoneCanvases[i]->setColorBack(ofxUIColor(20, 20, 20, 150));
-    
+        
         
     }
     
@@ -246,7 +340,7 @@ void testApp::setupGui(){
     zoneCanvases[0]->addWidgetRight(tPosY);
     zoneCanvases[0]->addWidgetRight(tPosZ);
     
-     zoneCanvases[0]->addSpacer();
+    zoneCanvases[0]->addSpacer();
     
     vector<string> st;
     st.push_back("sphere");
@@ -274,9 +368,11 @@ void testApp::setupGui(){
     
     loopTog = new ofxUIToggle("LOOP", true, 20,20,0,0, OFX_UI_FONT_SMALL);
     playToEndTog = new ofxUIToggle("PLAY_TO_END", false, 20,20,0,0, OFX_UI_FONT_SMALL);
+    invertedTog = new ofxUIToggle("INVERTED", false, 20,20,0,0, OFX_UI_FONT_SMALL);
     
     zoneCanvases[0]->addWidgetDown(loopTog);
     zoneCanvases[0]->addWidgetRight(playToEndTog);
+    zoneCanvases[0]->addWidgetRight(invertedTog);
     
     // a bit crap
     //sensSlider = new ofxUISlider("SENSITIVITY", 0.75, 1.0, 1.0, slw, 10);
@@ -311,7 +407,7 @@ void testApp::setupGui(){
     //zone c1----------------------------------------------------
     
     radSlid = zoneCanvases[1]->addSlider("RADIUS", 0.05, 3.0, 0.1);
-
+    
     ofAddListener(zoneCanvases[1]->newGUIEvent,this,&testApp::s2Events);
     
     
@@ -322,7 +418,11 @@ void testApp::setupGui(){
     zDimSlid= zoneCanvases[2]->addSlider("Z_DIM", 0.05,10.0,0.5);
     
     ofAddListener(zoneCanvases[2]->newGUIEvent,this,&testApp::s2Events);
+    
+}
 
+void testApp::setupDisplaySettings(){
+    
     //--------------------------------------DISPLAY SETTINGS----------------------------------------------------------//
     
     displayTabBar = new ofxUITabBar();
@@ -366,29 +466,14 @@ void testApp::setupGui(){
     displayCanvases[1]->addToggle("VIEW_SCENE", isViewCScene);
     
     
-    
+    displayCanvases[1]->autoSizeToFitWidgets();
     ofAddListener(displayCanvases[1]->newGUIEvent,this,&testApp::dispEvents);
     displayTabBar->addCanvas(displayCanvases[1]);
-  
+
     
-    fakeCanvas = new ofxUICanvas(ofGetWidth() - tabBarWidth, 500, tabBarWidth, 125);
-    fakeCanvas->setColorFill(ofxUIColor(200));
-    fakeCanvas->setColorFillHighlight(ofxUIColor(255));
-    fakeCanvas->setColorBack(ofxUIColor(20, 20, 20, 150));
-    
-    fakeCanvas->addSlider("F_POS_X", -5, 5, fakePos.x);
-    fakeCanvas->addSlider("F_POS_Y", -2, 2, fakePos.y);
-    fakeCanvas->addSlider("F_POS_Z", 0, 10, fakePos.z);
-    
-    ofAddListener(fakeCanvas->newGUIEvent,this,&testApp::fEvents);
-    fakeCanvas->setVisible(false);
-    
-    
-    synthCanvas = NULL;
-    
-   
-   
 }
+
+
 
 void testApp::saveSettings(string fn){
 
@@ -456,8 +541,9 @@ void testApp::saveSettings(string fn){
                             XML.addValue("SOUNDFILE", z->getSoundFileName());
                             XML.addValue("IS_LOOP", z->getIsLoop());
                             XML.addValue("IS_PLAY_TO_END", z->getIsPlayToEnd());
+                            XML.addValue("INVERTED", z->getIsInverted());
                             XML.addValue("ENABLED", z->getIsEnabled());
-                            XML.addValue("SENSITIVITY", z->getSensitivity());
+                            //XML.addValue("SENSITIVITY", z->getSensitivity());
                             XML.addValue("MIN_REPLAY", z->getMinReplaySecs());
                             XML.addValue("SYNTH_TYPE", z->getSynthType());
                             
@@ -466,7 +552,7 @@ void testApp::saveSettings(string fn){
                            
                             for(int i = 0; i < defSp.size(); i++){
                             
-                                synthParam sp = currentZone->getSynthParam(i);
+                                synthParam sp = z->getSynthParam(i);
                                 
                                 XML.addTag(defSp[i].name);
                                 
@@ -586,9 +672,10 @@ void testApp::loadSettings(string fn){
                             z->setRadius(XML.getValue("RADIUS",1.0));
                             z->setSoundFile(XML.getValue("SOUNDFILE", ""));
                             z->setIsPlayToEnd(XML.getValue("IS_PLAY_TO_END", false));
+                            z->setIsInverted(XML.getValue("INVERTED", false));
                             z->setIsLoop(XML.getValue("IS_LOOP", true));
                             z->setIsEnabled(XML.getValue("ENABLED", false));
-                            z->setSensitivity(XML.getValue("SENSITIVITY", 1.0));
+                            //z->setSensitivity(XML.getValue("SENSITIVITY", 1.0));
                             z->setMinReplaySecs(XML.getValue("MIN_REPLAY", 0.0));
                             z->setSynthType(XML.getValue("SYNTH_TYPE", 0));
                             
@@ -716,6 +803,8 @@ void testApp::update(){
                 
                 analyseUser();
                 currentScene->update(com, userHeight, userPixels);
+            }else{
+                currentScene->deselectAll();
             }
         }
        
@@ -1613,6 +1702,11 @@ void testApp::s2Events(ofxUIEventArgs &e){
             currentZone->setIsPlayToEnd(tog->getValue());        
         }
         
+        if(name == "INVERTED"){
+            ofxUIToggle *tog = (ofxUIToggle *) e.widget;
+            currentZone->setIsInverted(tog->getValue());
+        }
+        
         if(name == "SENSITIVITY"){
             ofxUISlider *slider = (ofxUISlider *) e.widget;
             currentZone->setSensitivity(slider->getScaledValue());
@@ -1677,6 +1771,36 @@ void testApp::updateZoneControls(){
         sc2TextInput[1]->setTextString("none");
     }
 
+
+}
+
+void testApp::s3Events(ofxUIEventArgs &e){
+    
+    string name = e.widget->getName();
+    
+    isTextFocus = false;
+    
+    if(e.widget->getKind() == 12){ //no key events whilst text is focussed
+        
+        ofxUITextInput * t = (ofxUITextInput *) e.widget;
+        
+        if(t->getTriggerType() == OFX_UI_TEXTINPUT_ON_FOCUS){
+            t->setTriggerType(OFX_UI_TEXTINPUT_ON_UNFOCUS);
+            isTextFocus = true;
+        }else{
+            t->setTriggerType(OFX_UI_TEXTINPUT_ON_FOCUS);
+            isTextFocus = false;
+            
+            if(name == "B_NAME"){
+                currentBank->name = t->getTextString();
+            }
+            
+            
+            
+        }
+        
+        
+    }
 
 }
 
@@ -1745,6 +1869,7 @@ void testApp::updateTZGuiElements(){
     eblTog->setValue(currentZone->getIsEnabled());
     loopTog->setValue(currentZone->getIsLoop());
     playToEndTog->setValue(currentZone->getIsPlayToEnd());
+    invertedTog->setValue(currentZone->getIsInverted());
     
     xDimSlid->setValue(currentZone->getBoxDims().x);
     yDimSlid->setValue(currentZone->getBoxDims().y);
@@ -1831,12 +1956,13 @@ void testApp::exit(){
 	delete settingsTabBar;
     delete displayTabBar;
     
-    for(int i = 0; i < NUM_CANVASES; i ++)delete settingsCanvases[i];
+    for(int i = 0; i < NUM_SETTINGS_CANVASES; i ++)delete settingsCanvases[i];
     for(int i = 0; i < 2; i++)delete displayCanvases[i];
     for(int i = 0; i < 3; i++)delete zoneCanvases[i];
     
     if(synthCanvas != NULL)delete synthCanvas;
-        
+    
+    mOsc->sendExit();
 
 }
 

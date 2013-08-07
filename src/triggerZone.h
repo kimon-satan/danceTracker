@@ -92,6 +92,9 @@ public:
     synthParam getSynthParam(int i);
     void setSynthParam(int i, synthParam p);
     
+    bool getIsInverted();
+    void setIsInverted(bool b);
+    
     int getIndex();
     
 
@@ -117,9 +120,9 @@ private:
     
     string mName, mSoundFileName;
     
-    bool isOccupied, isEnabled, isSelected;
+    bool isOccupied, isEnabled, isSelected, isSound;
     
-    bool isLoop, isPlayToEnd;
+    bool isLoop, isPlayToEnd, isInverted;
     int occupyCount, emptyCount;
     
     ofPtr<oscManager> mOsc;
