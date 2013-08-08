@@ -533,6 +533,7 @@ void testApp::saveSettings(string fn){
                 if(XML.pushTag("SCENE", sn)){
                     
                     XML.addValue("NAME", allScenes[sn]->getName());
+                    XML.addValue("INDEX", allScenes[sn]->getIndex());
                     
                     int numZones = allScenes[sn]->getNumTriggerZones();
                     
@@ -607,6 +608,39 @@ void testApp::saveSettings(string fn){
             XML.popTag();
         }
         
+        XML.addTag("BANK_SETTINGS");
+        
+        if(XML.pushTag("BANK_SETTINGS")){
+            
+            for(int i = 0; i < allBanks.size(); i ++){
+            
+                XML.addTag("BANK");
+                
+                if(XML.pushTag("BANK", i)){
+                    
+                    XML.setValue("NAME", allBanks[i]->name);
+                    
+                    int ns = allBanks[i]->scenes.size();
+                    XML.setValue("NUM_ITEMS", ns);
+                    
+                    for(int j = 0; j < ns; j ++){
+                    
+                        XML.setValue("ITEM", allBanks[i]->scenes[j]->getIndex(), j);
+                    
+                    }
+                    
+                
+                    //bank tag
+                    XML.popTag();
+                }
+            
+            }
+            
+            //Bank Settings tag
+            XML.popTag();
+        
+        }
+        
         //danceTracker tag
         XML.popTag();
     }
@@ -671,6 +705,7 @@ void testApp::loadSettings(string fn){
                         ofPtr<scene> nScene = ofPtr<scene>(new scene(mOsc));
                         
                         nScene->setName(XML.getValue("NAME", ""));
+                        nScene->setIndex(XML.getValue("INDEX", -1));
                         
                         int numZones = XML.getNumTags("ZONE");
                         
@@ -739,6 +774,8 @@ void testApp::loadSettings(string fn){
                     }
                     
                     
+                    
+                    
                 }
                 
                 selScene = 0;
@@ -761,6 +798,67 @@ void testApp::loadSettings(string fn){
                 //scene settings tag
                 XML.popTag();
             }
+            
+            
+            
+            if(XML.pushTag("BANK_SETTINGS")){
+                
+                allBanks.clear();
+                selBank = 0;
+                bSelScene = 0;
+                
+                int nb = XML.getNumTags("BANK");
+                
+                for(int i = 0; i < nb; i ++){
+                    
+                    if(XML.pushTag("BANK", i)){
+                        
+                        ofPtr<bank> tb = ofPtr<bank>(new bank());
+                        
+                        tb->name = XML.getValue("NAME","none");
+                        
+                        int ns = XML.getValue("NUM_ITEMS", 0);
+                        
+                        
+                        for(int j = 0; j < ns; j ++){
+                            
+                            int item = XML.getValue("ITEM", 0, j);
+                            
+                            vector<ofPtr<scene> >::iterator it = find_if(allScenes.begin(), allScenes.end(), matchSceneIndex(item));
+                            tb->scenes.push_back((*it));
+                            
+                        }
+                        
+                        allBanks.push_back(tb);
+                        //bank tag
+                        XML.popTag();
+                    }
+                    
+                }
+                
+                if(allBanks.size() > 0)currentBank = allBanks[0];
+                
+                updateBankElements();
+                
+                //Bank Settings tag
+                XML.popTag();
+                
+
+     
+            }else{
+        
+               
+                allBanks.clear();
+                ofPtr<bank> tb = ofPtr<bank>(new bank());
+                allBanks.push_back(tb);
+                currentBank = tb;
+                selBank = 0;
+                bSelScene = 0;
+                updateBankElements();
+            
+            }
+            
+
             
             //danceTracker Tag
             XML.popTag();
@@ -1800,6 +1898,7 @@ void testApp::hideSynthCanvas(){
 
 void testApp::updateBankElements(){
 
+    
     sc3TextInput->setTextString(currentBank->name);
     perfBankText->setTextString(currentBank->name);
     sceneText->setTextString(currentScene->getName());

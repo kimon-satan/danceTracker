@@ -31,7 +31,8 @@ class scene{
     void setName(string s);
     string getName();
     
-
+    void setIndex(int i);
+    int getIndex();
     
     private:
     
@@ -40,7 +41,7 @@ class scene{
     
     
     string mName;
-    
+    int mIndex;
     static int index;
     
 

@@ -14,7 +14,9 @@ scene::scene(ofPtr<oscManager> o): mOsc(o){
     
     mName = "emptyScene_" + ofToString(index,0);
     
+    mIndex = index;
     index += 1;
+    
     
 }
 
@@ -92,3 +94,13 @@ string scene::getName(){
 
     return mName;
 }
+
+
+void scene::setIndex(int i){
+    
+    if(i < 0)return; // -1 signifies no prev index recorded
+    mIndex = i;
+    index = i + 1;
+}
+
+int scene::getIndex(){return mIndex;}

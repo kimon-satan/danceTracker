@@ -36,6 +36,22 @@ public:
     
 };
 
+class matchSceneIndex{
+
+    int searchIndex;
+    
+    
+public:
+    
+    matchSceneIndex(int searchIndex):searchIndex(searchIndex){};
+    
+    bool operator()(ofPtr<scene> s) const{
+    
+        return (s->getIndex() == searchIndex);
+    };
+
+};
+
 
 
 
