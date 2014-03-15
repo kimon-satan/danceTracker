@@ -1,2 +1,6 @@
-bin/**/*
-!bin/data/XMLs/
+bin/*
+!bin/data
+
+bin/data/*
+!bin/data/GUI/
+!/bin/data/XMLs/
