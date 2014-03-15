@@ -943,7 +943,7 @@ void testApp::update(){
                 ofVec3f cur = kinect.getWorldCoordinateAt(x, y);
                 
                 ofVec3f curR = cur.getRotated(-qangle, qaxis);
-                curR *= ofVec3f(1,-1,1);
+                curR *= ofVec3f(0.001,-0.001,0.001); //new kinect lib in mm
                 curDepths.push_back(curR);
                 
             }
@@ -1041,7 +1041,7 @@ void testApp::recordBg(){
     
     for(int i = 0 ; i < bgDepths.size(); i ++){
         
-        if(bgDepths[i].z > nearThresh && bgDepths[i].z < farThresh){
+        if(bgDepths[i].z > nearThresh && bgDepths[i].z < farThresh ){
             
             if(bgDepths[i].y < cFloor){
                 cFloor = bgDepths[i].y;
@@ -1062,6 +1062,7 @@ void testApp::segment(){
     int counter = 0;
     
 	for(int i = 0; i < curDepths.size(); i ++) {
+        
         
         if(curDepths[i].z > nearThresh && curDepths[i].z < farThresh){
             
@@ -1139,7 +1140,7 @@ void testApp::analyseUser(){
             if(s_pix[y * kinect.width + x] > 0){
                 ofVec3f cur = kinect.getWorldCoordinateAt(x, y);
                 ofVec3f curR = cur.getRotated(-qangle, qaxis);
-                curR *= ofVec3f(1,-1,1);
+                curR *= ofVec3f(0.001,-0.001,0.001);
                 total += curR;
                 userPixels.push_back(curR);
                 
