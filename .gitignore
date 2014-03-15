@@ -1,7 +1,2 @@
-
-bin/
-!data/GUI/
-!data/XMLs/
-data/sound/
-*.wav
-
+bin/**/*
+!bin/data/XMLs/
