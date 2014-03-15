@@ -96,7 +96,7 @@ public:
     void setIsInverted(bool b);
     
     int getIndex();
-    
+    void newIndex();
 
     
     

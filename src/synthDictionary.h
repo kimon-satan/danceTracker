@@ -32,6 +32,9 @@ enum mapType{
     MT_LOCAL_Z,
     MT_LOCAL_CENTER,
     MT_NUM_POINTS,
+    MT_USER_Y,
+    MT_USER_RADIAL,
+    MT_USER_CENTER,
     MT_COUNT
     
 };

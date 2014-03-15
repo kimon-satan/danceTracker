@@ -41,14 +41,10 @@ triggerZone::triggerZone(ofPtr<oscManager> o) : mOsc(o){
     sensitivity = 1.0;
     minReplaySecs = 0.0;
     
-    //addZone to SC
-    mOsc->addZone(mIndex, mName);
-    
     synth = ST_SIMPLE;
     
     synthParams = synthDictionary::getSynthParams(synth);
     
-    updateAllAudio();
     
     
 }
@@ -311,7 +307,7 @@ void triggerZone::updateSynthParams(){
                 mul = 1 - mul;
                 break;
             case MT_GLOBAL_X:
-                mul =  (center.x + 5.0)/10.0;
+                mul =  (center.x + 3.0)/6.0;
                 break;
                 
             case MT_GLOBAL_Y:
@@ -319,7 +315,7 @@ void triggerZone::updateSynthParams(){
                 break;
                 
             case MT_GLOBAL_Z:
-                mul = center.z/10.0;
+                mul = center.z/9.0;
                 break;
                 
             case MT_LOCAL_X:
@@ -342,6 +338,25 @@ void triggerZone::updateSynthParams(){
                 
             case MT_NUM_POINTS:
                 mul = (float)inTotal/(float)numUp;
+                break;
+                
+
+            case MT_USER_Y:
+                mul =  ofMap(mCom.y ,-0.5,0.5, 0,1);
+                break;
+                
+            case MT_USER_RADIAL:
+            {
+                ofVec2f p1(center.z, center.x);
+                ofVec2f p2(mCom.z, mCom.x);
+                mul = abs((p2-p1).angle(ofVec2f(0,1)))/180;
+                
+            }
+                break;
+                
+            case MT_USER_CENTER:
+                mul = mCom.distance(center)/4.5;
+                mul = 1 - mul;
                 break;
                 
                 
@@ -393,11 +408,19 @@ void triggerZone::update(){
 void triggerZone::reloadSound(){ //when loading settings from file
 
     //no longer used
-    string s = "sound/" + mSoundFileName;
+    /*string s = "sound/" + mSoundFileName;
     mSound.stop();
     mSound.unloadSound();
     mSound.loadSound(s);
-    mSound.setLoop(isLoop);
+    mSound.setLoop(isLoop);*/
+    
+    ofFile f("sound/" + mSoundFileName);
+    
+    if(ofFile::doesFileExist("sound/" + mSoundFileName)){
+        mOsc->loadZoneSound(mIndex, f.getAbsolutePath());
+    }
+    
+    updateAllAudio();
     
 }
 
@@ -484,8 +507,7 @@ bool triggerZone::getIsPlayToEnd(){return isPlayToEnd;}
 
 bool triggerZone::getIsAudioLoaded(){
    
-    bool b =   ofFile::doesFileExist("sound/" + mSoundFileName);
-    
+    bool b = ofFile::doesFileExist("sound/" + mSoundFileName);
     return b;
 
 }
@@ -552,4 +574,8 @@ void triggerZone::setIsInverted(bool b){
 int triggerZone::getIndex(){ return mIndex; }
 
 
-
+void triggerZone::newIndex(){
+    
+    mIndex = index;
+    index += 1;
+}

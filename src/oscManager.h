@@ -35,8 +35,12 @@ class oscManager{
     void updateZoneSettings(int index, string item, int value);
     
     void updateSynth(int index);
+    void newScene(float fIn, float fOut);
+    
     
     void printMessage(ofxOscMessage & m);
+    
+    
     
     void sendExit();
     

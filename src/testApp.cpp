@@ -68,6 +68,7 @@ void testApp::setup(){
     cm.setTarget(ofVec3f(0, 0, 500));
     
     isCamMouse = false; isCamKey = true; isTextFocus = false, isMouseDown = false, isPerfMode = false;
+    isSaveDialog = false; isLoadDialog = false;
     
     cm.disableMouseInput();
     
@@ -99,6 +100,16 @@ void testApp::setupGui(){
     setupZonePanels();
     setupDisplaySettings();
     
+    dialog = new ofxUICanvas(0, 150, tabBarWidth, 100);
+    dialog->setColorFill(ofxUIColor(200));
+    dialog->setColorFillHighlight(ofxUIColor(255));
+    dialog->setColorBack(ofxUIColor(20, 20, 20, 150));
+    confLab = dialog->addLabel("CONFIRM");
+    dialog->addLabelButton("OK", true);
+    dialog->addLabelButton("CANCEL", true);
+    dialog->setVisible(false);
+    
+    ofAddListener(dialog->newGUIEvent, this, &testApp::s0Events);
     
     fakeCanvas = new ofxUICanvas(ofGetWidth() - tabBarWidth, 450, tabBarWidth, 125);
     fakeCanvas->setColorFill(ofxUIColor(200));
@@ -159,6 +170,8 @@ void testApp::setupGeneralSettings(){
     settingsTabBar->addCanvas(settingsCanvases[0]);
     settingsCanvases[0]->autoSizeToFitWidgets();
     
+  
+    
     //---------------------------
     
 	settingsCanvases[1]->setName("Initial Setup");
@@ -206,7 +219,14 @@ void testApp::setupGeneralSettings(){
     
     settingsCanvases[2]->addButton("CREATE_SCENE", false);
     settingsCanvases[2]->addButton("DELETE_SCENE", false);
+    settingsCanvases[2]->addButton("COPY_SCENE", false);
     
+    
+    fInSlid = new ofxUISlider("FADE_IN", 0.01, 1.0, 0.01, tabBarWidth, 20);
+    fOutSlid = new ofxUISlider("FADE_OUT", 0.01, 10.0, 0.01, tabBarWidth, 20);
+    
+    settingsCanvases[2]->addWidgetDown(fInSlid);
+    settingsCanvases[2]->addWidgetDown(fOutSlid);
     
     settingsCanvases[2]->addSpacer();
     
@@ -221,6 +241,7 @@ void testApp::setupGeneralSettings(){
     
     settingsCanvases[2]->addButton("CREATE_ZONE", false);
     settingsCanvases[2]->addButton("DELETE_ZONE", false);
+    settingsCanvases[2]->addButton("COPY_ZONE", false);
     
     
     ofAddListener(settingsCanvases[2]->newGUIEvent,this,&testApp::s2Events);
@@ -534,6 +555,8 @@ void testApp::saveSettings(string fn){
                     
                     XML.addValue("NAME", allScenes[sn]->getName());
                     XML.addValue("INDEX", allScenes[sn]->getIndex());
+                    XML.addValue("FADE_IN", allScenes[sn]->getFadeIn());
+                    XML.addValue("FADE_OUT", allScenes[sn]->getFadeOut());
                     
                     int numZones = allScenes[sn]->getNumTriggerZones();
                     
@@ -706,6 +729,8 @@ void testApp::loadSettings(string fn){
                         
                         nScene->setName(XML.getValue("NAME", ""));
                         nScene->setIndex(XML.getValue("INDEX", -1));
+                        nScene->setFadeIn(XML.getValue("FADE_IN", 0.01));
+                        nScene->setFadeOut(XML.getValue("FADE_OUT", 0.01));
                         
                         int numZones = XML.getNumTags("ZONE");
                         
@@ -799,6 +824,17 @@ void testApp::loadSettings(string fn){
                 XML.popTag();
             }
             
+            //update the index for all the loaded scenes
+            
+            int index = 0;
+            
+            for(int i = 0; i < allScenes.size(); i++){
+            
+                if(allScenes[i]->getIndex() > index)index = allScenes[i]->getIndex();
+            }
+            
+            scene::setStaticIndex(index);
+            
             
             
             if(XML.pushTag("BANK_SETTINGS")){
@@ -810,6 +846,7 @@ void testApp::loadSettings(string fn){
                 int nb = XML.getNumTags("BANK");
                 
                 for(int i = 0; i < nb; i ++){
+                    
                     
                     if(XML.pushTag("BANK", i)){
                         
@@ -1129,6 +1166,10 @@ void testApp::settingsEvents(ofxUIEventArgs &e){
     
     string name = e.widget->getName();
     
+    isSaveDialog = false; isLoadDialog = false;
+    dialog->setVisible(false);
+    
+    
     if(name == "Scene Setup"){
         
         updateZoneControls();
@@ -1147,10 +1188,29 @@ void testApp::settingsEvents(ofxUIEventArgs &e){
     }
     
     if(name == "Performance Mode"){
+        for(int i = 0; i < allScenes.size(); i++){
+            allScenes[i]->deselectAll();
+        }
+        currentBank = allBanks[0];
+        if(currentBank->scenes.size() > 0){
+            currentScene = currentBank->scenes[0];
+        }else{
+            currentScene = allScenes[0];
+        }
+        selBank = 0;
+        bSelScene = 0;
+        mOsc->newScene(currentScene->getFadeIn(), currentScene->getFadeOut());
         updateBankElements();
         isPerfMode = true;
-    }else{
-    
+        
+    }else if(isPerfMode){
+        
+        for(int i = 0; i < allScenes.size(); i++){
+            allScenes[i]->deselectAll();
+        }
+        currentScene = allScenes[0];
+        if(allScenes[0]->getNumTriggerZones() > 0)currentZone = currentScene->getTriggerZone(0);
+        updateZoneControls();
         isPerfMode = false;
     }
     
@@ -1246,11 +1306,69 @@ void testApp::s0Events(ofxUIEventArgs &e){
     
     string name = e.widget->getName();
     
+    if(e.widget->getKind() == 12){ //no key events whilst text is focussed
+        
+        ofxUITextInput * t = (ofxUITextInput *) e.widget;
+        
+        if(t->getTriggerType() == OFX_UI_TEXTINPUT_ON_FOCUS){
+            t->setTriggerType(OFX_UI_TEXTINPUT_ON_UNFOCUS);
+            isTextFocus = true;
+        }else{
+            t->setTriggerType(OFX_UI_TEXTINPUT_ON_FOCUS);
+            isTextFocus = false;
+        }
+        
+    }
+
+    
     if(isMouseDown){
-        if(name == "SAVE")saveSettings(fileNameInput->getTextString());
-        if(name == "LOAD")loadSettings(fileNameInput->getTextString());
+    
+        if(!isSaveDialog && !isLoadDialog){
+            if(name == "SAVE"){
+                confLab->setLabel("CONFIRM SAVE FILE");
+                isSaveDialog = true; isLoadDialog = false;
+                dialog->setVisible(true);
+            }
+            
+            if(name == "LOAD"){
+                isLoadDialog = true; isSaveDialog = false;
+                confLab->setLabel("CONFIRM LOAD FILE");
+                dialog->setVisible(true);
+            }
+        }else{
+            
+            if(isSaveDialog){
+                
+                if(name == "OK"){
+                    saveSettings(fileNameInput->getTextString());
+                    dialog->setVisible(false);
+                    isSaveDialog = false;
+                }else{
+                    isSaveDialog = false;
+                    dialog->setVisible(false);
+                }
+            }
+            
+            if(isLoadDialog){
+                
+                if(name == "OK"){
+                    loadSettings(fileNameInput->getTextString());
+                    dialog->setVisible(false);
+                    isLoadDialog = false;
+                }else{
+                    isLoadDialog = false;
+                    dialog->setVisible(false);
+                }
+            }
+            
+        }
+        
+        
+       
+        
     }
     
+      
 	
 }
 
@@ -1357,6 +1475,20 @@ void testApp::s2Events(ofxUIEventArgs &e){
         
     }
     
+    if(name == "FADE_IN"){
+        
+        ofxUISlider *slider = (ofxUISlider *) e.widget;
+        currentScene->setFadeIn(slider->getScaledValue());
+    }
+    
+    if(name == "FADE_OUT"){
+        
+        ofxUISlider *slider = (ofxUISlider *) e.widget;
+        currentScene->setFadeOut(slider->getScaledValue());
+    
+    }
+    
+    
     if(isMouseDown){
         
         if(name == "SCENE_PLUS"){
@@ -1399,6 +1531,7 @@ void testApp::s2Events(ofxUIEventArgs &e){
         if(name == "DELETE_SCENE"){
             
             if(allScenes.size() > 1){
+                cleanUpBanks();
                 allScenes.erase(remove(allScenes.begin(), allScenes.end(), currentScene));
                 selScene = max(selScene - 1, 0);
                 currentScene = allScenes[selScene];
@@ -1410,6 +1543,22 @@ void testApp::s2Events(ofxUIEventArgs &e){
             }
         }
         
+        if(name == "COPY_SCENE"){
+            
+            currentScene->deselectAll();
+            ofPtr<scene> t = ofPtr<scene>(new scene(*currentScene));
+            t->setName(t->getName() + "_cpy");
+            t->newIndex();
+            t->deepCopyTriggerZones();
+            allScenes.insert(allScenes.begin() + selScene + 1, t);
+            selScene = min(selScene + 1, (int)allScenes.size() - 1);
+            currentScene = t;
+            selZone = 0;
+            sc2TextInput[0]->setTextString(currentScene->getName());
+            updateZoneControls();
+            hideSynthCanvas();
+        }
+        
         
         if(name == "CREATE_ZONE"){
             
@@ -1419,6 +1568,19 @@ void testApp::s2Events(ofxUIEventArgs &e){
             updateZoneControls();
             hideSynthCanvas();
         }
+        
+        if(name == "COPY_ZONE"){
+            
+            if(currentScene->getNumTriggerZones() > 0){
+                currentZone->setIsSelected(false);
+                currentZone = currentScene->copyTriggerZone(selZone);
+                selZone = min(selZone + 1, (int)currentScene->getNumTriggerZones() - 1);
+                updateZoneControls();
+                hideSynthCanvas();
+            }
+        }
+        
+        
         
         if(currentScene->getNumTriggerZones() > 0){
             
@@ -1645,7 +1807,7 @@ void testApp::s3Events(ofxUIEventArgs &e){
         
             if(allBanks.size() > 1){
                 allBanks.erase(remove(allBanks.begin(), allBanks.end(), currentBank));
-                selBank -= 1;
+                selBank = max(0, selBank - 1);
                 currentBank = allBanks[selBank];
                 bSelScene = 0;
                 updateBankElements();
@@ -1775,6 +1937,9 @@ void testApp::fEvents(ofxUIEventArgs &e){
 //-----------------------------------------------------
 
 void testApp::updateZoneControls(){
+    
+    fInSlid->setValue(currentScene->getFadeIn());
+    fOutSlid->setValue(currentScene->getFadeOut());
     
     if(currentScene->getNumTriggerZones() > 0){
         
@@ -1920,6 +2085,7 @@ void testApp::updateBankElements(){
 
 void testApp::perfChange(string name){
 
+    
     if(name == "BANK_MINUS"){
         
         selBank = max(selBank - 1, 0);
@@ -1929,6 +2095,8 @@ void testApp::perfChange(string name){
             bSelScene = 0;
             if(currentBank->scenes.size() > 0){
                 currentScene = currentBank->scenes[bSelScene];
+                currentScene->deselectAll();
+                mOsc->newScene(currentScene->getFadeIn(), currentScene->getFadeOut());
             }
             updateBankElements();
         }
@@ -1944,6 +2112,8 @@ void testApp::perfChange(string name){
             bSelScene = 0;
             if(currentBank->scenes.size() > 0){
                 currentScene = currentBank->scenes[bSelScene];
+                currentScene->deselectAll();
+               mOsc->newScene(currentScene->getFadeIn(), currentScene->getFadeOut());
             }
             updateBankElements();
         }
@@ -1954,6 +2124,8 @@ void testApp::perfChange(string name){
         bSelScene = max(0, bSelScene - 1);
         if(currentBank->scenes.size() > 0){
             currentScene = currentBank->scenes[bSelScene];
+            currentScene->deselectAll();
+           mOsc->newScene(currentScene->getFadeIn(), currentScene->getFadeOut());
         }
         updateBankElements();
     }
@@ -1963,6 +2135,8 @@ void testApp::perfChange(string name){
         bSelScene = min((int)currentBank->scenes.size()- 1, bSelScene + 1);
         if(currentBank->scenes.size() > 0){
             currentScene = currentBank->scenes[bSelScene];
+            currentScene->deselectAll();
+            mOsc->newScene(currentScene->getFadeIn(), currentScene->getFadeOut());
         }
         updateBankElements();
         
@@ -2212,6 +2386,22 @@ void testApp::keyPressed(int key){
         if(key == OF_KEY_RIGHT)perfChange("BANK_PLUS");
             
     }
+    
+}
+
+void testApp::cleanUpBanks(){
+
+    //for when deleting a scene
+    
+    
+    for(int i = 0; i < allBanks.size(); i ++){
+        
+        vector<ofPtr<scene> >::iterator it = remove_if(allBanks[i]->scenes.begin(), allBanks[i]->scenes.end(), matchSceneIndex(currentScene->getIndex()));
+        
+        allBanks[i]->scenes.erase(it, allBanks[i]->scenes.end());
+       
+    }
+    
     
 }
 

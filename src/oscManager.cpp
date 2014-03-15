@@ -183,6 +183,16 @@ void oscManager::updateSynth(int index){
     
 }
 
+void oscManager::newScene(float fIn, float fOut){
+    
+    ofxOscMessage m;
+    m.setAddress("/newScene");
+    m.addFloatArg(fIn);
+    m.addFloatArg(fOut);
+    sender.sendMessage(m);
+    
+}
+
 void oscManager::sendExit(){
     
     ofxOscMessage m;

@@ -20,7 +20,10 @@ class scene{
     void update(ofVec3f com, float userHeight,vector<ofVec3f> & pc);
     
     ofPtr<triggerZone> addTriggerZone(int tz);
+     ofPtr<triggerZone> copyTriggerZone(int tz);
     void removeTriggerZone(int tz);
+    void deepCopyTriggerZones();
+    
     
     void deselectAll();
     
@@ -33,12 +36,21 @@ class scene{
     
     void setIndex(int i);
     int getIndex();
+    void newIndex();
+    static void setStaticIndex(int i);
+    
+    void setFadeIn(float f);
+    float getFadeIn();
+    
+    void setFadeOut(float f);
+    float getFadeOut();
     
     private:
     
     vector < ofPtr<triggerZone> > triggerZones;
     ofPtr<oscManager> mOsc;
     
+    float fadeIn, fadeOut;
     
     string mName;
     int mIndex;

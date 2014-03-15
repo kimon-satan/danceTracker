@@ -14,9 +14,10 @@ scene::scene(ofPtr<oscManager> o): mOsc(o){
     
     mName = "emptyScene_" + ofToString(index,0);
     
-    mIndex = index;
-    index += 1;
+    newIndex();
     
+    fadeIn = 0.01;
+    fadeOut = 0.01;
     
 }
 
@@ -70,10 +71,28 @@ ofPtr<triggerZone> scene::addTriggerZone(int tz){
     ofPtr <triggerZone> t = ofPtr<triggerZone>(new triggerZone(mOsc));
     if(triggerZones.size() > 0){
         triggerZones.insert(triggerZones.begin() + tz + 1, t);
+        //addZone to SC
+        mOsc->addZone(t->getIndex(), t->getName());
+        t->updateAllAudio();
     }else{
         triggerZones.push_back(t);
+         mOsc->addZone(t->getIndex(), t->getName());
+        t->updateAllAudio();
     }
     
+    return t;
+}
+
+ofPtr<triggerZone> scene::copyTriggerZone(int tz){
+    
+    ofPtr <triggerZone> t = ofPtr<triggerZone>(new triggerZone(*triggerZones[tz]));
+    t->setName(t->getName() + "_copy");
+    t->newIndex();
+    mOsc->addZone(t->getIndex(), t->getName());
+    t->reloadSound();
+  
+    triggerZones.insert(triggerZones.begin() + tz + 1, t);
+  
     return t;
 }
 
@@ -84,6 +103,25 @@ void scene::removeTriggerZone(int tz){
     
 }
 
+
+void scene::deepCopyTriggerZones(){
+
+    //make a deep copy of the trigger zones ... for when copying a scene
+    vector<ofPtr<triggerZone> > ttz;
+    
+    for(int i = 0; i < triggerZones.size(); i++){
+         ofPtr <triggerZone> t = ofPtr<triggerZone>(new triggerZone(*triggerZones[i]));
+        t->newIndex();
+        mOsc->addZone(t->getIndex(), t->getName());
+        t->reloadSound();
+        ttz.push_back(t);
+    }
+    
+    triggerZones.clear();
+    triggerZones = ttz;
+    
+
+}
 
 void scene::setName(string s){
 
@@ -96,11 +134,38 @@ string scene::getName(){
 }
 
 
-void scene::setIndex(int i){
-    
-    if(i < 0)return; // -1 signifies no prev index recorded
-    mIndex = i;
-    index = i + 1;
+void scene::setFadeIn(float f){
+
+    fadeIn = f;
 }
 
+float scene::getFadeIn(){
+
+    return fadeIn;
+}
+
+void scene::setFadeOut(float f){ fadeOut = f;}
+float scene::getFadeOut(){return fadeOut;}
+
+
+void scene::setIndex(int i){
+    
+    mIndex = i;
+    
+}
+
+
+void scene::newIndex(){
+
+    mIndex = index;
+    index += 1;
+}
+
+
 int scene::getIndex(){return mIndex;}
+
+void scene::setStaticIndex(int i){
+
+    index = i;
+
+}

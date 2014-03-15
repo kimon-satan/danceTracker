@@ -37,7 +37,7 @@ public:
 };
 
 class matchSceneIndex{
-
+/Users/simonkatan/Code/openFrameworks/apps/miscProjects/danceTracker/src/testApp.h
     int searchIndex;
     
     
@@ -116,6 +116,7 @@ public:
     void hideSynthCanvas();
     
     void perfChange(string name);
+    void cleanUpBanks();
     
     //kinect variables
     
@@ -181,7 +182,7 @@ public:
     //UI Variables
     
     bool isSettingsGui, isDisplayGui, isCamMouse, isCamKey, isTextFocus, isPerfMode;
-    bool isMouseDown;
+    bool isMouseDown, isSaveDialog, isLoadDialog;
     
     bool isViewCom, isViewCScene, isViewSegPoints, isSynthView;
     
@@ -199,10 +200,13 @@ public:
     ofxUIScrollableCanvas * synthCanvas;
     ofxUIScrollableCanvas * bankCanvas;
     ofxUICanvas * fakeCanvas;
+    ofxUICanvas * dialog;
+    
     
     //canvas 0
     
     ofxUITextInput * fileNameInput;
+    ofxUILabel * confLab;
     
     //canvas 1
     
@@ -211,6 +215,9 @@ public:
     //canvas 2
     
     ofxUITextInput * sc2TextInput[3];
+    
+    ofxUISlider * fInSlid, * fOutSlid;
+    
     ofxUIRadio * shapeRad;
     
     ofxUISlider * sensSlider, * repSlider;
