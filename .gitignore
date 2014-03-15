@@ -1,1 +1,7 @@
-/bin
+
+bin/
+!data/GUI/
+!data/XMLs/
+data/sound/
+*.wav
+
