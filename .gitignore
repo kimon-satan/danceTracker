@@ -4,3 +4,5 @@ bin/*
 bin/data/*
 !bin/data/GUI/
 !/bin/data/XMLs/
+
+danceTracker.xcodeproj/xcuserdata/simonkatan.xcuserdatad/xcdebugger/
