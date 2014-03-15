@@ -85,7 +85,7 @@ void testApp::setup(){
     updateZoneControls();
     
     isFakeUser = false;
-    selBank = 0; selZone = 0; selScene = 0; bSelScene = 0;
+    selBank = 0; selZone = ""; selScene = 0; bSelScene = 0;
     
 }
 
@@ -559,15 +559,17 @@ void testApp::saveSettings(string fn){
                     XML.addValue("FADE_IN", allScenes[sn]->getFadeIn());
                     XML.addValue("FADE_OUT", allScenes[sn]->getFadeOut());
                     
-                    int numZones = allScenes[sn]->getNumTriggerZones();
+                    map < string, ofPtr<triggerZone> > t_tzs = allScenes[sn]->getTriggerZones();
+                    map < string, ofPtr<triggerZone> > ::iterator it;
+                    int count = 0;
                     
-                    for(int tz = 0; tz < numZones; tz++){
-                        
-                        ofPtr<triggerZone> z = allScenes[sn]->getTriggerZone(tz);
+                    for(it = t_tzs.begin(); it != t_tzs.end(); it++){
                         
                         XML.addTag("ZONE");
                         
-                        if(XML.pushTag("ZONE", tz)){
+                        ofPtr<triggerZone> z = (*it).second;
+                        
+                        if(XML.pushTag("ZONE", count)){
                             
                             XML.addValue("NAME", z->getName());
                             
@@ -739,7 +741,7 @@ void testApp::loadSettings(string fn){
                             
                             if(XML.pushTag("ZONE", tz)){
                                 
-                                ofPtr<triggerZone> z = nScene->addTriggerZone(max(0,tz - 1));
+                                ofPtr<triggerZone> z = nScene->addTriggerZone();
                                 
                                 z->setName(XML.getValue("NAME", ""));
                                 z->setShape(XML.getValue("SHAPE", 0));
@@ -810,13 +812,10 @@ void testApp::loadSettings(string fn){
                 //there will probably be more to update here later
                 
                 if(currentScene->getNumTriggerZones() > 0){
-                    selZone = 0;
-                    currentZone = currentScene->getTriggerZone(selZone);
+                    currentZone = currentScene->getFirstTriggerZone();
                     updateTZGuiElements();
                 }else{
                     //potentially refactor into a disableZoneElements
-                    
-                    selZone = 0;
                     sc2TextInput[1]->setTextString("none");
                     sc2TextInput[2]->setTextString("none");
                 }
@@ -825,7 +824,7 @@ void testApp::loadSettings(string fn){
                 XML.popTag();
             }
             
-            //update the index for all the loaded scenes
+            //update the index for all the loaded scenes ... this looks suspect
             
             int index = 0;
             
@@ -1499,7 +1498,7 @@ void testApp::s2Events(ofxUIEventArgs &e){
             selScene = min(selScene + 1, (int)allScenes.size() - 1);
             currentScene = allScenes[selScene];
             sc2TextInput[0]->setTextString(currentScene->getName());
-            selZone = 0;
+            currentZone = currentScene->getFirstTriggerZone();
             updateZoneControls();
             hideSynthCanvas();
             
@@ -1511,7 +1510,7 @@ void testApp::s2Events(ofxUIEventArgs &e){
             selScene = max(selScene - 1, 0);
             currentScene = allScenes[selScene];
             sc2TextInput[0]->setTextString(currentScene->getName());
-            selZone = 0;
+            currentZone = currentScene->getFirstTriggerZone();
             updateZoneControls();
             hideSynthCanvas();
             
@@ -1524,7 +1523,6 @@ void testApp::s2Events(ofxUIEventArgs &e){
             allScenes.insert(allScenes.begin() + selScene + 1, t);
             selScene = min(selScene + 1, (int)allScenes.size() - 1);
             currentScene = t;
-            selZone = 0;
             sc2TextInput[0]->setTextString(currentScene->getName());
             updateZoneControls();
             hideSynthCanvas();
@@ -1538,7 +1536,7 @@ void testApp::s2Events(ofxUIEventArgs &e){
                 selScene = max(selScene - 1, 0);
                 currentScene = allScenes[selScene];
                 sc2TextInput[0]->setTextString(currentScene->getName());
-                selZone = 0;
+                currentZone = currentScene->getFirstTriggerZone();
                 updateZoneControls();
                 hideSynthCanvas();
                 
@@ -1555,7 +1553,7 @@ void testApp::s2Events(ofxUIEventArgs &e){
             allScenes.insert(allScenes.begin() + selScene + 1, t);
             selScene = min(selScene + 1, (int)allScenes.size() - 1);
             currentScene = t;
-            selZone = 0;
+            currentZone = currentScene->getFirstTriggerZone();
             sc2TextInput[0]->setTextString(currentScene->getName());
             updateZoneControls();
             hideSynthCanvas();
@@ -1565,8 +1563,7 @@ void testApp::s2Events(ofxUIEventArgs &e){
         if(name == "CREATE_ZONE"){
             
             if(currentScene->getNumTriggerZones() > 0)currentZone->setIsSelected(false);
-            currentZone = currentScene->addTriggerZone(selZone);
-            selZone = min(selZone + 1, (int)currentScene->getNumTriggerZones() - 1);
+            currentZone = currentScene->addTriggerZone();
             updateZoneControls();
             hideSynthCanvas();
         }
@@ -1575,8 +1572,7 @@ void testApp::s2Events(ofxUIEventArgs &e){
             
             if(currentScene->getNumTriggerZones() > 0){
                 currentZone->setIsSelected(false);
-                currentZone = currentScene->copyTriggerZone(selZone);
-                selZone = min(selZone + 1, (int)currentScene->getNumTriggerZones() - 1);
+                currentZone = currentScene->copyTriggerZone(currentZone->getUid());
                 updateZoneControls();
                 hideSynthCanvas();
             }
@@ -1589,8 +1585,8 @@ void testApp::s2Events(ofxUIEventArgs &e){
             if(name == "ZONE_PLUS"){
                 
                 currentZone->setIsSelected(false);
-                selZone = min(selZone + 1, (int)currentScene->getNumTriggerZones() - 1);
-                currentZone = currentScene->getTriggerZone(selZone);
+               // selZone = min(selZone + 1, (int)currentScene->getNumTriggerZones() - 1);
+                currentZone = currentScene->getTriggerZone(selZone); //selZone .. needs to become a string
                 updateZoneControls();
                 hideSynthCanvas();
                 
@@ -1600,7 +1596,7 @@ void testApp::s2Events(ofxUIEventArgs &e){
             if(name == "ZONE_MINUS"){
                 
                 currentZone->setIsSelected(false);
-                selZone = max(selZone - 1, 0);
+                //selZone = max(selZone - 1, 0);
                 currentZone = currentScene->getTriggerZone(selZone);
                 updateZoneControls();
                 hideSynthCanvas();
@@ -1610,9 +1606,9 @@ void testApp::s2Events(ofxUIEventArgs &e){
             
             if(name == "DELETE_ZONE"){
                 
-                currentScene->removeTriggerZone(selZone);
-                selZone = max(selZone - 1, 0);
-                if(currentScene->getNumTriggerZones() > 0)currentZone = currentScene->getTriggerZone(selZone);
+                string dz = currentZone->getUid();
+                currentZone = currentScene->getNextTriggerZone(currentZone);
+                currentScene->removeTriggerZone(dz);
                 updateZoneControls();
                 hideSynthCanvas();
                 
@@ -1821,7 +1817,7 @@ void testApp::s3Events(ofxUIEventArgs &e){
             currentScene->deselectAll();
             selScene = min(selScene + 1, (int)allScenes.size() - 1);
             currentScene = allScenes[selScene];
-            selZone = 0;
+            currentZone = currentScene->getFirstTriggerZone();
             updateBankElements();
         
         }
@@ -1831,7 +1827,7 @@ void testApp::s3Events(ofxUIEventArgs &e){
             currentScene->deselectAll();
             selScene = max(selScene - 1, 0);
             currentScene = allScenes[selScene];
-            selZone = 0;
+            currentZone = currentScene->getFirstTriggerZone();
             updateBankElements();
 
         }
@@ -1949,7 +1945,6 @@ void testApp::updateZoneControls(){
             
             zoneCanvases[0]->setVisible(true);
             
-            currentZone = currentScene->getTriggerZone(selZone);
             if(currentZone->getShape() == 0){
                 zoneCanvases[1]->setVisible(true);
                 zoneCanvases[2]->setVisible(false);

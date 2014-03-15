@@ -12,6 +12,7 @@
 #include "ofMain.h"
 #include "oscManager.h"
 #include "synthDictionary.h"
+#include "dt_utils.h"
 
 enum tzShape{
 
@@ -97,6 +98,8 @@ public:
     
     int getIndex();
     void newIndex();
+    
+    string getUid();
 
     
     
@@ -134,7 +137,7 @@ private:
     int mIndex;
     
     static int index;
-    
+    string u_id;
     
     
     

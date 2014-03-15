@@ -19,9 +19,12 @@ class scene{
     void draw(ofVec3f camPos);
     void update(ofVec3f com, float userHeight,vector<ofVec3f> & pc);
     
-    ofPtr<triggerZone> addTriggerZone(int tz);
-     ofPtr<triggerZone> copyTriggerZone(int tz);
-    void removeTriggerZone(int tz);
+    ofPtr<triggerZone> addTriggerZone();
+    ofPtr<triggerZone> copyTriggerZone(string tz);
+    ofPtr<triggerZone> getFirstTriggerZone();
+    ofPtr<triggerZone> getNextTriggerZone(ofPtr<triggerZone>);
+    
+    void removeTriggerZone(string tz);
     void deepCopyTriggerZones();
     
     
@@ -29,7 +32,8 @@ class scene{
     
     //getters and setters
     
-    ofPtr<triggerZone> getTriggerZone(int tz);
+    map < string, ofPtr<triggerZone> > getTriggerZones();
+    ofPtr<triggerZone> getTriggerZone(string tz);
     int getNumTriggerZones();
     void setName(string s);
     string getName();
@@ -47,7 +51,7 @@ class scene{
     
     private:
     
-    vector < ofPtr<triggerZone> > triggerZones;
+    map < string, ofPtr<triggerZone> > triggerZones;
     ofPtr<oscManager> mOsc;
     
     float fadeIn, fadeOut;

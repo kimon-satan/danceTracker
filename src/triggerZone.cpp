@@ -44,7 +44,7 @@ triggerZone::triggerZone(ofPtr<oscManager> o) : mOsc(o){
     synth = ST_SIMPLE;
     
     synthParams = synthDictionary::getSynthParams(synth);
-    
+    u_id = dt_utils::getRandom(10);
     
     
 }
@@ -578,4 +578,10 @@ void triggerZone::newIndex(){
     
     mIndex = index;
     index += 1;
+    u_id = dt_utils::getRandom(10);
+}
+
+string triggerZone::getUid(){
+    
+    return u_id;
 }

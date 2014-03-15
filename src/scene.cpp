@@ -24,11 +24,11 @@ scene::scene(ofPtr<oscManager> o): mOsc(o){
 
 void scene::draw(ofVec3f camPos){
 
-    vector< ofPtr<triggerZone> >::iterator it;
+    map< string, ofPtr<triggerZone> >::iterator it;
     
     for(it = triggerZones.begin(); it != triggerZones.end(); it++){
     
-        (*it)->draw(camPos);
+        (*it).second->draw(camPos);
         
     }
     
@@ -37,14 +37,14 @@ void scene::draw(ofVec3f camPos){
 
 void scene::update(ofVec3f com, float userHeight, vector<ofVec3f> & pc){
 
-    vector< ofPtr<triggerZone> >::iterator it;
+    map<string, ofPtr<triggerZone> >::iterator it;
     
     for(it = triggerZones.begin(); it != triggerZones.end(); it++){
         
-        if((*it)->getIsEnabled()){
+        if((*it).second->getIsEnabled()){
             
-            if((*it)->checkInRange(com, userHeight))(*it)->checkPoints(pc);
-            (*it)->update();
+            if((*it).second->checkInRange(com, userHeight))(*it).second->checkPoints(pc);
+            (*it).second->update();
             
         }
         
@@ -55,35 +55,48 @@ void scene::update(ofVec3f com, float userHeight, vector<ofVec3f> & pc){
 
 void scene::deselectAll(){
 
-    vector< ofPtr<triggerZone> >::iterator it;
+    map< string, ofPtr<triggerZone> >::iterator it;
     
     for(it = triggerZones.begin(); it != triggerZones.end(); it++){
      
-        (*it)->deselect();
+        (*it).second->deselect();
     }
 }
 
-ofPtr<triggerZone> scene::getTriggerZone(int tz){return triggerZones[tz];}
+ofPtr<triggerZone> scene::getTriggerZone(string tz){return triggerZones[tz];} 
+
+ofPtr<triggerZone> scene::getNextTriggerZone(ofPtr<triggerZone> tz){
+    
+    map< string, ofPtr<triggerZone> >::iterator it = triggerZones.find(tz->getUid());
+    it++;
+    if(it == triggerZones.end())it = triggerZones.begin();
+    return (*it).second;
+    
+    
+}
+
+ofPtr<triggerZone> scene::getFirstTriggerZone(){
+    return (*triggerZones.begin()).second;
+}
+
+
+map < string, ofPtr<triggerZone> > scene::getTriggerZones(){ return triggerZones;}
 int scene::getNumTriggerZones(){return triggerZones.size();}
 
-ofPtr<triggerZone> scene::addTriggerZone(int tz){
+ofPtr<triggerZone> scene::addTriggerZone(){
     
     ofPtr <triggerZone> t = ofPtr<triggerZone>(new triggerZone(mOsc));
-    if(triggerZones.size() > 0){
-        triggerZones.insert(triggerZones.begin() + tz + 1, t);
+ 
+        triggerZones[t->getUid()] = t;
         //addZone to SC
-        mOsc->addZone(t->getIndex(), t->getName());
+        mOsc->addZone(t->getIndex(), t->getName()); //replace index
         t->updateAllAudio();
-    }else{
-        triggerZones.push_back(t);
-         mOsc->addZone(t->getIndex(), t->getName());
-        t->updateAllAudio();
-    }
+  
     
     return t;
 }
 
-ofPtr<triggerZone> scene::copyTriggerZone(int tz){
+ofPtr<triggerZone> scene::copyTriggerZone(string tz){
     
     ofPtr <triggerZone> t = ofPtr<triggerZone>(new triggerZone(*triggerZones[tz]));
     t->setName(t->getName() + "_copy");
@@ -91,15 +104,15 @@ ofPtr<triggerZone> scene::copyTriggerZone(int tz){
     mOsc->addZone(t->getIndex(), t->getName());
     t->reloadSound();
   
-    triggerZones.insert(triggerZones.begin() + tz + 1, t);
+    triggerZones[t->getUid()] = t;
   
     return t;
 }
 
-void scene::removeTriggerZone(int tz){
+void scene::removeTriggerZone(string tz){
 
     mOsc->removeZone(triggerZones[tz]->getIndex());
-    triggerZones.erase(triggerZones.begin() + tz);
+    triggerZones.erase(tz);
     
 }
 
@@ -107,14 +120,14 @@ void scene::removeTriggerZone(int tz){
 void scene::deepCopyTriggerZones(){
 
     //make a deep copy of the trigger zones ... for when copying a scene
-    vector<ofPtr<triggerZone> > ttz;
+    map <string, ofPtr<triggerZone> > ttz;
     
     for(int i = 0; i < triggerZones.size(); i++){
-         ofPtr <triggerZone> t = ofPtr<triggerZone>(new triggerZone(*triggerZones[i]));
+        ofPtr <triggerZone> t = ofPtr<triggerZone>(new triggerZone(*triggerZones["index"]));
         t->newIndex();
         mOsc->addZone(t->getIndex(), t->getName());
         t->reloadSound();
-        ttz.push_back(t);
+        ttz["index"] = t;
     }
     
     triggerZones.clear();
