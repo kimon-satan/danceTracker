@@ -18,7 +18,7 @@ void testApp::setup(){
     if(USE_KINECT){
         kinect.clear();
         kinect.init(false, false);  // disable infrared/rgb video iamge (faster fps)
-        kinect.setVerbose(true);
+        //kinect.setVerbose(true);
         kinect.open();
         
         
@@ -26,7 +26,8 @@ void testApp::setup(){
             // zero the tilt on startup
             kinectAngle = 0;
             kinect.setCameraTiltAngle(kinectAngle);
-            kinect.getCalibration().setClippingInCentimeters(50,1500);
+            //kinect.getCalibration().setClippingInCentimeters(50,1500);
+            kinect.setDepthClipping(500,10000);
         }
         
     }
@@ -939,7 +940,7 @@ void testApp::update(){
             
             for(int x = 0; x < kinect.width; x += segRes) {
                 
-                ofVec3f cur = kinect.getWorldCoordinateFor(x, y);
+                ofVec3f cur = kinect.getWorldCoordinateAt(x, y);
                 
                 ofVec3f curR = cur.getRotated(-qangle, qaxis);
                 curR *= ofVec3f(1,-1,1);
@@ -1136,7 +1137,7 @@ void testApp::analyseUser(){
         for(int x = 0; x < kinect.width; x ++){
             
             if(s_pix[y * kinect.width + x] > 0){
-                ofVec3f cur = kinect.getWorldCoordinateFor(x, y);
+                ofVec3f cur = kinect.getWorldCoordinateAt(x, y);
                 ofVec3f curR = cur.getRotated(-qangle, qaxis);
                 curR *= ofVec3f(1,-1,1);
                 total += curR;

@@ -37,7 +37,7 @@ public:
 };
 
 class matchSceneIndex{
-/Users/simonkatan/Code/openFrameworks/apps/miscProjects/danceTracker/src/testApp.h
+
     int searchIndex;
     
     
