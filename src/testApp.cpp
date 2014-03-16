@@ -1531,6 +1531,7 @@ void testApp::s2Events(ofxUIEventArgs &e){
             
             currentScene->deselectAll();
             ofPtr<scene> t = ofPtr<scene>(new scene(mOsc));
+            checkUniqueId(t);
             allScenes[t->getUid()] = t;
             currentScene = t;
             sc2TextInput[0]->setTextString(currentScene->getName());
@@ -1558,8 +1559,20 @@ void testApp::s2Events(ofxUIEventArgs &e){
             
             currentScene->deselectAll();
             ofPtr<scene> t = ofPtr<scene>(new scene(*currentScene));
-            t->setName(t->getName() + "_cpy"); //new method needed
             t->newIndex();
+            checkUniqueId(t);
+            string s = t->getName();
+            string s_a = "_" + t->getUid() + "_copy";
+            if(s.length() > 5){
+                if(s.substr(s.length()- 5,5) != "_copy"){
+                    t->setName(s + s_a);
+                }else{
+                    t->setName(s.substr(0,s.length()-16) + s_a);
+                }
+            }else{
+                t->setName(s + s_a);
+            }
+         
             t->deepCopyTriggerZones();
             allScenes[t->getUid()] = t;
             currentScene = t;
@@ -2149,6 +2162,20 @@ void testApp::perfChange(string name){
         
     }
 
+}
+
+void testApp::checkUniqueId(ofPtr<scene> sn){
+    
+    bool isUnique = false;
+    
+    while (!isUnique) {
+        if(allScenes.find(sn->getUid()) != allScenes.end()){
+            sn->newIndex();
+        }else{
+            isUnique = true;
+        }
+    }
+    
 }
 
 //--------------------------------------------------------------

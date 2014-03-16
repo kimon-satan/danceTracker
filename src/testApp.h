@@ -105,6 +105,8 @@ public:
     void segment();
     void analyseUser();
     
+    void checkUniqueId(ofPtr<scene> sn);
+    
     void drawScenePointCloud();
     void drawUserPointCloud();
     void drawFloor();
