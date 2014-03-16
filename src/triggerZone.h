@@ -96,12 +96,9 @@ public:
     bool getIsInverted();
     void setIsInverted(bool b);
     
-    int getIndex();
     void newIndex();
-    
     string getUid();
 
-    
     
 private:
     
@@ -134,9 +131,6 @@ private:
     ofVec3f iCom;
     int numUp, inTotal;
     
-    int mIndex;
-    
-    static int index;
     string u_id;
     
     

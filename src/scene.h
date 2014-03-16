@@ -28,6 +28,7 @@ class scene{
     void removeTriggerZone(string tz);
     void deepCopyTriggerZones();
     
+    void checkUniqueId(ofPtr<triggerZone> tz);
     
     void deselectAll();
     

@@ -8,8 +8,6 @@
 
 #include "triggerZone.h"
 
-int triggerZone::index = 0;
-
 triggerZone::triggerZone(ofPtr<oscManager> o) : mOsc(o){
     
     shape = TZ_SPHERE;
@@ -21,12 +19,9 @@ triggerZone::triggerZone(ofPtr<oscManager> o) : mOsc(o){
     isOccupied = false;
     isEnabled = false;
     
-    mName = "defaultZone_" + ofToString(index, 0);
+   
     mSoundFileName = "none";
     font.loadFont("NewMedia.ttf", 15);
-    
-    mIndex = index;
-    index += 1;
     
     isSelected = false;
     isSound = false;
@@ -45,6 +40,8 @@ triggerZone::triggerZone(ofPtr<oscManager> o) : mOsc(o){
     
     synthParams = synthDictionary::getSynthParams(synth);
     u_id = dt_utils::getRandom(10);
+    
+     mName = "zone_" + u_id;
     
     
 }
@@ -571,14 +568,12 @@ void triggerZone::setIsInverted(bool b){
     emptyCount = 0;
 }
 
-int triggerZone::getIndex(){ return mIndex; }
 
 
 void triggerZone::newIndex(){
     
-    mIndex = index;
-    index += 1;
     u_id = dt_utils::getRandom(10);
+    
 }
 
 string triggerZone::getUid(){
