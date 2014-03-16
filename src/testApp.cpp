@@ -1584,9 +1584,9 @@ void testApp::s2Events(ofxUIEventArgs &e){
             
             if(name == "ZONE_PLUS"){
                 
+                ofPtr<triggerZone> tz = currentScene->getNextTriggerZone(currentZone);
                 currentZone->setIsSelected(false);
-               // selZone = min(selZone + 1, (int)currentScene->getNumTriggerZones() - 1);
-                currentZone = currentScene->getTriggerZone(selZone); //selZone .. needs to become a string
+                currentZone = tz;
                 updateZoneControls();
                 hideSynthCanvas();
                 
@@ -1595,9 +1595,9 @@ void testApp::s2Events(ofxUIEventArgs &e){
             
             if(name == "ZONE_MINUS"){
                 
+                ofPtr<triggerZone> tz = currentScene->getPrevTriggerZone(currentZone);
                 currentZone->setIsSelected(false);
-                //selZone = max(selZone - 1, 0);
-                currentZone = currentScene->getTriggerZone(selZone);
+                currentZone = tz;
                 updateZoneControls();
                 hideSynthCanvas();
                 

@@ -67,15 +67,35 @@ ofPtr<triggerZone> scene::getTriggerZone(string tz){return triggerZones[tz];}
 
 ofPtr<triggerZone> scene::getNextTriggerZone(ofPtr<triggerZone> tz){
     
-    map< string, ofPtr<triggerZone> >::iterator it = triggerZones.find(tz->getUid());
-    it++;
-    if(it == triggerZones.end())it = triggerZones.begin();
-    return (*it).second;
+    if(!tz){
+        return tz; //return the empty pointer
+    }else{
+        map< string, ofPtr<triggerZone> >::iterator it = triggerZones.find(tz->getUid());
+        it++;
+        if(it == triggerZones.end())it = triggerZones.begin();
+        return (*it).second;
+    }
     
+}
+
+ofPtr<triggerZone> scene::getPrevTriggerZone(ofPtr<triggerZone> tz){
+    
+    if(!tz){
+        return tz; //return the empty pointer
+    }else{
+        
+        map< string, ofPtr<triggerZone> >::iterator it = triggerZones.find(tz->getUid());
+        if(it == triggerZones.begin())it = triggerZones.end();
+        it--;
+        
+        return (*it).second;
+    }
     
 }
 
 ofPtr<triggerZone> scene::getFirstTriggerZone(){
+    ofPtr<triggerZone> tz;
+    if(triggerZones.size() == 0)return tz; //an empty pointer
     return (*triggerZones.begin()).second;
 }
 

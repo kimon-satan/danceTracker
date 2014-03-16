@@ -23,6 +23,7 @@ class scene{
     ofPtr<triggerZone> copyTriggerZone(string tz);
     ofPtr<triggerZone> getFirstTriggerZone();
     ofPtr<triggerZone> getNextTriggerZone(ofPtr<triggerZone>);
+    ofPtr<triggerZone> getPrevTriggerZone(ofPtr<triggerZone> tz);
     
     void removeTriggerZone(string tz);
     void deepCopyTriggerZones();
