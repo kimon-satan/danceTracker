@@ -36,7 +36,9 @@ public:
     
 };
 
-class matchSceneIndex{
+
+//FIXME
+/*class matchSceneIndex{
 
     int searchIndex;
     
@@ -50,7 +52,7 @@ public:
         return (s->getIndex() == searchIndex);
     };
 
-};
+};*/
 
 
 
@@ -118,6 +120,8 @@ public:
     void perfChange(string name);
     void cleanUpBanks();
     
+    ofPtr<scene> selectNextScene(ofPtr<scene> sn);
+    ofPtr<scene> selectPrevScene(ofPtr<scene> sn);
     //kinect variables
     
     ofxKinect 			kinect;
@@ -171,7 +175,7 @@ public:
     
     int selScene, selBank, bSelScene;
     
-    vector<ofPtr<scene> > allScenes;
+    map<string, ofPtr<scene> > allScenes;
     vector<ofPtr<bank> >allBanks;
     
     ofPtr<scene> currentScene;

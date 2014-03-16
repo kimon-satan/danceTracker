@@ -40,10 +40,9 @@ class scene{
     void setName(string s);
     string getName();
     
-    void setIndex(int i);
-    int getIndex();
+    string getUid();
+    
     void newIndex();
-    static void setStaticIndex(int i);
     
     void setFadeIn(float f);
     float getFadeIn();
@@ -59,8 +58,7 @@ class scene{
     float fadeIn, fadeOut;
     
     string mName;
-    int mIndex;
-    static int index;
+    string u_id;
     
 
 };

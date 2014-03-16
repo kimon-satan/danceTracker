@@ -74,7 +74,7 @@ void testApp::setup(){
     cm.disableMouseInput();
     
     ofPtr<scene>  s = ofPtr<scene>(new scene(mOsc));
-    allScenes.push_back(s);
+    allScenes[s->getUid()] = s;
     currentScene = s;
     
     ofPtr<bank> b = ofPtr<bank>(new bank());
@@ -548,18 +548,22 @@ void testApp::saveSettings(string fn){
         
         if(XML.pushTag("SCENE_SETTINGS")){
             
-            for(int sn = 0; sn < allScenes.size(); sn++){
+            map<string, ofPtr<scene> >::iterator it;
+            int counter = 0;
+            
+            for(it = allScenes.begin(); it != allScenes.end(); it++){
                 
                 XML.addTag("SCENE");
+                ofPtr<scene> sn = (*it).second;
                 
-                if(XML.pushTag("SCENE", sn)){
+                if(XML.pushTag("SCENE", counter)){
                     
-                    XML.addValue("NAME", allScenes[sn]->getName());
-                    XML.addValue("INDEX", allScenes[sn]->getIndex());
-                    XML.addValue("FADE_IN", allScenes[sn]->getFadeIn());
-                    XML.addValue("FADE_OUT", allScenes[sn]->getFadeOut());
+                    XML.addValue("NAME", sn->getName());
+                    //XML.addValue("INDEX", sn->getIndex());
+                    XML.addValue("FADE_IN", sn->getFadeIn());
+                    XML.addValue("FADE_OUT", sn->getFadeOut());
                     
-                    map < string, ofPtr<triggerZone> > t_tzs = allScenes[sn]->getTriggerZones();
+                    map < string, ofPtr<triggerZone> > t_tzs = sn->getTriggerZones();
                     map < string, ofPtr<triggerZone> > ::iterator it;
                     int count = 0;
                     
@@ -623,6 +627,8 @@ void testApp::saveSettings(string fn){
                         
                     }
                     
+                    counter++;
+                    
                     //scene tag
                     XML.popTag();
                 }
@@ -651,7 +657,7 @@ void testApp::saveSettings(string fn){
                     
                     for(int j = 0; j < ns; j ++){
                     
-                        XML.setValue("ITEM", allBanks[i]->scenes[j]->getIndex(), j);
+                       XML.setValue("ITEM", allBanks[i]->scenes[j]->getUid(), j); //this will need checking if uIds are temporary
                     
                     }
                     
@@ -722,6 +728,7 @@ void testApp::loadSettings(string fn){
                 
                 allScenes.clear();
                 
+                
                 int numScenes = XML.getNumTags("SCENE");
                 
                 for(int sn = 0; sn < numScenes; sn++){
@@ -731,7 +738,7 @@ void testApp::loadSettings(string fn){
                         ofPtr<scene> nScene = ofPtr<scene>(new scene(mOsc));
                         
                         nScene->setName(XML.getValue("NAME", ""));
-                        nScene->setIndex(XML.getValue("INDEX", -1));
+                      //  nScene->setIndex(XML.getValue("INDEX", -1));
                         nScene->setFadeIn(XML.getValue("FADE_IN", 0.01));
                         nScene->setFadeOut(XML.getValue("FADE_OUT", 0.01));
                         
@@ -795,7 +802,7 @@ void testApp::loadSettings(string fn){
                         }
                         
                         
-                        allScenes.push_back(nScene);
+                        allScenes[nScene->getUid()] = nScene;
                         
                         //scene tag
                         XML.popTag();
@@ -806,8 +813,7 @@ void testApp::loadSettings(string fn){
                     
                 }
                 
-                selScene = 0;
-                currentScene = allScenes[selScene];
+                currentScene = (*allScenes.begin()).second;
                 sc2TextInput[0]->setTextString(currentScene->getName());
                 //there will probably be more to update here later
                 
@@ -826,14 +832,14 @@ void testApp::loadSettings(string fn){
             
             //update the index for all the loaded scenes ... this looks suspect
             
-            int index = 0;
+            /*int index = 0;
             
             for(int i = 0; i < allScenes.size(); i++){
             
                 if(allScenes[i]->getIndex() > index)index = allScenes[i]->getIndex();
-            }
+            }*/
             
-            scene::setStaticIndex(index);
+           // scene::setStaticIndex(index);
             
             
             
@@ -861,8 +867,9 @@ void testApp::loadSettings(string fn){
                             
                             int item = XML.getValue("ITEM", 0, j);
                             
-                            vector<ofPtr<scene> >::iterator it = find_if(allScenes.begin(), allScenes.end(), matchSceneIndex(item));
-                            tb->scenes.push_back((*it));
+                            //FIXME
+                            //vector<ofPtr<scene> >::iterator it = find_if(allScenes.begin(), allScenes.end(), matchSceneIndex(item));
+                            //tb->scenes.push_back((*it));
                             
                         }
                         
@@ -1189,8 +1196,11 @@ void testApp::settingsEvents(ofxUIEventArgs &e){
     }
     
     if(name == "Performance Mode"){
-        for(int i = 0; i < allScenes.size(); i++){
-            allScenes[i]->deselectAll();
+        
+        map<string, ofPtr<scene> >:: iterator it;
+        
+        for(it = allScenes.begin(); it != allScenes.end(); it++){
+            (*it).second->deselectAll();
         }
         currentBank = allBanks[0];
         if(currentBank->scenes.size() > 0){
@@ -1206,8 +1216,10 @@ void testApp::settingsEvents(ofxUIEventArgs &e){
         
     }else if(isPerfMode){
         
-        for(int i = 0; i < allScenes.size(); i++){
-            allScenes[i]->deselectAll();
+        map<string, ofPtr<scene> >:: iterator it;
+        
+        for(it = allScenes.begin(); it != allScenes.end(); it++){
+            (*it).second->deselectAll();
         }
         currentScene = allScenes[0];
         if(allScenes[0]->getNumTriggerZones() > 0)currentZone = currentScene->getTriggerZone(0);
@@ -1495,8 +1507,8 @@ void testApp::s2Events(ofxUIEventArgs &e){
         if(name == "SCENE_PLUS"){
             
             currentScene->deselectAll();
-            selScene = min(selScene + 1, (int)allScenes.size() - 1);
-            currentScene = allScenes[selScene];
+           
+            currentScene = selectNextScene(currentScene);
             sc2TextInput[0]->setTextString(currentScene->getName());
             currentZone = currentScene->getFirstTriggerZone();
             updateZoneControls();
@@ -1507,8 +1519,7 @@ void testApp::s2Events(ofxUIEventArgs &e){
         if(name == "SCENE_MINUS"){
             
             currentScene->deselectAll();
-            selScene = max(selScene - 1, 0);
-            currentScene = allScenes[selScene];
+            currentScene = selectPrevScene(currentScene);
             sc2TextInput[0]->setTextString(currentScene->getName());
             currentZone = currentScene->getFirstTriggerZone();
             updateZoneControls();
@@ -1520,8 +1531,7 @@ void testApp::s2Events(ofxUIEventArgs &e){
             
             currentScene->deselectAll();
             ofPtr<scene> t = ofPtr<scene>(new scene(mOsc));
-            allScenes.insert(allScenes.begin() + selScene + 1, t);
-            selScene = min(selScene + 1, (int)allScenes.size() - 1);
+            allScenes[t->getUid()] = t;
             currentScene = t;
             sc2TextInput[0]->setTextString(currentScene->getName());
             updateZoneControls();
@@ -1532,9 +1542,10 @@ void testApp::s2Events(ofxUIEventArgs &e){
             
             if(allScenes.size() > 1){
                 cleanUpBanks();
-                allScenes.erase(remove(allScenes.begin(), allScenes.end(), currentScene));
-                selScene = max(selScene - 1, 0);
-                currentScene = allScenes[selScene];
+                ofPtr<scene> t = currentScene;
+                currentScene = selectPrevScene(currentScene);
+                map <string, ofPtr<scene> > :: iterator it = allScenes.find(t->getUid());
+                allScenes.erase(it);
                 sc2TextInput[0]->setTextString(currentScene->getName());
                 currentZone = currentScene->getFirstTriggerZone();
                 updateZoneControls();
@@ -1550,8 +1561,7 @@ void testApp::s2Events(ofxUIEventArgs &e){
             t->setName(t->getName() + "_cpy");
             t->newIndex();
             t->deepCopyTriggerZones();
-            allScenes.insert(allScenes.begin() + selScene + 1, t);
-            selScene = min(selScene + 1, (int)allScenes.size() - 1);
+            allScenes[t->getUid()] = t;
             currentScene = t;
             currentZone = currentScene->getFirstTriggerZone();
             sc2TextInput[0]->setTextString(currentScene->getName());
@@ -1813,20 +1823,20 @@ void testApp::s3Events(ofxUIEventArgs &e){
         }
         
         if(name == "B_SCENE_PLUS"){
-            
+            //FIXME
             currentScene->deselectAll();
-            selScene = min(selScene + 1, (int)allScenes.size() - 1);
-            currentScene = allScenes[selScene];
+            //selScene = min(selScene + 1, (int)allScenes.size() - 1);
+            //currentScene = allScenes[selScene];
             currentZone = currentScene->getFirstTriggerZone();
             updateBankElements();
         
         }
         
         if(name == "B_SCENE_MINUS"){
-        
+            //FIXME
             currentScene->deselectAll();
-            selScene = max(selScene - 1, 0);
-            currentScene = allScenes[selScene];
+            //selScene = max(selScene - 1, 0);
+            //currentScene = allScenes[selScene];
             currentZone = currentScene->getFirstTriggerZone();
             updateBankElements();
 
@@ -2390,15 +2400,37 @@ void testApp::cleanUpBanks(){
 
     //for when deleting a scene
     
+    //FIXME - modify to work with new indexing
     
-    for(int i = 0; i < allBanks.size(); i ++){
-        
+    /*for(int i = 0; i < allBanks.size(); i ++){
+       
+    
         vector<ofPtr<scene> >::iterator it = remove_if(allBanks[i]->scenes.begin(), allBanks[i]->scenes.end(), matchSceneIndex(currentScene->getIndex()));
         
         allBanks[i]->scenes.erase(it, allBanks[i]->scenes.end());
        
-    }
+    }*/
     
+    
+}
+
+ofPtr<scene> testApp::selectNextScene(ofPtr<scene> sn){
+
+    if(allScenes.size() == 1)return sn;
+    map<string, ofPtr<scene> >::iterator it = allScenes.find(sn->getUid());
+    it++;
+    if(it == allScenes.end())it = allScenes.begin();
+    return(*it).second;
+    
+}
+
+ofPtr<scene> testApp::selectPrevScene(ofPtr<scene> sn){
+    
+    if(allScenes.size() == 1)return sn;
+    map<string, ofPtr<scene> >::iterator it = allScenes.find(sn->getUid());
+    if(it == allScenes.begin())it = allScenes.end();
+    it--;
+    return(*it).second;
     
 }
 

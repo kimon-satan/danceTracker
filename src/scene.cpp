@@ -8,13 +8,12 @@
 
 #include "scene.h"
 
-int scene::index = 0;
 
 scene::scene(ofPtr<oscManager> o): mOsc(o){
     
-    mName = "emptyScene_" + ofToString(index,0);
-    
     newIndex();
+    mName = "scene_" + u_id;
+    
     
     fadeIn = 0.01;
     fadeOut = 0.01;
@@ -202,24 +201,12 @@ void scene::setFadeOut(float f){ fadeOut = f;}
 float scene::getFadeOut(){return fadeOut;}
 
 
-void scene::setIndex(int i){
-    
-    mIndex = i;
-    
-}
-
 
 void scene::newIndex(){
 
-    mIndex = index;
-    index += 1;
+    u_id = dt_utils::getRandom(10);
 }
 
 
-int scene::getIndex(){return mIndex;}
+string scene::getUid(){return u_id;}
 
-void scene::setStaticIndex(int i){
-
-    index = i;
-
-}
