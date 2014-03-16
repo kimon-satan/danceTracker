@@ -23,11 +23,11 @@ scene::scene(ofPtr<oscManager> o): mOsc(o){
 
 void scene::draw(ofVec3f camPos){
 
-    map< string, ofPtr<triggerZone> >::iterator it;
+    vector<ofPtr<triggerZone> >::iterator it;
     
     for(it = triggerZones.begin(); it != triggerZones.end(); it++){
     
-        (*it).second->draw(camPos);
+        (*it)->draw(camPos);
         
     }
     
@@ -36,14 +36,14 @@ void scene::draw(ofVec3f camPos){
 
 void scene::update(ofVec3f com, float userHeight, vector<ofVec3f> & pc){
 
-    map<string, ofPtr<triggerZone> >::iterator it;
+    vector<ofPtr<triggerZone> >::iterator it;
     
     for(it = triggerZones.begin(); it != triggerZones.end(); it++){
         
-        if((*it).second->getIsEnabled()){
+        if((*it)->getIsEnabled()){
             
-            if((*it).second->checkInRange(com, userHeight))(*it).second->checkPoints(pc);
-            (*it).second->update();
+            if((*it)->checkInRange(com, userHeight))(*it)->checkPoints(pc);
+            (*it)->update();
             
         }
         
@@ -54,25 +54,26 @@ void scene::update(ofVec3f com, float userHeight, vector<ofVec3f> & pc){
 
 void scene::deselectAll(){
 
-    map< string, ofPtr<triggerZone> >::iterator it;
+    vector< ofPtr<triggerZone> >::iterator it;
     
     for(it = triggerZones.begin(); it != triggerZones.end(); it++){
      
-        (*it).second->deselect();
+        (*it)->deselect();
     }
 }
 
-ofPtr<triggerZone> scene::getTriggerZone(string tz){return triggerZones[tz];} 
+//does this get used ?
+//ofPtr<triggerZone> scene::getTriggerZone(string tz){return triggerZones[tz];}
 
 ofPtr<triggerZone> scene::getNextTriggerZone(ofPtr<triggerZone> tz){
     
     if(!tz){
         return tz; //return the empty pointer
     }else{
-        map< string, ofPtr<triggerZone> >::iterator it = triggerZones.find(tz->getUid());
+        vector< ofPtr<triggerZone> >::iterator it = find(triggerZones.begin(), triggerZones.end(), tz);
         it++;
-        if(it == triggerZones.end())it = triggerZones.begin();
-        return (*it).second;
+        if(it == triggerZones.end())it--;
+        return (*it);
     }
     
 }
@@ -83,11 +84,9 @@ ofPtr<triggerZone> scene::getPrevTriggerZone(ofPtr<triggerZone> tz){
         return tz; //return the empty pointer
     }else{
         
-        map< string, ofPtr<triggerZone> >::iterator it = triggerZones.find(tz->getUid());
-        if(it == triggerZones.begin())it = triggerZones.end();
-        it--;
-        
-        return (*it).second;
+        vector< ofPtr<triggerZone> >::iterator it = find(triggerZones.begin(), triggerZones.end(), tz);
+        if(it != triggerZones.begin())it--;
+        return (*it);
     }
     
 }
@@ -95,18 +94,18 @@ ofPtr<triggerZone> scene::getPrevTriggerZone(ofPtr<triggerZone> tz){
 ofPtr<triggerZone> scene::getFirstTriggerZone(){
     ofPtr<triggerZone> tz;
     if(triggerZones.size() == 0)return tz; //an empty pointer
-    return (*triggerZones.begin()).second;
+    return (*triggerZones.begin());
 }
 
 
-map < string, ofPtr<triggerZone> > scene::getTriggerZones(){ return triggerZones;}
+vector < ofPtr<triggerZone> > scene::getTriggerZones(){ return triggerZones;}
 int scene::getNumTriggerZones(){return triggerZones.size();}
 
-ofPtr<triggerZone> scene::addTriggerZone(){
+ofPtr<triggerZone> scene::addTriggerZone(ofPtr<triggerZone> tz){
     
     ofPtr <triggerZone> t = ofPtr<triggerZone>(new triggerZone(mOsc));
     checkUniqueId(t);
-    triggerZones[t->getUid()] = t;
+    triggerZones.insert(getInsertIt(tz), t);
     
     //addZone to SC
     mOsc->addZone(t->getUid(), t->getName());
@@ -115,9 +114,9 @@ ofPtr<triggerZone> scene::addTriggerZone(){
     return t;
 }
 
-ofPtr<triggerZone> scene::copyTriggerZone(string tz){ //TODO for consistency this could be done with ptr
+ofPtr<triggerZone> scene::copyTriggerZone(ofPtr<triggerZone> tz){ 
     
-    ofPtr <triggerZone> t = ofPtr<triggerZone>(new triggerZone(*triggerZones[tz]));
+    ofPtr <triggerZone> t = ofPtr<triggerZone>(new triggerZone(*tz));
     t->newIndex();
     checkUniqueId(t);
     
@@ -128,16 +127,16 @@ ofPtr<triggerZone> scene::copyTriggerZone(string tz){ //TODO for consistency thi
     mOsc->addZone(t->getUid(), t->getName());
     t->reloadSound();
   
-    triggerZones[t->getUid()] = t;
+    triggerZones.insert(getInsertIt(tz), t);
   
     return t;
     
 }
 
-void scene::removeTriggerZone(string tz){ //TODO for consistency this could be done with ptr
+void scene::removeTriggerZone(ofPtr<triggerZone> tz){
 
-    mOsc->removeZone(triggerZones[tz]->getUid());
-    triggerZones.erase(tz);
+    mOsc->removeZone(tz->getUid());
+    triggerZones.erase(find(triggerZones.begin(), triggerZones.end(), tz));
     
 }
 
@@ -145,17 +144,17 @@ void scene::removeTriggerZone(string tz){ //TODO for consistency this could be d
 void scene::deepCopyTriggerZones(){
 
     //make a deep copy of the trigger zones ... for when copying a scene
-    map <string, ofPtr<triggerZone> > ttz;
-    map <string, ofPtr<triggerZone> >::iterator it;
+    vector <ofPtr<triggerZone> > ttz;
+    vector <ofPtr<triggerZone> >::iterator it;
     
     for(it = triggerZones.begin(); it != triggerZones.end(); it++){
-        ofPtr<triggerZone> tz = (*it).second;
+        ofPtr<triggerZone> tz = (*it);
         ofPtr <triggerZone> t = ofPtr<triggerZone>(new triggerZone(*tz));
         t->newIndex();
         checkUniqueId(t);
         mOsc->addZone(t->getUid(), t->getName());
         t->reloadSound();
-        ttz[t->getUid()] = t;
+        ttz.push_back(t); //no need for insert here
     }
     
     triggerZones.clear();
@@ -169,12 +168,35 @@ void scene::checkUniqueId(ofPtr<triggerZone> tz){
     bool isUnique = false;
     
     while (!isUnique) {
-        if(triggerZones.find(tz->getUid()) != triggerZones.end()){
+        
+        bool isFound = false;
+        vector<ofPtr<triggerZone> >::iterator it = triggerZones.begin();
+        for(it = triggerZones.begin(); it != triggerZones.end(); it++){
+            if(tz->getUid() == (*it)->getUid())isFound = true;
+        }
+        
+        if(isFound){
             tz->newIndex();
         }else{
             isUnique = true;
         }
     }
+    
+   
+    
+}
+
+vector<ofPtr<triggerZone> >::iterator scene::getInsertIt(ofPtr<triggerZone> tz){
+    
+    vector<ofPtr<triggerZone> >::iterator it;
+    if(triggerZones.size() == 1)
+        return triggerZones.end();
+    else if(!tz)
+        return triggerZones.end();
+    else
+        it = find(triggerZones.begin(), triggerZones.end(), tz);
+    it ++;
+    return it;
     
 }
 

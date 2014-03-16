@@ -563,15 +563,15 @@ void testApp::saveSettings(string fn){
                     XML.addValue("FADE_IN", sn->getFadeIn());
                     XML.addValue("FADE_OUT", sn->getFadeOut());
                     
-                    map < string, ofPtr<triggerZone> > t_tzs = sn->getTriggerZones();
-                    map < string, ofPtr<triggerZone> > ::iterator it;
+                    vector <ofPtr<triggerZone> > t_tzs = sn->getTriggerZones();
+                    vector <ofPtr<triggerZone> > ::iterator it;
                     int count = 0;
                     
                     for(it = t_tzs.begin(); it != t_tzs.end(); it++){
                         
                         XML.addTag("ZONE");
                         
-                        ofPtr<triggerZone> z = (*it).second;
+                        ofPtr<triggerZone> z = (*it);
                         
                         if(XML.pushTag("ZONE", count)){
                             
@@ -683,6 +683,9 @@ void testApp::saveSettings(string fn){
 
 void testApp::loadSettings(string fn){
     
+    currentZone.reset();
+    currentScene.reset();
+    
     ofxXmlSettings XML;
     
     if(fn.substr(fn.length()-4, 4) != ".xml")fn += ".xml";
@@ -748,7 +751,7 @@ void testApp::loadSettings(string fn){
                             
                             if(XML.pushTag("ZONE", tz)){
                                 
-                                ofPtr<triggerZone> z = nScene->addTriggerZone();
+                                ofPtr<triggerZone> z = nScene->addTriggerZone(currentZone);
                                 
                                 z->setName(XML.getValue("NAME", ""));
                                 z->setShape(XML.getValue("SHAPE", 0));
@@ -1222,7 +1225,7 @@ void testApp::settingsEvents(ofxUIEventArgs &e){
             (*it)->deselectAll();
         }
         currentScene = allScenes[0];
-        if(allScenes[0]->getNumTriggerZones() > 0)currentZone = currentScene->getTriggerZone(0);
+        if(allScenes[0]->getNumTriggerZones() > 0)currentZone = currentScene->getFirstTriggerZone();
         updateZoneControls();
         isPerfMode = false;
     }
@@ -1586,7 +1589,7 @@ void testApp::s2Events(ofxUIEventArgs &e){
         if(name == "CREATE_ZONE"){
             
             if(currentScene->getNumTriggerZones() > 0)currentZone->setIsSelected(false);
-            currentZone = currentScene->addTriggerZone();
+            currentZone = currentScene->addTriggerZone(currentZone);
             updateZoneControls();
             hideSynthCanvas();
         }
@@ -1595,7 +1598,7 @@ void testApp::s2Events(ofxUIEventArgs &e){
             
             if(currentScene->getNumTriggerZones() > 0){
                 currentZone->setIsSelected(false);
-                currentZone = currentScene->copyTriggerZone(currentZone->getUid());
+                currentZone = currentScene->copyTriggerZone(currentZone);
                 updateZoneControls();
                 hideSynthCanvas();
             }
@@ -1629,9 +1632,9 @@ void testApp::s2Events(ofxUIEventArgs &e){
             
             if(name == "DELETE_ZONE"){
                 
-                string dz = currentZone->getUid();
+                ofPtr<triggerZone> tz = currentZone;
                 currentZone = currentScene->getNextTriggerZone(currentZone);
-                currentScene->removeTriggerZone(dz);
+                currentScene->removeTriggerZone(tz);
                 updateZoneControls();
                 hideSynthCanvas();
                 

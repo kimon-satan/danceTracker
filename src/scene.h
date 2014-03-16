@@ -19,23 +19,24 @@ class scene{
     void draw(ofVec3f camPos);
     void update(ofVec3f com, float userHeight,vector<ofVec3f> & pc);
     
-    ofPtr<triggerZone> addTriggerZone();
-    ofPtr<triggerZone> copyTriggerZone(string tz);
+    ofPtr<triggerZone> addTriggerZone(ofPtr<triggerZone> tz);
+    ofPtr<triggerZone> copyTriggerZone(ofPtr<triggerZone> tz);
     ofPtr<triggerZone> getFirstTriggerZone();
-    ofPtr<triggerZone> getNextTriggerZone(ofPtr<triggerZone>);
+    ofPtr<triggerZone> getNextTriggerZone(ofPtr<triggerZone> tz);
     ofPtr<triggerZone> getPrevTriggerZone(ofPtr<triggerZone> tz);
     
-    void removeTriggerZone(string tz);
+    void removeTriggerZone(ofPtr<triggerZone> tz);
     void deepCopyTriggerZones();
     
     void checkUniqueId(ofPtr<triggerZone> tz);
+    vector<ofPtr<triggerZone> >::iterator getInsertIt(ofPtr<triggerZone> tz);
     
     void deselectAll();
     
     //getters and setters
     
-    map < string, ofPtr<triggerZone> > getTriggerZones();
-    ofPtr<triggerZone> getTriggerZone(string tz);
+    vector <ofPtr<triggerZone> > getTriggerZones();
+    //ofPtr<triggerZone> getTriggerZone(string tz);
     int getNumTriggerZones();
     void setName(string s);
     string getName();
@@ -52,7 +53,7 @@ class scene{
     
     private:
     
-    map < string, ofPtr<triggerZone> > triggerZones;
+    vector <ofPtr<triggerZone> > triggerZones;
     ofPtr<oscManager> mOsc;
     
     float fadeIn, fadeOut;
