@@ -1,0 +1,6 @@
+safety to prevent duplicate alpha numeric indices
+check that copy function is working appropriately
+remove numeric indexing
+alpha numeric indices for scenes
+check scene copying
+performance mode issues
