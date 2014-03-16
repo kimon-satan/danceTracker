@@ -119,10 +119,13 @@ ofPtr<triggerZone> scene::addTriggerZone(){
 ofPtr<triggerZone> scene::copyTriggerZone(string tz){ //TODO for consistency this could be done with ptr
     
     ofPtr <triggerZone> t = ofPtr<triggerZone>(new triggerZone(*triggerZones[tz]));
-    t->setName(t->getName() + "_copy");
     t->newIndex();
     checkUniqueId(t);
     
+    string tn = t->getName();
+    if(tn.substr(tn.length() - 5, 5) != "_copy")tn += "_copy";
+    
+    t->setName(tn);
     mOsc->addZone(t->getUid(), t->getName());
     t->reloadSound();
   
