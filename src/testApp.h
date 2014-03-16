@@ -124,6 +124,9 @@ public:
     
     ofPtr<scene> selectNextScene(ofPtr<scene> sn);
     ofPtr<scene> selectPrevScene(ofPtr<scene> sn);
+    
+    vector<ofPtr<scene> >::iterator getInsertIt(ofPtr<scene> sn);
+    
     //kinect variables
     
     ofxKinect 			kinect;
@@ -177,7 +180,7 @@ public:
     
     int selScene, selBank, bSelScene;
     
-    map<string, ofPtr<scene> > allScenes;
+    vector<ofPtr<scene> > allScenes;
     vector<ofPtr<bank> >allBanks;
     
     ofPtr<scene> currentScene;

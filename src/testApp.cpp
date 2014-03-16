@@ -74,7 +74,7 @@ void testApp::setup(){
     cm.disableMouseInput();
     
     ofPtr<scene>  s = ofPtr<scene>(new scene(mOsc));
-    allScenes[s->getUid()] = s;
+    allScenes.push_back(s);
     currentScene = s;
     
     ofPtr<bank> b = ofPtr<bank>(new bank());
@@ -548,13 +548,13 @@ void testApp::saveSettings(string fn){
         
         if(XML.pushTag("SCENE_SETTINGS")){
             
-            map<string, ofPtr<scene> >::iterator it;
+            vector<ofPtr<scene> >::iterator it;
             int counter = 0;
             
             for(it = allScenes.begin(); it != allScenes.end(); it++){
                 
                 XML.addTag("SCENE");
-                ofPtr<scene> sn = (*it).second;
+                ofPtr<scene> sn = (*it);
                 
                 if(XML.pushTag("SCENE", counter)){
                     
@@ -802,7 +802,7 @@ void testApp::loadSettings(string fn){
                         }
                         
                         
-                        allScenes[nScene->getUid()] = nScene;
+                        allScenes.push_back(nScene);
                         
                         //scene tag
                         XML.popTag();
@@ -813,7 +813,7 @@ void testApp::loadSettings(string fn){
                     
                 }
                 
-                currentScene = (*allScenes.begin()).second;
+                currentScene = (*allScenes.begin());
                 sc2TextInput[0]->setTextString(currentScene->getName());
                 //there will probably be more to update here later
                 
@@ -1197,10 +1197,10 @@ void testApp::settingsEvents(ofxUIEventArgs &e){
     
     if(name == "Performance Mode"){
         
-        map<string, ofPtr<scene> >:: iterator it;
+        vector<ofPtr<scene> >:: iterator it;
         
         for(it = allScenes.begin(); it != allScenes.end(); it++){
-            (*it).second->deselectAll();
+            (*it)->deselectAll();
         }
         currentBank = allBanks[0];
         if(currentBank->scenes.size() > 0){
@@ -1216,10 +1216,10 @@ void testApp::settingsEvents(ofxUIEventArgs &e){
         
     }else if(isPerfMode){
         
-        map<string, ofPtr<scene> >:: iterator it;
+        vector<ofPtr<scene> >:: iterator it;
         
         for(it = allScenes.begin(); it != allScenes.end(); it++){
-            (*it).second->deselectAll();
+            (*it)->deselectAll();
         }
         currentScene = allScenes[0];
         if(allScenes[0]->getNumTriggerZones() > 0)currentZone = currentScene->getTriggerZone(0);
@@ -1532,7 +1532,7 @@ void testApp::s2Events(ofxUIEventArgs &e){
             currentScene->deselectAll();
             ofPtr<scene> t = ofPtr<scene>(new scene(mOsc));
             checkUniqueId(t);
-            allScenes[t->getUid()] = t;
+            allScenes.insert(getInsertIt(currentScene), t);
             currentScene = t;
             sc2TextInput[0]->setTextString(currentScene->getName());
             updateZoneControls();
@@ -1545,7 +1545,7 @@ void testApp::s2Events(ofxUIEventArgs &e){
                 cleanUpBanks();
                 ofPtr<scene> t = currentScene;
                 currentScene = selectPrevScene(currentScene);
-                map <string, ofPtr<scene> > :: iterator it = allScenes.find(t->getUid());
+                vector <ofPtr<scene> > :: iterator it = find(allScenes.begin(),allScenes.end(), t);
                 allScenes.erase(it);
                 sc2TextInput[0]->setTextString(currentScene->getName());
                 currentZone = currentScene->getFirstTriggerZone();
@@ -1574,7 +1574,7 @@ void testApp::s2Events(ofxUIEventArgs &e){
             }
          
             t->deepCopyTriggerZones();
-            allScenes[t->getUid()] = t;
+            allScenes.insert(getInsertIt(currentScene), t);
             currentScene = t;
             currentZone = currentScene->getFirstTriggerZone();
             sc2TextInput[0]->setTextString(currentScene->getName());
@@ -2169,12 +2169,31 @@ void testApp::checkUniqueId(ofPtr<scene> sn){
     bool isUnique = false;
     
     while (!isUnique) {
-        if(allScenes.find(sn->getUid()) != allScenes.end()){
+        
+        bool isFound = false;
+        vector<ofPtr<scene> >::iterator it = allScenes.begin();
+        for(it = allScenes.begin(); it != allScenes.end(); it++){
+            if(sn->getUid() == (*it)->getUid())isFound = true;
+        }
+        
+        if(isFound){
             sn->newIndex();
         }else{
             isUnique = true;
         }
     }
+    
+}
+
+vector<ofPtr<scene> >::iterator testApp::getInsertIt(ofPtr<scene> sn){
+
+    vector<ofPtr<scene> >::iterator it;
+    if(allScenes.size() == 1)
+        return allScenes.end();
+    else
+        it = find(allScenes.begin(), allScenes.end(), sn);
+        it ++;
+        return it;
     
 }
 
@@ -2444,20 +2463,19 @@ void testApp::cleanUpBanks(){
 ofPtr<scene> testApp::selectNextScene(ofPtr<scene> sn){
 
     if(allScenes.size() == 1)return sn;
-    map<string, ofPtr<scene> >::iterator it = allScenes.find(sn->getUid());
+    vector< ofPtr<scene> >::iterator it = find(allScenes.begin(), allScenes.end(), sn);
     it++;
-    if(it == allScenes.end())it = allScenes.begin();
-    return(*it).second;
+    if(it == allScenes.end())it--;
+    return(*it);
     
 }
 
 ofPtr<scene> testApp::selectPrevScene(ofPtr<scene> sn){
     
     if(allScenes.size() == 1)return sn;
-    map<string, ofPtr<scene> >::iterator it = allScenes.find(sn->getUid());
-    if(it == allScenes.begin())it = allScenes.end();
-    it--;
-    return(*it).second;
+    vector< ofPtr<scene> >::iterator it = find(allScenes.begin(), allScenes.end(), sn);
+    if(it != allScenes.begin())it--;
+    return(*it);
     
 }
 
@@ -2523,3 +2541,4 @@ void testApp::exit(){
     
 }
 
+    
