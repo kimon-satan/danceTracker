@@ -85,7 +85,7 @@ void testApp::setup(){
     updateZoneControls();
     
     isFakeUser = false;
-    selBank = 0; selZone = ""; selScene = 0; bSelScene = 0;
+    selBank = 0; selScene = 0; bSelScene = 0;
     
 }
 
@@ -614,7 +614,7 @@ void testApp::saveSettings(string fn){
                                 
                             }
                             
-                            
+                            count++;
                             
                             //zone tag
                             XML.popTag();

@@ -16,6 +16,102 @@
             <FADE_IN>0.010000000</FADE_IN>
             <FADE_OUT>0.010000000</FADE_OUT>
             <ZONE>
+                <NAME>newZone</NAME>
+                <POS_X>3.376962662</POS_X>
+                <POS_Y>0.000000000</POS_Y>
+                <POS_Z>2.000000000</POS_Z>
+                <SHAPE>0</SHAPE>
+                <DIM_X>0.500000000</DIM_X>
+                <DIM_Y>0.250000000</DIM_Y>
+                <DIM_Z>0.500000000</DIM_Z>
+                <RADIUS>0.605650723</RADIUS>
+                <SOUNDFILE>testing/electro.wav</SOUNDFILE>
+                <IS_LOOP>1</IS_LOOP>
+                <IS_PLAY_TO_END>0</IS_PLAY_TO_END>
+                <INVERTED>0</INVERTED>
+                <ENABLED>1</ENABLED>
+                <MIN_REPLAY>0.000000000</MIN_REPLAY>
+                <SYNTH_TYPE>0</SYNTH_TYPE>
+                <pan>
+                    <ABS_VAL>0.000000000</ABS_VAL>
+                    <MIN_VAL>-1.000000000</MIN_VAL>
+                    <MAX_VAL>1.000000000</MAX_VAL>
+                    <MAP>3</MAP>
+                </pan>
+                <amp>
+                    <ABS_VAL>0.500000000</ABS_VAL>
+                    <MIN_VAL>0.000000000</MIN_VAL>
+                    <MAX_VAL>1.000000000</MAX_VAL>
+                    <MAP>0</MAP>
+                </amp>
+                <rate>
+                    <ABS_VAL>1.000000000</ABS_VAL>
+                    <MIN_VAL>-2.000000000</MIN_VAL>
+                    <MAX_VAL>2.000000000</MAX_VAL>
+                    <MAP>0</MAP>
+                </rate>
+                <fadeIn>
+                    <ABS_VAL>0.010000000</ABS_VAL>
+                    <MIN_VAL>0.010000000</MIN_VAL>
+                    <MAX_VAL>2.000000000</MAX_VAL>
+                    <MAP>0</MAP>
+                </fadeIn>
+                <fadeOut>
+                    <ABS_VAL>0.010000000</ABS_VAL>
+                    <MIN_VAL>0.010000000</MIN_VAL>
+                    <MAX_VAL>2.000000000</MAX_VAL>
+                    <MAP>0</MAP>
+                </fadeOut>
+            </ZONE>
+            <ZONE>
+                <NAME>defaultZone_0</NAME>
+                <POS_X>0.000000000</POS_X>
+                <POS_Y>0.000000000</POS_Y>
+                <POS_Z>2.000000000</POS_Z>
+                <SHAPE>0</SHAPE>
+                <DIM_X>0.500000000</DIM_X>
+                <DIM_Y>0.250000000</DIM_Y>
+                <DIM_Z>0.500000000</DIM_Z>
+                <RADIUS>0.250000000</RADIUS>
+                <SOUNDFILE>testing/electro.wav</SOUNDFILE>
+                <IS_LOOP>1</IS_LOOP>
+                <IS_PLAY_TO_END>0</IS_PLAY_TO_END>
+                <INVERTED>0</INVERTED>
+                <ENABLED>1</ENABLED>
+                <MIN_REPLAY>0.000000000</MIN_REPLAY>
+                <SYNTH_TYPE>0</SYNTH_TYPE>
+                <pan>
+                    <ABS_VAL>0.000000000</ABS_VAL>
+                    <MIN_VAL>-1.000000000</MIN_VAL>
+                    <MAX_VAL>1.000000000</MAX_VAL>
+                    <MAP>3</MAP>
+                </pan>
+                <amp>
+                    <ABS_VAL>0.500000000</ABS_VAL>
+                    <MIN_VAL>0.000000000</MIN_VAL>
+                    <MAX_VAL>1.000000000</MAX_VAL>
+                    <MAP>0</MAP>
+                </amp>
+                <rate>
+                    <ABS_VAL>1.000000000</ABS_VAL>
+                    <MIN_VAL>-2.000000000</MIN_VAL>
+                    <MAX_VAL>2.000000000</MAX_VAL>
+                    <MAP>0</MAP>
+                </rate>
+                <fadeIn>
+                    <ABS_VAL>0.010000000</ABS_VAL>
+                    <MIN_VAL>0.010000000</MIN_VAL>
+                    <MAX_VAL>2.000000000</MAX_VAL>
+                    <MAP>0</MAP>
+                </fadeIn>
+                <fadeOut>
+                    <ABS_VAL>0.010000000</ABS_VAL>
+                    <MIN_VAL>0.010000000</MIN_VAL>
+                    <MAX_VAL>2.000000000</MAX_VAL>
+                    <MAP>0</MAP>
+                </fadeOut>
+            </ZONE>
+            <ZONE>
                 <NAME>defaultZone_3</NAME>
                 <POS_X>-1.753926516</POS_X>
                 <POS_Y>0.000000000</POS_Y>
@@ -37,24 +133,8 @@
                     <MIN_VAL>-1.000000000</MIN_VAL>
                     <MAX_VAL>1.000000000</MAX_VAL>
                     <MAP>3</MAP>
-                    <ABS_VAL>0.000000000</ABS_VAL>
-                    <MIN_VAL>-1.000000000</MIN_VAL>
-                    <MAX_VAL>1.000000000</MAX_VAL>
-                    <MAP>3</MAP>
-                    <ABS_VAL>0.000000000</ABS_VAL>
-                    <MIN_VAL>-1.000000000</MIN_VAL>
-                    <MAX_VAL>1.000000000</MAX_VAL>
-                    <MAP>3</MAP>
                 </pan>
                 <amp>
-                    <ABS_VAL>0.500000000</ABS_VAL>
-                    <MIN_VAL>0.000000000</MIN_VAL>
-                    <MAX_VAL>1.000000000</MAX_VAL>
-                    <MAP>0</MAP>
-                    <ABS_VAL>0.500000000</ABS_VAL>
-                    <MIN_VAL>0.000000000</MIN_VAL>
-                    <MAX_VAL>1.000000000</MAX_VAL>
-                    <MAP>0</MAP>
                     <ABS_VAL>0.500000000</ABS_VAL>
                     <MIN_VAL>0.000000000</MIN_VAL>
                     <MAX_VAL>1.000000000</MAX_VAL>
@@ -65,24 +145,8 @@
                     <MIN_VAL>-2.000000000</MIN_VAL>
                     <MAX_VAL>2.000000000</MAX_VAL>
                     <MAP>0</MAP>
-                    <ABS_VAL>1.000000000</ABS_VAL>
-                    <MIN_VAL>-2.000000000</MIN_VAL>
-                    <MAX_VAL>2.000000000</MAX_VAL>
-                    <MAP>0</MAP>
-                    <ABS_VAL>1.000000000</ABS_VAL>
-                    <MIN_VAL>-2.000000000</MIN_VAL>
-                    <MAX_VAL>2.000000000</MAX_VAL>
-                    <MAP>0</MAP>
                 </rate>
                 <fadeIn>
-                    <ABS_VAL>0.010000000</ABS_VAL>
-                    <MIN_VAL>0.010000000</MIN_VAL>
-                    <MAX_VAL>2.000000000</MAX_VAL>
-                    <MAP>0</MAP>
-                    <ABS_VAL>0.010000000</ABS_VAL>
-                    <MIN_VAL>0.010000000</MIN_VAL>
-                    <MAX_VAL>2.000000000</MAX_VAL>
-                    <MAP>0</MAP>
                     <ABS_VAL>0.010000000</ABS_VAL>
                     <MIN_VAL>0.010000000</MIN_VAL>
                     <MAX_VAL>2.000000000</MAX_VAL>
@@ -93,36 +157,9 @@
                     <MIN_VAL>0.010000000</MIN_VAL>
                     <MAX_VAL>2.000000000</MAX_VAL>
                     <MAP>0</MAP>
-                    <ABS_VAL>0.010000000</ABS_VAL>
-                    <MIN_VAL>0.010000000</MIN_VAL>
-                    <MAX_VAL>2.000000000</MAX_VAL>
-                    <MAP>0</MAP>
-                    <ABS_VAL>0.010000000</ABS_VAL>
-                    <MIN_VAL>0.010000000</MIN_VAL>
-                    <MAX_VAL>2.000000000</MAX_VAL>
-                    <MAP>0</MAP>
                 </fadeOut>
-                <NAME>defaultZone_0</NAME>
-                <POS_X>0.000000000</POS_X>
-                <POS_Y>0.000000000</POS_Y>
-                <POS_Z>2.000000000</POS_Z>
-                <SHAPE>0</SHAPE>
-                <DIM_X>0.500000000</DIM_X>
-                <DIM_Y>0.250000000</DIM_Y>
-                <DIM_Z>0.500000000</DIM_Z>
-                <RADIUS>0.250000000</RADIUS>
-                <SOUNDFILE>testing/electro.wav</SOUNDFILE>
-                <IS_LOOP>1</IS_LOOP>
-                <IS_PLAY_TO_END>0</IS_PLAY_TO_END>
-                <INVERTED>0</INVERTED>
-                <ENABLED>1</ENABLED>
-                <MIN_REPLAY>0.000000000</MIN_REPLAY>
-                <SYNTH_TYPE>0</SYNTH_TYPE>
-                <pan></pan>
-                <amp></amp>
-                <rate></rate>
-                <fadeIn></fadeIn>
-                <fadeOut></fadeOut>
+            </ZONE>
+            <ZONE>
                 <NAME>defaultZone_1</NAME>
                 <POS_X>1.701570511</POS_X>
                 <POS_Y>0.000000000</POS_Y>
@@ -139,14 +176,37 @@
                 <ENABLED>0</ENABLED>
                 <MIN_REPLAY>0.000000000</MIN_REPLAY>
                 <SYNTH_TYPE>0</SYNTH_TYPE>
-                <pan></pan>
-                <amp></amp>
-                <rate></rate>
-                <fadeIn></fadeIn>
-                <fadeOut></fadeOut>
+                <pan>
+                    <ABS_VAL>0.000000000</ABS_VAL>
+                    <MIN_VAL>-1.000000000</MIN_VAL>
+                    <MAX_VAL>1.000000000</MAX_VAL>
+                    <MAP>3</MAP>
+                </pan>
+                <amp>
+                    <ABS_VAL>0.500000000</ABS_VAL>
+                    <MIN_VAL>0.000000000</MIN_VAL>
+                    <MAX_VAL>1.000000000</MAX_VAL>
+                    <MAP>0</MAP>
+                </amp>
+                <rate>
+                    <ABS_VAL>1.000000000</ABS_VAL>
+                    <MIN_VAL>-2.000000000</MIN_VAL>
+                    <MAX_VAL>2.000000000</MAX_VAL>
+                    <MAP>0</MAP>
+                </rate>
+                <fadeIn>
+                    <ABS_VAL>0.010000000</ABS_VAL>
+                    <MIN_VAL>0.010000000</MIN_VAL>
+                    <MAX_VAL>2.000000000</MAX_VAL>
+                    <MAP>0</MAP>
+                </fadeIn>
+                <fadeOut>
+                    <ABS_VAL>0.010000000</ABS_VAL>
+                    <MIN_VAL>0.010000000</MIN_VAL>
+                    <MAX_VAL>2.000000000</MAX_VAL>
+                    <MAP>0</MAP>
+                </fadeOut>
             </ZONE>
-            <ZONE></ZONE>
-            <ZONE></ZONE>
         </SCENE>
     </SCENE_SETTINGS>
     <BANK_SETTINGS>

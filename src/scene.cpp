@@ -109,7 +109,7 @@ ofPtr<triggerZone> scene::addTriggerZone(){
  
         triggerZones[t->getUid()] = t;
         //addZone to SC
-        mOsc->addZone(t->getIndex(), t->getName()); //replace index
+        mOsc->addZone(t->getUid(), t->getName()); //replace index
         t->updateAllAudio();
   
     
@@ -121,7 +121,7 @@ ofPtr<triggerZone> scene::copyTriggerZone(string tz){
     ofPtr <triggerZone> t = ofPtr<triggerZone>(new triggerZone(*triggerZones[tz]));
     t->setName(t->getName() + "_copy");
     t->newIndex();
-    mOsc->addZone(t->getIndex(), t->getName());
+    mOsc->addZone(t->getUid(), t->getName());
     t->reloadSound();
   
     triggerZones[t->getUid()] = t;
@@ -131,7 +131,7 @@ ofPtr<triggerZone> scene::copyTriggerZone(string tz){
 
 void scene::removeTriggerZone(string tz){
 
-    mOsc->removeZone(triggerZones[tz]->getIndex());
+    mOsc->removeZone(triggerZones[tz]->getUid());
     triggerZones.erase(tz);
     
 }
@@ -145,7 +145,7 @@ void scene::deepCopyTriggerZones(){
     for(int i = 0; i < triggerZones.size(); i++){
         ofPtr <triggerZone> t = ofPtr<triggerZone>(new triggerZone(*triggerZones["index"]));
         t->newIndex();
-        mOsc->addZone(t->getIndex(), t->getName());
+        mOsc->addZone(t->getUid(), t->getName());
         t->reloadSound();
         ttz["index"] = t;
     }

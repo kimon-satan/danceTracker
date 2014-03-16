@@ -83,65 +83,65 @@ void oscManager::printMessage(ofxOscMessage & m){
 
 }
 
-void oscManager::loadZoneSound(int index, string name){
+void oscManager::loadZoneSound(string index, string name){
 
     ofxOscMessage m;
     m.setAddress("/loadZoneSound");
-    m.addIntArg(index);
+    m.addStringArg(index);
     m.addStringArg(name);
     
     sender.sendMessage(m);
     
 }
 
-void oscManager::addZone(int index, string name){
+void oscManager::addZone(string index, string name){
 
     ofxOscMessage m;
     m.setAddress("/addZone");
-    m.addIntArg(index);
+    m.addStringArg(index);
     m.addStringArg(name);
     
     sender.sendMessage(m);
 }
 
 
-void oscManager::removeZone(int index){
+void oscManager::removeZone(string index){
     
     ofxOscMessage m;
     m.setAddress("/removeZone");
-    m.addIntArg(index);
+    m.addStringArg(index);
     
     sender.sendMessage(m);
 
 }
 
 
-void oscManager::playZone(int index){
+void oscManager::playZone(string index){
     
     ofxOscMessage m;
     m.setAddress("/playZone");
-    m.addIntArg(index);
+    m.addStringArg(index);
     
     sender.sendMessage(m);
 
 }
 
 
-void oscManager::stopZone(int index){
+void oscManager::stopZone(string index){
 
     ofxOscMessage m;
     m.setAddress("/stopZone");
-    m.addIntArg(index);
+    m.addStringArg(index);
     
     sender.sendMessage(m);
 
 }
 
-void oscManager::updateZoneSettings(int index, string item, string value){
+void oscManager::updateZoneSettings(string index, string item, string value){
 
     ofxOscMessage m;
     m.setAddress("/updateZoneSettings");
-    m.addIntArg(index);
+    m.addStringArg(index);
     m.addStringArg(item);
     m.addStringArg(value);
     
@@ -149,11 +149,11 @@ void oscManager::updateZoneSettings(int index, string item, string value){
 
 }
 
-void oscManager::updateZoneSettings(int index, string item, int value){
+void oscManager::updateZoneSettings(string index, string item, int value){
     
     ofxOscMessage m;
     m.setAddress("/updateZoneSettings");
-    m.addIntArg(index);
+    m.addStringArg(index);
     m.addStringArg(item);
     m.addIntArg(value);
     
@@ -161,11 +161,11 @@ void oscManager::updateZoneSettings(int index, string item, int value){
     
 }
 
-void oscManager::updateZoneSettings(int index, string item, float value){
+void oscManager::updateZoneSettings(string index, string item, float value){
     
     ofxOscMessage m;
     m.setAddress("/updateZoneSettings");
-    m.addIntArg(index);
+    m.addStringArg(index);
     m.addStringArg(item);
     m.addFloatArg(value);
     
@@ -173,11 +173,11 @@ void oscManager::updateZoneSettings(int index, string item, float value){
     
 }
 
-void oscManager::updateSynth(int index){
+void oscManager::updateSynth(string index){
 
     ofxOscMessage m;
     m.setAddress("/updateSynth");
-    m.addIntArg(index);
+    m.addStringArg(index);
   
     sender.sendMessage(m);
     

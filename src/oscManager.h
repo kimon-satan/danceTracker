@@ -24,17 +24,17 @@ class oscManager{
     
     void update();
     
-    void addZone(int index, string name);
-    void loadZoneSound(int index, string name);
-    void removeZone(int index);
-    void playZone(int index);
-    void stopZone(int index);
+    void addZone(string index, string name);
+    void loadZoneSound(string index, string name);
+    void removeZone(string index);
+    void playZone(string index);
+    void stopZone(string index);
     
-    void updateZoneSettings(int index, string item, string value);
-    void updateZoneSettings(int index, string item, float value);
-    void updateZoneSettings(int index, string item, int value);
+    void updateZoneSettings(string index, string item, string value);
+    void updateZoneSettings(string index, string item, float value);
+    void updateZoneSettings(string index, string item, int value);
     
-    void updateSynth(int index);
+    void updateSynth(string index);
     void newScene(float fIn, float fOut);
     
     

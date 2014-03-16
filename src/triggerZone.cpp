@@ -51,9 +51,9 @@ triggerZone::triggerZone(ofPtr<oscManager> o) : mOsc(o){
 
 void triggerZone::updateAllAudio(){
     
-    mOsc->updateZoneSettings(mIndex, "loop", isLoop);
-    mOsc->updateZoneSettings(mIndex, "playToEnd", isPlayToEnd);
-    mOsc->updateZoneSettings(mIndex, "synthType", (int)synth);
+    mOsc->updateZoneSettings(u_id, "loop", isLoop);
+    mOsc->updateZoneSettings(u_id, "playToEnd", isPlayToEnd);
+    mOsc->updateZoneSettings(u_id, "synthType", (int)synth);
     updateSynthParams();
 
 }
@@ -182,10 +182,10 @@ void triggerZone::checkPoints(vector<ofVec3f> & pc){
             if((float)emptyCount/60.0 >= minReplaySecs){
                 
                 if(!isInverted){
-                    mOsc->playZone(mIndex);
+                    mOsc->playZone(u_id);
                     isSound = true;
                 }else{
-                    mOsc->stopZone(mIndex);
+                    mOsc->stopZone(u_id);
                     isSound = false;
                 }
                 
@@ -204,10 +204,10 @@ void triggerZone::checkPoints(vector<ofVec3f> & pc){
         
         if(occupyCount > 0){
             if(isInverted){
-                mOsc->playZone(mIndex);
+                mOsc->playZone(u_id);
                 isSound = true;
             }else{
-                mOsc->stopZone(mIndex);
+                mOsc->stopZone(u_id);
                 isSound = false;
             }
             occupyCount = 0;
@@ -257,10 +257,10 @@ bool triggerZone::checkInRange(ofVec3f com, float userHeight){
     if(!inRange && isOccupied){
         
         if(isInverted){
-            mOsc->playZone(mIndex);
+            mOsc->playZone(u_id);
             isSound = true;
         }else{
-            mOsc->stopZone(mIndex);
+            mOsc->stopZone(u_id);
             isSound = false;
         }
         
@@ -367,12 +367,12 @@ void triggerZone::updateSynthParams(){
         
         if(synthParams[i].map == MT_FIXED){
             
-            mOsc->updateZoneSettings(mIndex, synthParams[i].name, synthParams[i].abs_val);
+            mOsc->updateZoneSettings(u_id, synthParams[i].name, synthParams[i].abs_val);
             
         }else{
   
             float val = ofMap(mul, 0, 1, synthParams[i].min_val, synthParams[i].max_val);
-            mOsc->updateZoneSettings(mIndex, synthParams[i].name, val);
+            mOsc->updateZoneSettings(u_id, synthParams[i].name, val);
             
         }
         
@@ -387,7 +387,7 @@ void triggerZone::update(){
     if(!isOccupied){
         
         if(emptyCount == 0 && isInverted){
-            mOsc->playZone(mIndex);
+            mOsc->playZone(u_id);
             isSound = true;
         }
         
@@ -397,7 +397,7 @@ void triggerZone::update(){
     
     if(isSound){
         updateSynthParams();
-        mOsc->updateSynth(mIndex);
+        mOsc->updateSynth(u_id);
     }
     
     
@@ -417,7 +417,7 @@ void triggerZone::reloadSound(){ //when loading settings from file
     ofFile f("sound/" + mSoundFileName);
     
     if(ofFile::doesFileExist("sound/" + mSoundFileName)){
-        mOsc->loadZoneSound(mIndex, f.getAbsolutePath());
+        mOsc->loadZoneSound(u_id, f.getAbsolutePath());
     }
     
     updateAllAudio();
@@ -433,7 +433,7 @@ void triggerZone::setSoundFile(string s){
     
     ofFile f("sound/" + s);
     
-    mOsc->loadZoneSound(mIndex, f.getAbsolutePath());
+    mOsc->loadZoneSound(u_id, f.getAbsolutePath());
     
     
     //reloadSound();
@@ -447,7 +447,7 @@ void triggerZone::setIsEnabled(bool b){
 
     isEnabled = b;
     if(!isEnabled){
-        mOsc->stopZone(mIndex);
+        mOsc->stopZone(u_id);
         isSound = false;
     }
 
@@ -489,7 +489,7 @@ void triggerZone::setBoxDimsZ(float z){boxDims.z = z; }
 
 void triggerZone::setIsLoop(bool b){
 
-    mOsc->updateZoneSettings(mIndex, "loop", b);
+    mOsc->updateZoneSettings(u_id, "loop", b);
     isLoop = b;
 
 
@@ -498,7 +498,7 @@ bool triggerZone::getIsLoop(){return isLoop;}
 
 void triggerZone::setIsPlayToEnd(bool b){
     
-    mOsc->updateZoneSettings(mIndex, "playToEnd", b);
+    mOsc->updateZoneSettings(u_id, "playToEnd", b);
     isPlayToEnd = b;
 
 }
@@ -516,12 +516,12 @@ void triggerZone::deselect(){
     
     if(!isInverted){
         if(isOccupied){
-            mOsc->stopZone(mIndex);
+            mOsc->stopZone(u_id);
             isSound = false;
         }
     }else{
         if(!isOccupied){
-           mOsc->stopZone(mIndex);
+           mOsc->stopZone(u_id);
             isSound = false;
         }
         
@@ -556,12 +556,12 @@ void triggerZone::setIsInverted(bool b){
     
     if(!isInverted){
         if(isOccupied){
-            mOsc->stopZone(mIndex);
+            mOsc->stopZone(u_id);
             isSound = false;
         }
     }else{
         if(!isOccupied){
-            mOsc->stopZone(mIndex);
+            mOsc->stopZone(u_id);
             isSound = false;
         }
     }

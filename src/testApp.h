@@ -170,7 +170,6 @@ public:
     //Banks, Scenes, Zones
     
     int selScene, selBank, bSelScene;
-    string selZone;
     
     vector<ofPtr<scene> > allScenes;
     vector<ofPtr<bank> >allBanks;
