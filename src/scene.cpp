@@ -146,14 +146,16 @@ void scene::deepCopyTriggerZones(){
 
     //make a deep copy of the trigger zones ... for when copying a scene
     map <string, ofPtr<triggerZone> > ttz;
+    map <string, ofPtr<triggerZone> >::iterator it;
     
-    for(int i = 0; i < triggerZones.size(); i++){
-        ofPtr <triggerZone> t = ofPtr<triggerZone>(new triggerZone(*triggerZones["index"]));
+    for(it = triggerZones.begin(); it != triggerZones.end(); it++){
+        ofPtr<triggerZone> tz = (*it).second;
+        ofPtr <triggerZone> t = ofPtr<triggerZone>(new triggerZone(*tz));
         t->newIndex();
         checkUniqueId(t);
         mOsc->addZone(t->getUid(), t->getName());
         t->reloadSound();
-        ttz["index"] = t;
+        ttz[t->getUid()] = t;
     }
     
     triggerZones.clear();

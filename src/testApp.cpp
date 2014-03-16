@@ -1558,7 +1558,7 @@ void testApp::s2Events(ofxUIEventArgs &e){
             
             currentScene->deselectAll();
             ofPtr<scene> t = ofPtr<scene>(new scene(*currentScene));
-            t->setName(t->getName() + "_cpy");
+            t->setName(t->getName() + "_cpy"); //new method needed
             t->newIndex();
             t->deepCopyTriggerZones();
             allScenes[t->getUid()] = t;
