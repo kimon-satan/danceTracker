@@ -36,7 +36,6 @@ class scene{
     //getters and setters
     
     vector <ofPtr<triggerZone> > getTriggerZones();
-    //ofPtr<triggerZone> getTriggerZone(string tz);
     int getNumTriggerZones();
     void setName(string s);
     string getName();

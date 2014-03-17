@@ -44,7 +44,9 @@ void bank::firstScene(){
         selScene.reset();
     }else{
         selScene = scenes[0];
+        selSceneIndex = 0;
     }
+    
     
 }
 

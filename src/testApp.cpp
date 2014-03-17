@@ -85,7 +85,6 @@ void testApp::setup(){
     updateZoneControls();
     
     isFakeUser = false;
-     bSelScene = 0;
     
 }
 
@@ -838,7 +837,6 @@ void testApp::loadSettings(string fn){
             if(XML.pushTag("BANK_SETTINGS")){
                 
                 allBanks.clear();
-                bSelScene = 0;
                 
                 int nb = XML.getNumTags("BANK");
                 
@@ -886,7 +884,6 @@ void testApp::loadSettings(string fn){
                 ofPtr<bank> tb = ofPtr<bank>(new bank());
                 allBanks.push_back(tb);
                 currentBank = tb;
-                bSelScene = 0;
                 updateBankElements();
             
             }
@@ -1169,6 +1166,7 @@ void testApp::settingsEvents(ofxUIEventArgs &e){
     
     if(name == "Scene Setup"){
         
+        currentZone = currentScene->getFirstTriggerZone();
         updateZoneControls();
         
     }else{
@@ -1192,13 +1190,13 @@ void testApp::settingsEvents(ofxUIEventArgs &e){
             (*it)->deselectAll();
         }
         currentBank = allBanks[0];
+        currentBank->firstScene();
         if(currentBank->scenes.size() > 0){
-            currentScene = currentBank->scenes[0];
+            currentScene = currentBank->selScene;
         }else{
             currentScene = allScenes[0];
         }
 
-        bSelScene = 0;
         mOsc->newScene(currentScene->getFadeIn(), currentScene->getFadeOut());
         updateBankElements();
         isPerfMode = true;
@@ -1210,8 +1208,10 @@ void testApp::settingsEvents(ofxUIEventArgs &e){
         for(it = allScenes.begin(); it != allScenes.end(); it++){
             (*it)->deselectAll();
         }
+        
         currentScene = allScenes[0];
-        if(allScenes[0]->getNumTriggerZones() > 0)currentZone = currentScene->getFirstTriggerZone();
+        currentZone = currentScene->getFirstTriggerZone();
+        sc2TextInput[0]->setTextString(currentScene->getName());
         updateZoneControls();
         isPerfMode = false;
     }
@@ -1790,7 +1790,6 @@ void testApp::s3Events(ofxUIEventArgs &e){
         if(name == "BANK_MINUS"){
             
             currentBank = selectPrevBank(currentBank);
-            bSelScene = 0;
             updateBankElements();
         
         }
@@ -1798,7 +1797,6 @@ void testApp::s3Events(ofxUIEventArgs &e){
         if(name == "BANK_PLUS"){
             
             currentBank = selectNextBank(currentBank);
-            bSelScene = 0;
             updateBankElements();
         }
         
@@ -1806,7 +1804,6 @@ void testApp::s3Events(ofxUIEventArgs &e){
             ofPtr<bank> b = ofPtr<bank>(new bank());
             allBanks.insert(getInsertIt(currentBank), b);
             currentBank = b;
-            bSelScene = 0;
             updateBankElements();
         }
         
@@ -1816,7 +1813,6 @@ void testApp::s3Events(ofxUIEventArgs &e){
                 ofPtr<bank> db = currentBank;
                 currentBank = selectPrevBank(currentBank);
                 allBanks.erase(find(allBanks.begin(), allBanks.end(), db));
-                bSelScene = 0;
                 updateBankElements();
             }
         }

@@ -1,2 +1,6 @@
-sort out banks
-performance mode issues
+check fixes work
+reafctoring of testApp
+    - allScenes can becomes a bank
+    - make a manager class to separate GUI from functionality
+
+could put some of the iteration/ search functions into an inherited base class (probably not worth it a this stage)

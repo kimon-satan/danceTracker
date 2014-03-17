@@ -181,8 +181,6 @@ public:
     
     //Banks, Scenes, Zones
     
-    int selBank, bSelScene;
-    
     vector<ofPtr<scene> > allScenes;
     vector<ofPtr<bank> >allBanks;
     
