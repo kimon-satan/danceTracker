@@ -7,3 +7,14 @@ OSC is sent to a supercollider app
 
 
 available from https://github.com/kimon-satan/danceTrackerSC
+
+
+requirements 
+
+openFrameworks 0072
+ofxKinect 0.7.4
+ofxUI
+ofxXmlSettings
+ofxOSC
+ofxOpenCV
+
