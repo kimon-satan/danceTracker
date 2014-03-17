@@ -740,7 +740,7 @@ void testApp::loadSettings(string fn){
                         ofPtr<scene> nScene = ofPtr<scene>(new scene(mOsc));
                         
                         nScene->setName(XML.getValue("NAME", ""));
-                        nScene->setUid(XML.getValue("UID", ""));
+                        nScene->setUid(XML.getValue("UID", nScene->getUid()));
                         nScene->setFadeIn(XML.getValue("FADE_IN", 0.01));
                         nScene->setFadeOut(XML.getValue("FADE_OUT", 0.01));
                         
@@ -918,7 +918,7 @@ void testApp::update(){
         
     }
     
-    if(kinect.isFrameNew() || numBlankFrames == 10){
+    if((kinect.isFrameNew() || numBlankFrames == 10) && kinect.isConnected()){
         
         numBlankFrames = 0;
         
@@ -951,7 +951,7 @@ void testApp::update(){
                 analyseUser();
                 currentScene->update(com, userHeight, userPixels);
             }else{
-                currentScene->deselectAll();
+                currentScene->unTriggerAll();
             }
         }
         
@@ -1179,6 +1179,8 @@ void testApp::settingsEvents(ofxUIEventArgs &e){
     if(name == "Setup Banks"){
         
         updateBankElements();
+        if(currentZone)currentZone->setIsSelected(false);
+        currentZone.reset();
     
     }
     
@@ -1186,11 +1188,16 @@ void testApp::settingsEvents(ofxUIEventArgs &e){
         
         vector<ofPtr<scene> >:: iterator it;
         
+        
         for(it = allScenes.begin(); it != allScenes.end(); it++){
+            (*it)->unTriggerAll();
             (*it)->deselectAll();
         }
+        
         currentBank = allBanks[0];
         currentBank->firstScene();
+        currentZone.reset();
+        
         if(currentBank->scenes.size() > 0){
             currentScene = currentBank->selScene;
         }else{
@@ -1206,6 +1213,7 @@ void testApp::settingsEvents(ofxUIEventArgs &e){
         vector<ofPtr<scene> >:: iterator it;
         
         for(it = allScenes.begin(); it != allScenes.end(); it++){
+            (*it)->unTriggerAll();
             (*it)->deselectAll();
         }
         
@@ -1495,6 +1503,7 @@ void testApp::s2Events(ofxUIEventArgs &e){
         
         if(name == "SCENE_PLUS"){
             
+            currentScene->unTriggerAll();
             currentScene->deselectAll();
            
             currentScene = selectNextScene(currentScene);
@@ -1507,7 +1516,9 @@ void testApp::s2Events(ofxUIEventArgs &e){
         
         if(name == "SCENE_MINUS"){
             
+            currentScene->unTriggerAll();
             currentScene->deselectAll();
+            
             currentScene = selectPrevScene(currentScene);
             sc2TextInput[0]->setTextString(currentScene->getName());
             currentZone = currentScene->getFirstTriggerZone();
@@ -1518,7 +1529,9 @@ void testApp::s2Events(ofxUIEventArgs &e){
         
         if(name == "CREATE_SCENE"){
             
+            currentScene->unTriggerAll();
             currentScene->deselectAll();
+            
             ofPtr<scene> t = ofPtr<scene>(new scene(mOsc));
             checkUniqueId(t);
             allScenes.insert(getInsertIt(currentScene), t);
@@ -1546,7 +1559,9 @@ void testApp::s2Events(ofxUIEventArgs &e){
         
         if(name == "COPY_SCENE"){
             
+            currentScene->unTriggerAll();
             currentScene->deselectAll();
+            
             ofPtr<scene> t = ofPtr<scene>(new scene(*currentScene));
             t->newIndex();
             checkUniqueId(t);
@@ -1565,6 +1580,7 @@ void testApp::s2Events(ofxUIEventArgs &e){
             t->deepCopyTriggerZones();
             allScenes.insert(getInsertIt(currentScene), t);
             currentScene = t;
+            
             currentZone = currentScene->getFirstTriggerZone();
             sc2TextInput[0]->setTextString(currentScene->getName());
             updateZoneControls();
@@ -1574,20 +1590,19 @@ void testApp::s2Events(ofxUIEventArgs &e){
         
         if(name == "CREATE_ZONE"){
             
-            if(currentScene->getNumTriggerZones() > 0)currentZone->setIsSelected(false);
+            currentScene->deselectAll();
             currentZone = currentScene->addTriggerZone(currentZone);
             updateZoneControls();
             hideSynthCanvas();
         }
         
-        if(name == "COPY_ZONE"){
+        if(name == "COPY_ZONE" && currentZone){
             
-            if(currentScene->getNumTriggerZones() > 0){
-                currentZone->setIsSelected(false);
-                currentZone = currentScene->copyTriggerZone(currentZone);
-                updateZoneControls();
-                hideSynthCanvas();
-            }
+            currentZone->setIsSelected(false);
+            currentZone = currentScene->copyTriggerZone(currentZone);
+            updateZoneControls();
+            hideSynthCanvas();
+            
         }
         
         
@@ -1616,7 +1631,7 @@ void testApp::s2Events(ofxUIEventArgs &e){
             }
             
             
-            if(name == "DELETE_ZONE"){
+            if(name == "DELETE_ZONE" && currentZone){
                 
                 ofPtr<triggerZone> tz = currentZone;
                 currentZone = currentScene->getNextTriggerZone(currentZone);
@@ -1819,18 +1834,16 @@ void testApp::s3Events(ofxUIEventArgs &e){
         
         if(name == "B_SCENE_PLUS"){
             
-            currentScene->deselectAll();
+            currentScene->unTriggerAll();
             currentScene = selectNextScene(currentScene);
-            currentZone = currentScene->getFirstTriggerZone();
             updateBankElements();
         
         }
         
         if(name == "B_SCENE_MINUS"){
             
-            currentScene->deselectAll();
+            currentScene->unTriggerAll();
             currentScene = selectPrevScene(currentScene);
-            currentZone = currentScene->getFirstTriggerZone();
             updateBankElements();
 
         }
@@ -2089,7 +2102,7 @@ void testApp::perfChange(string name){
             currentBank->firstScene();
             if(currentBank->scenes.size() > 0){
                 currentScene = currentBank->selScene;
-                currentScene->deselectAll();
+                currentScene->unTriggerAll();
                 mOsc->newScene(currentScene->getFadeIn(), currentScene->getFadeOut());
             }
             updateBankElements();
@@ -2106,7 +2119,7 @@ void testApp::perfChange(string name){
             currentBank->firstScene();
             if(currentBank->scenes.size() > 0){
                 currentScene = currentBank->selScene;
-                currentScene->deselectAll();
+                currentScene->unTriggerAll();
                mOsc->newScene(currentScene->getFadeIn(), currentScene->getFadeOut());
             }
             updateBankElements();
@@ -2118,7 +2131,7 @@ void testApp::perfChange(string name){
         if(currentBank->scenes.size() > 0){
             currentBank->prevScene();
             currentScene = currentBank->selScene;
-            currentScene->deselectAll();
+            currentScene->unTriggerAll();
            mOsc->newScene(currentScene->getFadeIn(), currentScene->getFadeOut());
         }
         updateBankElements();
@@ -2130,7 +2143,7 @@ void testApp::perfChange(string name){
         if(currentBank->scenes.size() > 0){
             currentBank->nextScene();
             currentScene = currentBank->selScene;
-            currentScene->deselectAll();
+            currentScene->unTriggerAll();
             mOsc->newScene(currentScene->getFadeIn(), currentScene->getFadeOut());
         }
         updateBankElements();

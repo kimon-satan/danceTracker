@@ -1,4 +1,3 @@
-check fixes work
 reafctoring of testApp
     - allScenes can becomes a bank
     - make a manager class to separate GUI from functionality

@@ -32,6 +32,7 @@ class scene{
     vector<ofPtr<triggerZone> >::iterator getInsertIt(ofPtr<triggerZone> tz);
     
     void deselectAll();
+    void unTriggerAll();
     
     //getters and setters
     

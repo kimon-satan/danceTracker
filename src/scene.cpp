@@ -58,12 +58,20 @@ void scene::deselectAll(){
     
     for(it = triggerZones.begin(); it != triggerZones.end(); it++){
      
-        (*it)->deselect();
+        (*it)->setIsSelected(false);
     }
 }
 
-//does this get used ?
-//ofPtr<triggerZone> scene::getTriggerZone(string tz){return triggerZones[tz];}
+void scene::unTriggerAll(){
+    
+    vector< ofPtr<triggerZone> >::iterator it;
+    
+    for(it = triggerZones.begin(); it != triggerZones.end(); it++){
+        
+        (*it)->deselect();
+    }
+    
+}
 
 ofPtr<triggerZone> scene::getNextTriggerZone(ofPtr<triggerZone> tz){
     

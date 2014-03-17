@@ -9,7 +9,7 @@
 #include "bank.h"
 
 #define NUM_SETTINGS_CANVASES 5
-#define USE_KINECT false
+#define USE_KINECT true
 
 enum dtDisplayMode{
     
