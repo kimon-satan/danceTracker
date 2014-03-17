@@ -3,7 +3,17 @@
 #define OFX_KINECT_GRAVITY 9.80665
 
 
-
+/*
+ 
+ TODO:
+ 
+    The testApp file is in desparate need of refactoring
+        - AllScenes should be absorbed into a specialised bank
+        - A separate manager class leaving only the gui functions here
+ 
+ 
+ 
+ */
 
 //--------------------------------------------------------------
 void testApp::setup(){
@@ -918,7 +928,7 @@ void testApp::update(){
         
     }
     
-    if((kinect.isFrameNew() || numBlankFrames == 10) && kinect.isConnected()){
+    if((kinect.isFrameNew() || numBlankFrames == 10) && kinect.isConnected()&& !isFakeUser){
         
         numBlankFrames = 0;
         
