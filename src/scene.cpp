@@ -233,4 +233,5 @@ void scene::newIndex(){
 
 
 string scene::getUid(){return u_id;}
+void scene::setUid(string s){u_id = s;}
 

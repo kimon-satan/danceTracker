@@ -85,7 +85,7 @@ void testApp::setup(){
     updateZoneControls();
     
     isFakeUser = false;
-    selBank = 0; selScene = 0; bSelScene = 0;
+     bSelScene = 0;
     
 }
 
@@ -275,7 +275,7 @@ void testApp::setupGeneralSettings(){
     
     settingsCanvases[3]->addLabel("SELECTED SCENE: ", OFX_UI_FONT_SMALL);
     
-    sceneText = new ofxUITextArea("SCENE_TEXT", "none", 200, 20,0,0,OFX_UI_FONT_SMALL);
+    sceneText = new ofxUITextArea("SCENE_TEXT", "none", 250, 20,0,0,OFX_UI_FONT_SMALL);
     
     sceneText->setDrawBack(true);
     
@@ -559,7 +559,7 @@ void testApp::saveSettings(string fn){
                 if(XML.pushTag("SCENE", counter)){
                     
                     XML.addValue("NAME", sn->getName());
-                    //XML.addValue("INDEX", sn->getIndex());
+                    XML.addValue("UID", sn->getUid());
                     XML.addValue("FADE_IN", sn->getFadeIn());
                     XML.addValue("FADE_OUT", sn->getFadeOut());
                     
@@ -657,7 +657,7 @@ void testApp::saveSettings(string fn){
                     
                     for(int j = 0; j < ns; j ++){
                     
-                       XML.setValue("ITEM", allBanks[i]->scenes[j]->getUid(), j); //this will need checking if uIds are temporary
+                       XML.setValue("ITEM", allBanks[i]->scenes[j]->getUid(), j); 
                     
                     }
                     
@@ -741,7 +741,7 @@ void testApp::loadSettings(string fn){
                         ofPtr<scene> nScene = ofPtr<scene>(new scene(mOsc));
                         
                         nScene->setName(XML.getValue("NAME", ""));
-                      //  nScene->setIndex(XML.getValue("INDEX", -1));
+                        nScene->setUid(XML.getValue("UID", ""));
                         nScene->setFadeIn(XML.getValue("FADE_IN", 0.01));
                         nScene->setFadeOut(XML.getValue("FADE_OUT", 0.01));
                         
@@ -833,23 +833,11 @@ void testApp::loadSettings(string fn){
                 XML.popTag();
             }
             
-            //update the index for all the loaded scenes ... this looks suspect
-            
-            /*int index = 0;
-            
-            for(int i = 0; i < allScenes.size(); i++){
-            
-                if(allScenes[i]->getIndex() > index)index = allScenes[i]->getIndex();
-            }*/
-            
-           // scene::setStaticIndex(index);
-            
             
             
             if(XML.pushTag("BANK_SETTINGS")){
                 
                 allBanks.clear();
-                selBank = 0;
                 bSelScene = 0;
                 
                 int nb = XML.getNumTags("BANK");
@@ -868,11 +856,10 @@ void testApp::loadSettings(string fn){
                         
                         for(int j = 0; j < ns; j ++){
                             
-                            int item = XML.getValue("ITEM", 0, j);
+                            string item = XML.getValue("ITEM", "", j);
                             
-                            //FIXME
-                            //vector<ofPtr<scene> >::iterator it = find_if(allScenes.begin(), allScenes.end(), matchSceneIndex(item));
-                            //tb->scenes.push_back((*it));
+                            vector<ofPtr<scene> >::iterator it = find_if(allScenes.begin(), allScenes.end(), matchSceneIndex(item));
+                            tb->scenes.push_back((*it));
                             
                         }
                         
@@ -899,7 +886,6 @@ void testApp::loadSettings(string fn){
                 ofPtr<bank> tb = ofPtr<bank>(new bank());
                 allBanks.push_back(tb);
                 currentBank = tb;
-                selBank = 0;
                 bSelScene = 0;
                 updateBankElements();
             
@@ -1211,7 +1197,7 @@ void testApp::settingsEvents(ofxUIEventArgs &e){
         }else{
             currentScene = allScenes[0];
         }
-        selBank = 0;
+
         bSelScene = 0;
         mOsc->newScene(currentScene->getFadeIn(), currentScene->getFadeOut());
         updateBankElements();
@@ -1803,8 +1789,7 @@ void testApp::s3Events(ofxUIEventArgs &e){
     
         if(name == "BANK_MINUS"){
             
-            selBank = max(selBank - 1, 0);
-            currentBank = allBanks[selBank];
+            currentBank = selectPrevBank(currentBank);
             bSelScene = 0;
             updateBankElements();
         
@@ -1812,17 +1797,15 @@ void testApp::s3Events(ofxUIEventArgs &e){
         
         if(name == "BANK_PLUS"){
             
-            selBank = min((int)allBanks.size() -1, selBank + 1);
-            currentBank = allBanks[selBank];
+            currentBank = selectNextBank(currentBank);
             bSelScene = 0;
             updateBankElements();
         }
         
         if(name == "CREATE_BANK"){
             ofPtr<bank> b = ofPtr<bank>(new bank());
-            allBanks.insert(allBanks.begin() + selBank + 1, b);
+            allBanks.insert(getInsertIt(currentBank), b);
             currentBank = b;
-            selBank += 1;
             bSelScene = 0;
             updateBankElements();
         }
@@ -1830,29 +1813,27 @@ void testApp::s3Events(ofxUIEventArgs &e){
         if(name == "DELETE_BANK"){
         
             if(allBanks.size() > 1){
-                allBanks.erase(remove(allBanks.begin(), allBanks.end(), currentBank));
-                selBank = max(0, selBank - 1);
-                currentBank = allBanks[selBank];
+                ofPtr<bank> db = currentBank;
+                currentBank = selectPrevBank(currentBank);
+                allBanks.erase(find(allBanks.begin(), allBanks.end(), db));
                 bSelScene = 0;
                 updateBankElements();
             }
         }
         
         if(name == "B_SCENE_PLUS"){
-            //FIXME
+            
             currentScene->deselectAll();
-            //selScene = min(selScene + 1, (int)allScenes.size() - 1);
-            //currentScene = allScenes[selScene];
+            currentScene = selectNextScene(currentScene);
             currentZone = currentScene->getFirstTriggerZone();
             updateBankElements();
         
         }
         
         if(name == "B_SCENE_MINUS"){
-            //FIXME
+            
             currentScene->deselectAll();
-            //selScene = max(selScene - 1, 0);
-            //currentScene = allScenes[selScene];
+            currentScene = selectPrevScene(currentScene);
             currentZone = currentScene->getFirstTriggerZone();
             updateBankElements();
 
@@ -1860,36 +1841,28 @@ void testApp::s3Events(ofxUIEventArgs &e){
         
         if(name == "ADD_SCENE_TO_BANK"){
         
-            if(currentBank->scenes.size() > 0){
-                currentBank->scenes.insert(currentBank->scenes.begin() + bSelScene + 1, currentScene);
-                bSelScene += 1;
-            }else{
-                currentBank->scenes.push_back(currentScene);
-            }
+            currentBank->insertScene(currentScene);
             updateBankElements();
         }
         
         if(name == "B_ITEM_MINUS"){
         
-            bSelScene = max(0, bSelScene - 1);
-             updateBankElements();
+            currentBank->prevScene();
+            updateBankElements();
+            
         }
         
         if(name == "B_ITEM_PLUS"){
             
-            bSelScene = min((int)currentBank->scenes.size()- 1, bSelScene + 1);
-             updateBankElements();
+            currentBank->nextScene();
+            updateBankElements();
         
         }
         
         if(name == "REMOVE_ITEM"){
         
-            if(currentBank->scenes.size() > 0){
-            
-                currentBank->scenes.erase(currentBank->scenes.begin()+ bSelScene);
-                bSelScene = max(0, bSelScene - 1);
-                updateBankElements();
-            }
+            currentBank->removeScene();
+            updateBankElements();
             
         }
         
@@ -2089,14 +2062,16 @@ void testApp::updateBankElements(){
     
     sc3TextInput->setTextString(currentBank->name);
     perfBankText->setTextString(currentBank->name);
-    sceneText->setTextString(currentScene->getName());
+    string nm = currentScene->getName();
+    if(nm.length() > 30)nm.resize(30);
+    sceneText->setTextString(nm);
     
     string b_str = "\n\n";
     
     for(int i = 0; i < currentBank->scenes.size(); i++){
         
         b_str += "   " + currentBank->scenes[i]->getName();
-        b_str += (i == bSelScene) ? "   <--- \n\n" : "\n\n";
+        b_str += (i == currentBank->selSceneIndex) ? "   <--- \n\n" : "\n\n";
     
     }
     
@@ -2111,13 +2086,13 @@ void testApp::perfChange(string name){
     
     if(name == "BANK_MINUS"){
         
-        selBank = max(selBank - 1, 0);
+        ofPtr<bank> b = selectPrevBank(currentBank);
         
-        if(currentBank != allBanks[selBank]){
-            currentBank = allBanks[selBank];
-            bSelScene = 0;
+        if(currentBank != b){
+            currentBank = b;
+            currentBank->firstScene();
             if(currentBank->scenes.size() > 0){
-                currentScene = currentBank->scenes[bSelScene];
+                currentScene = currentBank->selScene;
                 currentScene->deselectAll();
                 mOsc->newScene(currentScene->getFadeIn(), currentScene->getFadeOut());
             }
@@ -2128,13 +2103,13 @@ void testApp::perfChange(string name){
     
     if(name == "BANK_PLUS"){
         
-        selBank = min((int)allBanks.size() -1, selBank + 1);
+        ofPtr<bank> b = selectNextBank(currentBank);
         
-        if(currentBank != allBanks[selBank]){
-            currentBank = allBanks[selBank];
-            bSelScene = 0;
+        if(currentBank != b){
+            currentBank = b;
+            currentBank->firstScene();
             if(currentBank->scenes.size() > 0){
-                currentScene = currentBank->scenes[bSelScene];
+                currentScene = currentBank->selScene;
                 currentScene->deselectAll();
                mOsc->newScene(currentScene->getFadeIn(), currentScene->getFadeOut());
             }
@@ -2144,9 +2119,9 @@ void testApp::perfChange(string name){
     
     if(name == "B_ITEM_MINUS"){
         
-        bSelScene = max(0, bSelScene - 1);
         if(currentBank->scenes.size() > 0){
-            currentScene = currentBank->scenes[bSelScene];
+            currentBank->prevScene();
+            currentScene = currentBank->selScene;
             currentScene->deselectAll();
            mOsc->newScene(currentScene->getFadeIn(), currentScene->getFadeOut());
         }
@@ -2155,9 +2130,10 @@ void testApp::perfChange(string name){
     
     if(name == "B_ITEM_PLUS"){
         
-        bSelScene = min((int)currentBank->scenes.size()- 1, bSelScene + 1);
+        
         if(currentBank->scenes.size() > 0){
-            currentScene = currentBank->scenes[bSelScene];
+            currentBank->nextScene();
+            currentScene = currentBank->selScene;
             currentScene->deselectAll();
             mOsc->newScene(currentScene->getFadeIn(), currentScene->getFadeOut());
         }
@@ -2197,6 +2173,18 @@ vector<ofPtr<scene> >::iterator testApp::getInsertIt(ofPtr<scene> sn){
         it = find(allScenes.begin(), allScenes.end(), sn);
         it ++;
         return it;
+    
+}
+
+vector<ofPtr<bank> >::iterator testApp::getInsertIt(ofPtr<bank> bk){
+    
+    vector<ofPtr<bank> >::iterator it;
+    if(allBanks.size() == 1)
+        return allBanks.end();
+    else
+        it = find(allBanks.begin(), allBanks.end(), bk);
+    it ++;
+    return it;
     
 }
 
@@ -2478,6 +2466,25 @@ ofPtr<scene> testApp::selectPrevScene(ofPtr<scene> sn){
     if(allScenes.size() == 1)return sn;
     vector< ofPtr<scene> >::iterator it = find(allScenes.begin(), allScenes.end(), sn);
     if(it != allScenes.begin())it--;
+    return(*it);
+    
+}
+
+ofPtr<bank> testApp::selectNextBank(ofPtr<bank> bk){
+    
+    if(allBanks.size() == 1)return bk;
+    vector< ofPtr<bank> >::iterator it = find(allBanks.begin(), allBanks.end(), bk);
+    it++;
+    if(it == allBanks.end())it--;
+    return(*it);
+    
+}
+
+ofPtr<bank> testApp::selectPrevBank(ofPtr<bank> bk){
+    
+    if(allBanks.size() == 1)return bk;
+    vector< ofPtr<bank> >::iterator it = find(allBanks.begin(), allBanks.end(), bk);
+    if(it != allBanks.begin())it--;
     return(*it);
     
 }

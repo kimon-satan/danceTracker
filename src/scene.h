@@ -42,6 +42,7 @@ class scene{
     string getName();
     
     string getUid();
+    void setUid(string s);
     
     void newIndex();
     

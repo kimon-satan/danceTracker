@@ -15,18 +15,21 @@ class bank{
 
     public:
     
-    bank(){
-        
-        mIndex = index;
-        name = "bank_" + ofToString(index,0);
-        index += 1;
+    bank();
     
-    };
+    void newIndex();
+    void firstScene();
+    void nextScene();
+    void prevScene();
+    void insertScene(ofPtr<scene> sn);
+    void removeScene();
+    
     
     vector<ofPtr<scene> > scenes;
+    ofPtr<scene> selScene;
+    int selSceneIndex;
     string name;
-    static int index;
-    int mIndex;
+    string u_id;
 
 };
 

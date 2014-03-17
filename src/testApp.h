@@ -37,22 +37,21 @@ public:
 };
 
 
-//FIXME
-/*class matchSceneIndex{
+class matchSceneIndex{
 
-    int searchIndex;
+    string searchIndex;
     
     
 public:
     
-    matchSceneIndex(int searchIndex):searchIndex(searchIndex){};
+    matchSceneIndex(string searchIndex):searchIndex(searchIndex){};
     
     bool operator()(ofPtr<scene> s) const{
     
-        return (s->getIndex() == searchIndex);
+        return (s->getUid() == searchIndex);
     };
 
-};*/
+};
 
 
 
@@ -122,10 +121,14 @@ public:
     void perfChange(string name);
     void cleanUpBanks();
     
+    //should be refactored
     ofPtr<scene> selectNextScene(ofPtr<scene> sn);
     ofPtr<scene> selectPrevScene(ofPtr<scene> sn);
+    ofPtr<bank> selectNextBank(ofPtr<bank> bk); 
+    ofPtr<bank> selectPrevBank(ofPtr<bank> bk);
     
     vector<ofPtr<scene> >::iterator getInsertIt(ofPtr<scene> sn);
+    vector<ofPtr<bank> >::iterator getInsertIt(ofPtr<bank> bk);
     
     //kinect variables
     
@@ -178,7 +181,7 @@ public:
     
     //Banks, Scenes, Zones
     
-    int selScene, selBank, bSelScene;
+    int selBank, bSelScene;
     
     vector<ofPtr<scene> > allScenes;
     vector<ofPtr<bank> >allBanks;
