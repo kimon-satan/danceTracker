@@ -23,7 +23,7 @@ bankManager::bankManager(ofPtr<oscManager> t){
 
 }
 
-void bankManager::saveSettings(ofxXmlSettings XML){
+void bankManager::saveSettings(ofxXmlSettings & XML){
 
     saveScenes(XML);
     saveBanks(XML);
@@ -32,7 +32,7 @@ void bankManager::saveSettings(ofxXmlSettings XML){
 
 
 
-void bankManager::saveScenes(ofxXmlSettings XML){
+void bankManager::saveScenes(ofxXmlSettings & XML){
     
     XML.addTag("SCENE_SETTINGS");
     
@@ -65,7 +65,7 @@ void bankManager::saveScenes(ofxXmlSettings XML){
 
 }
 
-void bankManager::saveScene(ofxXmlSettings XML, ofPtr<scene> sn){
+void bankManager::saveScene(ofxXmlSettings & XML, ofPtr<scene> sn){
     
     XML.addValue("NAME", sn->getName());
     XML.addValue("UID", sn->getUid());
@@ -98,7 +98,7 @@ void bankManager::saveScene(ofxXmlSettings XML, ofPtr<scene> sn){
 }
 
 
-void bankManager::saveZone(ofxXmlSettings XML, ofPtr<triggerZone> z){
+void bankManager::saveZone(ofxXmlSettings & XML, ofPtr<triggerZone> z){
     
     XML.addValue("NAME", z->getName());
     
@@ -127,7 +127,7 @@ void bankManager::saveZone(ofxXmlSettings XML, ofPtr<triggerZone> z){
 
 }
 
-void bankManager::saveSynth(ofxXmlSettings XML, ofPtr<triggerZone> z){
+void bankManager::saveSynth(ofxXmlSettings & XML, ofPtr<triggerZone> z){
     
     vector<synthParam> defSp = synthDictionary::getSynthParams(z->getSynthType());
     
@@ -153,7 +153,7 @@ void bankManager::saveSynth(ofxXmlSettings XML, ofPtr<triggerZone> z){
 
 }
 
-void bankManager::saveBanks(ofxXmlSettings XML){
+void bankManager::saveBanks(ofxXmlSettings & XML){
     
     XML.addTag("BANK_SETTINGS");
     
@@ -191,7 +191,7 @@ void bankManager::saveBanks(ofxXmlSettings XML){
     
 }
 
-void bankManager::loadSettings(ofxXmlSettings XML){
+void bankManager::loadSettings(ofxXmlSettings & XML){
     
     currentZone.reset();
     currentScene.reset();
@@ -203,7 +203,7 @@ void bankManager::loadSettings(ofxXmlSettings XML){
 }
 
 
-void bankManager::loadScenes(ofxXmlSettings XML){
+void bankManager::loadScenes(ofxXmlSettings & XML){
     
     if(XML.pushTag("SCENE_SETTINGS")){
         
@@ -237,7 +237,7 @@ void bankManager::loadScenes(ofxXmlSettings XML){
 }
 
 
-void bankManager::loadScene(ofxXmlSettings XML, ofPtr<scene> nScene){
+void bankManager::loadScene(ofxXmlSettings & XML, ofPtr<scene> nScene){
     
     
     nScene->setName(XML.getValue("NAME", ""));
@@ -268,7 +268,7 @@ void bankManager::loadScene(ofxXmlSettings XML, ofPtr<scene> nScene){
 
 }
 
-void bankManager::loadZone(ofxXmlSettings XML, ofPtr<triggerZone> z){
+void bankManager::loadZone(ofxXmlSettings & XML, ofPtr<triggerZone> z){
     
     z->setName(XML.getValue("NAME", ""));
     z->setShape(XML.getValue("SHAPE", 0));
@@ -292,7 +292,7 @@ void bankManager::loadZone(ofxXmlSettings XML, ofPtr<triggerZone> z){
 
 }
 
-void bankManager::loadSynth(ofxXmlSettings XML, ofPtr<triggerZone> z){
+void bankManager::loadSynth(ofxXmlSettings & XML, ofPtr<triggerZone> z){
     
     vector<synthParam> defSp = synthDictionary::getSynthParams(z->getSynthType());
     
@@ -319,7 +319,7 @@ void bankManager::loadSynth(ofxXmlSettings XML, ofPtr<triggerZone> z){
 
 }
 
-void bankManager::loadBanks(ofxXmlSettings XML){
+void bankManager::loadBanks(ofxXmlSettings & XML){
     
     if(XML.pushTag("BANK_SETTINGS")){
         

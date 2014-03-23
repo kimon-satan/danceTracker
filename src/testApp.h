@@ -1,15 +1,12 @@
 #pragma once
 
 #include "ofMain.h"
-#include "ofxKinect.h"
-#include "ofxOpenCv.h"
 #include "ofxUI.h"
 
-
+#include "kinectManager.h"
 #include "bankManager.h"
 
 #define NUM_SETTINGS_CANVASES 5
-#define USE_KINECT false
 
 enum dtDisplayMode{
     
@@ -18,27 +15,6 @@ enum dtDisplayMode{
     DT_DM_COUNT
     
 };
-
-class findOutliers{
-    
-    ofVec3f com;
-    float userHeight;
-    
-public:
-    
-    findOutliers(ofVec3f com, float userHeight): com(com), userHeight(userHeight){};
-    
-    bool operator()(ofVec3f t) const{
-        
-        return (t.distance(com) > userHeight/2);
-        
-    };
-    
-};
-
-
-
-
 
 
 class testApp : public ofBaseApp{
@@ -84,15 +60,9 @@ public:
     void saveSettings(string fn);
     void loadSettings(string fn);
     
-    void calcQ();
-    void recordBg();
-    void segment();
-    void analyseUser();
-    
-    void drawScenePointCloud();
-    void drawUserPointCloud();
     void drawFloor();
     
+    void updateMainSettingsGui();
     void updateBankElements(ofPtr<bank> b, ofPtr<scene> s);
     void updateSceneControls(ofPtr<scene> s, ofPtr<triggerZone> zn);
     void updateTZGuiElements(ofPtr<triggerZone> zn);
@@ -103,55 +73,11 @@ public:
     void perfChange(string name);
     
     ofPtr<bankManager> m_bankManager;
-    
-    //kinect variables
-    
-    ofxKinect 			kinect;
-    int					kinectAngle;
-    int                 numBlankFrames;
-    
-    int pointCloudRotation;
-    float pitch, roll;
-    
-    vector<float> mPitches;
-    vector<float> mRolls;
-    
-    ofVec3f qaxis;
-    float qangle;
-    
-    float rRange, pRange;
-    
-    vector<ofVec3f> bgDepths;
-    vector<ofVec3f> curDepths;
-    vector<ofVec3f> userPixels;
-    
-    ofxCvGrayscaleImage liveImg;
-    ofxCvGrayscaleImage segImg;
-    ofxCvGrayscaleImage segMask;
-    ofxCvContourFinder cfFinder;
-    
-    int segRes;
-    float segThresh, nearThresh, farThresh, minBlob, maxBlob;
-    
-    bool isUser;
-    bool isBgRecorded;
-    
-    float floorY;
-    ofVec3f com;
-    float userHeight;
-    
+    kinectManager m_kinectManager;
+        
     
     ofPtr<oscManager>  mOsc;
     ofEasyCam  cm;
-    ofLight topLight, ambientLight;
-    
-    
-    //for fake users
-    
-    bool isFakeUser;
-    ofVec3f fakePos;
-    float fakeRadius;
-    int numFakePoints;
     
     
     //UI Variables

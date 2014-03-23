@@ -36,8 +36,8 @@ class bankManager{
     
     bankManager(ofPtr<oscManager> t);
     
-    void saveSettings(ofxXmlSettings XML);
-    void loadSettings(ofxXmlSettings XML);
+    void saveSettings(ofxXmlSettings & XML);
+    void loadSettings(ofxXmlSettings & XML);
     
     void update(ofVec3f com, float userHeight,vector<ofVec3f> & pc);
     void unTriggerAll();
@@ -115,19 +115,19 @@ class bankManager{
     
     private:
     
-    void saveScenes(ofxXmlSettings XML);
-    void saveBanks(ofxXmlSettings XML);
+    void saveScenes(ofxXmlSettings & XML);
+    void saveBanks(ofxXmlSettings & XML);
     
-    void saveScene(ofxXmlSettings XML, ofPtr<scene> sn);
-    void saveZone(ofxXmlSettings XML, ofPtr<triggerZone> zn);
-    void saveSynth(ofxXmlSettings XML, ofPtr<triggerZone> zn);
+    void saveScene(ofxXmlSettings & XML, ofPtr<scene> sn);
+    void saveZone(ofxXmlSettings & XML, ofPtr<triggerZone> zn);
+    void saveSynth(ofxXmlSettings & XML, ofPtr<triggerZone> zn);
     
-    void loadScenes(ofxXmlSettings XML);
-    void loadBanks(ofxXmlSettings XML);
+    void loadScenes(ofxXmlSettings & XML);
+    void loadBanks(ofxXmlSettings & XML);
     
-    void loadScene(ofxXmlSettings XML, ofPtr<scene> sn);
-    void loadZone(ofxXmlSettings XML, ofPtr<triggerZone> zn);
-    void loadSynth(ofxXmlSettings XML, ofPtr<triggerZone> zn);
+    void loadScene(ofxXmlSettings & XML, ofPtr<scene> sn);
+    void loadZone(ofxXmlSettings & XML, ofPtr<triggerZone> zn);
+    void loadSynth(ofxXmlSettings & XML, ofPtr<triggerZone> zn);
     
     //selection tools
     ofPtr<scene> selectNextScene(ofPtr<scene> sn);

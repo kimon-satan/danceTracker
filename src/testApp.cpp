@@ -1,6 +1,5 @@
 #include "testApp.h"
 
-#define OFX_KINECT_GRAVITY 9.80665
 
 
 /*
@@ -9,9 +8,6 @@
  
  The testApp file is in desparate need of refactoring
  - AllScenes should be absorbed into a specialised bank
- - A separate manager class leaving only the gui functions here
- 
- 
  
  */
 
@@ -23,52 +19,8 @@ void testApp::setup(){
     ofEnableSmoothing();
     ofSetCircleResolution(60);
     
-    numBlankFrames = 0;
-    
-    if(USE_KINECT){
-        kinect.clear();
-        kinect.init(false, false);  // disable infrared/rgb video iamge (faster fps)
-        //kinect.setVerbose(true);
-        kinect.open();
-        
-        
-        if(kinect.isConnected()){
-            // zero the tilt on startup
-            kinectAngle = 0;
-            kinect.setCameraTiltAngle(kinectAngle);
-            //kinect.getCalibration().setClippingInCentimeters(50,1500);
-            kinect.setDepthClipping(500,10000);
-        }
-        
-    }
-    
     mOsc = ofPtr<oscManager>(new oscManager());
     m_bankManager = ofPtr<bankManager>(new bankManager(mOsc));
-    
-    pointCloudRotation = 0;
-    
-    calcQ();
-    
-    floorY = -1;
-    
-    liveImg.allocate(kinect.width,kinect.height);
-    segMask.allocate(kinect.width, kinect.height);
-    
-    isBgRecorded = false;
-    isUser = false;
-    segThresh = 0.2;
-    segRes = 2;
-    nearThresh = 0.5;
-    farThresh = 12;
-    
-    minBlob = 0.005;
-    maxBlob = 0.5;
-    
-    userHeight = 1.80;
-    
-    fakePos.set(0,0,5);
-    fakeRadius = 0.25;
-    numFakePoints = 1000;
     
     isViewCom = false;
     isViewCScene = false;
@@ -84,11 +36,8 @@ void testApp::setup(){
     
     cm.disableMouseInput();
     
-    
     setupGui();
     updateSceneControls(m_bankManager->getCurrentScene(), m_bankManager->getCurrentZone());
-    
-    isFakeUser = false;
     
 }
 
@@ -120,9 +69,9 @@ void testApp::setupGui(){
     fakeCanvas->setColorFillHighlight(ofxUIColor(255));
     fakeCanvas->setColorBack(ofxUIColor(20, 20, 20, 150));
     
-    fakeCanvas->addSlider("F_POS_X", -5, 5, fakePos.x);
-    fakeCanvas->addSlider("F_POS_Y", -2, 2, fakePos.y);
-    fakeCanvas->addSlider("F_POS_Z", 0, 10, fakePos.z);
+    fakeCanvas->addSlider("F_POS_X", -5, 5, m_kinectManager.getFakePos().x);
+    fakeCanvas->addSlider("F_POS_Y", -2, 2, m_kinectManager.getFakePos().y);
+    fakeCanvas->addSlider("F_POS_Z", 0, 10, m_kinectManager.getFakePos().z);
     
     ofAddListener(fakeCanvas->newGUIEvent,this,&testApp::fEvents);
     fakeCanvas->setVisible(false);
@@ -180,7 +129,7 @@ void testApp::setupGeneralSettings(){
     
 	settingsCanvases[1]->setName("Initial Setup");
     
-    sc1Sliders[0] = settingsCanvases[1]->addSlider("KN_TILT", -30, 30, kinectAngle, slLength, slHeight);
+    sc1Sliders[0] = settingsCanvases[1]->addSlider("KN_TILT", -30, 30, m_kinectManager.getKinectAngle(), slLength, slHeight);
     
     settingsCanvases[1]->addSpacer();
     
@@ -188,17 +137,17 @@ void testApp::setupGeneralSettings(){
     
     settingsCanvases[1]->addSpacer();
     
-    sc1Sliders[1] = settingsCanvases[1]->addSlider("NEAR_THRESH", 0, 2, nearThresh, slLength, slHeight);
-    sc1Sliders[2] = settingsCanvases[1]->addSlider("FAR_THRESH", 5, 15, farThresh, slLength, slHeight);
-    sc1Sliders[3] =  settingsCanvases[1]->addSlider("SEG_THRESH", 0, 1, segThresh, slLength, slHeight);
-    sc1Sliders[4] = settingsCanvases[1]->addSlider("MIN_BLOB", 0.0, 0.1, minBlob, slLength, slHeight);
+    sc1Sliders[1] = settingsCanvases[1]->addSlider("NEAR_THRESH", 0, 2, m_kinectManager.getNearThresh(), slLength, slHeight);
+    sc1Sliders[2] = settingsCanvases[1]->addSlider("FAR_THRESH", 5, 15, m_kinectManager.getFarThresh(), slLength, slHeight);
+    sc1Sliders[3] =  settingsCanvases[1]->addSlider("SEG_THRESH", 0, 1, m_kinectManager.getSegThresh(), slLength, slHeight);
+    sc1Sliders[4] = settingsCanvases[1]->addSlider("MIN_BLOB", 0.0, 0.1, m_kinectManager.getMinBlob(), slLength, slHeight);
     sc1Sliders[4]->setLabelPrecision(3);
-    sc1Sliders[5] = settingsCanvases[1]->addSlider("MAX_BLOB", 0.25, 1, maxBlob, slLength, slHeight);
+    sc1Sliders[5] = settingsCanvases[1]->addSlider("MAX_BLOB", 0.25, 1, m_kinectManager.getMaxBlob(), slLength, slHeight);
     
     
     settingsCanvases[1]->addSpacer();
-    sc1Sliders[6] = settingsCanvases[1]->addSlider("FLOOR_Y", -10, -0.5, floorY, slLength, slHeight);
-    sc1Sliders[7] = settingsCanvases[1]->addSlider("USER_HEIGHT", 1, 2, userHeight, slLength, slHeight);
+    sc1Sliders[6] = settingsCanvases[1]->addSlider("FLOOR_Y", -10, -0.5, m_kinectManager.getFloorY(), slLength, slHeight);
+    sc1Sliders[7] = settingsCanvases[1]->addSlider("USER_HEIGHT", 1, 2, m_kinectManager.getDancerHeight(), slLength, slHeight);
     
     
     ofAddListener(settingsCanvases[1]->newGUIEvent,this,&testApp::s1Events);
@@ -532,23 +481,7 @@ void testApp::saveSettings(string fn){
     
     if(XML.pushTag("DANCE_TRACKER")){
         
-        XML.addTag("MAIN_SETTINGS");
-        
-        if(XML.pushTag("MAIN_SETTINGS")){
-            
-            XML.addValue("KN_TILT", kinect.getTargetCameraTiltAngle());
-            XML.addValue("FLOOR_Y", floorY);
-            XML.addValue("SEG_FRESH", segThresh);
-            XML.addValue("USER_HEIGHT", userHeight);
-            XML.addValue("NEAR_THRESH", nearThresh);
-            XML.addValue("FAR_THRESH", farThresh);
-            XML.addValue("MIN_BLOB", minBlob);
-            XML.addValue("MAX_BLOB", maxBlob);
-            
-            XML.popTag();
-        }
-        
-        
+        m_kinectManager.saveSettings(XML);
         m_bankManager->saveSettings(XML);
         
         //danceTracker tag
@@ -572,36 +505,8 @@ void testApp::loadSettings(string fn){
         
         if(XML.pushTag("DANCE_TRACKER")){
             
-            if(XML.pushTag("MAIN_SETTINGS")){
-                
-                float kt = XML.getValue("KN_TILT", 0.0);
-                kinect.setCameraTiltAngle(kt);
-                sc1Sliders[0]->setValue(kt);
-                
-                nearThresh = XML.getValue("NEAR_THRESH", 0.5);
-                sc1Sliders[1]->setValue(nearThresh);
-                
-                farThresh = XML.getValue("FAR_THRESH", 10.0);
-                sc1Sliders[2]->setValue(farThresh);
-                
-                segThresh = XML.getValue("SEG_FRESH", 0.1);
-                sc1Sliders[3]->setValue(segThresh);
-                
-                minBlob = XML.getValue("MIN_BLOB", 0.005);
-                sc1Sliders[4]->setValue(minBlob);
-                
-                maxBlob = XML.getValue("MAX_BLOB", 10.0);
-                sc1Sliders[5]->setValue(maxBlob);
-                
-                floorY = XML.getValue("FLOOR_Y", 1.0);
-                sc1Sliders[6]->setValue(floorY);
-                
-                userHeight = XML.getValue("USER_HEIGHT", 1.8);
-                sc1Sliders[7]->setValue(userHeight);
-                
-                XML.popTag();
-            }
-            
+            m_kinectManager.loadSettings(XML);
+            updateMainSettingsGui();
             
             //load settings call
             m_bankManager->loadSettings(XML);
@@ -623,248 +528,35 @@ void testApp::loadSettings(string fn){
     
 }
 
+void testApp::updateMainSettingsGui(){
+
+    sc1Sliders[0]->setValue(m_kinectManager.getKinectAngle());
+    sc1Sliders[1]->setValue(m_kinectManager.getNearThresh());
+    sc1Sliders[2]->setValue(m_kinectManager.getFarThresh());
+    sc1Sliders[3]->setValue(m_kinectManager.getSegThresh());
+    sc1Sliders[4]->setValue(m_kinectManager.getMinBlob());
+    sc1Sliders[5]->setValue(m_kinectManager.getMaxBlob());
+    sc1Sliders[6]->setValue(m_kinectManager.getFloorY());
+    sc1Sliders[7]->setValue(m_kinectManager.getDancerHeight());
+    
+}
+
 //--------------------------------------------------------------
 void testApp::update(){
     
     mOsc->update();
+    m_kinectManager.update();
     
-    if(USE_KINECT){
-        
-        kinect.update();
-        numBlankFrames += 1;
-        
-    }
-    
-    if((kinect.isFrameNew() || numBlankFrames == 10) && kinect.isConnected()&& !isFakeUser){
-        
-        numBlankFrames = 0;
-        
-        liveImg.setFromPixels(kinect.getDepthPixels(), kinect.width, kinect.height);
-        calcQ();
-        //rotate the pixels
-        
-        curDepths.clear();
-        
-        for(int y = 0; y < kinect.height; y += segRes) {
-            
-            for(int x = 0; x < kinect.width; x += segRes) {
-                
-                ofVec3f cur = kinect.getWorldCoordinateAt(x, y);
-                
-                ofVec3f curR = cur.getRotated(-qangle, qaxis);
-                curR *= ofVec3f(0.001,-0.001,0.001); //new kinect lib in mm
-                curDepths.push_back(curR);
-                
-            }
-            
-        }
-        
-        
-        if(isBgRecorded){
-            
-            segment();
-            if(isUser){
-                
-                analyseUser();
-                m_bankManager->update(com, userHeight, userPixels);
-            }else{
-                m_bankManager->unTriggerAll();
-            }
-        }
-        
-    }else if(isFakeUser){
-        
-        userPixels.clear();
-        
-        for(int i = 0; i < numFakePoints; i ++){
-            ofVec3f p(0,ofRandom(-fakeRadius, fakeRadius),0);
-            p.rotate(ofRandom(0,360), ofRandom(0,360), ofRandom(0,360));
-            p += fakePos;
-            userPixels.push_back(p);
-        }
-        
-        m_bankManager->update(fakePos, fakeRadius * 3, userPixels);
-        
-    }
-    
-    
-}
-
-void testApp::calcQ(){
-    
-    
-    float cPitch = -ofRadToDeg(asin(kinect.getMksAccel().z/OFX_KINECT_GRAVITY));
-    float cRoll = -ofRadToDeg(asin(kinect.getMksAccel().x/OFX_KINECT_GRAVITY));
-    
-    if(mPitches.size() > 10)mPitches.erase(mPitches.begin());
-    if(mRolls.size() > 10)mRolls.erase(mRolls.begin());
-    
-    mPitches.push_back(cPitch);
-    mRolls.push_back(cRoll);
-    
-    vector<float> tPitches = mPitches;
-    vector<float> tRolls = mRolls;
-    
-    sort(tPitches.begin(), tPitches.end());
-    sort(tRolls.begin(), tRolls.end());
-    
-    rRange = tRolls[tRolls.size()-1] - tRolls[0];
-    pRange = tPitches[tPitches.size()-1] - tPitches[0];
-    
-    if(ofGetFrameNum() < 10){
-        
-        roll = cRoll;
-        pitch = cPitch;
-    }
-    
-    if(rRange > 4)roll = cRoll;
-    if(pRange > 4)pitch = cPitch;
-    
-    ofVec3f Znormal(0, 0, 1);
-    ofVec3f Xnormal(1, 0, 0);
-    ofVec3f Ynormal(0, 1, 0);
-    
-    //Create the quaternions
-    ofQuaternion qr(roll, Znormal);
-    ofQuaternion qp(pitch, Xnormal);
-    ofQuaternion qh(0, Ynormal);
-    
-    ofQuaternion qt = qr * qp * qh;
-    
-    qt.getRotate(qangle, qaxis);
-    
-    
-}
-
-void testApp::recordBg(){
-    
-    isBgRecorded = true;
-    bgDepths = curDepths;
-    
-    float cFloor = 10;
-    
-    for(int i = 0 ; i < bgDepths.size(); i ++){
-        
-        if(bgDepths[i].z > nearThresh && bgDepths[i].z < farThresh ){
-            
-            if(bgDepths[i].y < cFloor){
-                cFloor = bgDepths[i].y;
-            }
-        }
-    }
-    
-    floorY = cFloor;
-    
-}
-
-void testApp::segment(){
-    
-    segImg.allocate(kinect.width/segRes, kinect.height/segRes);
-    
-    unsigned char * s_pix = segImg.getPixels();
-    
-    int counter = 0;
-    
-	for(int i = 0; i < curDepths.size(); i ++) {
-        
-        
-        if(curDepths[i].z > nearThresh && curDepths[i].z < farThresh){
-            
-            //is inside range
-            
-            if(curDepths[i].z == 0){ //curDepth didn't record data
-                s_pix[i] = 0;
-            }else if(bgDepths[i].z == 0){ // bgDepth didn't record data
-                s_pix[i] = 255;
-            }else if(curDepths[i].z < bgDepths[i].z - segThresh){ //meets difference threshold
-                s_pix[i] = 255;
-            }else{
-                s_pix[i] = 0; // doesn't meet thresholds
-            }
-            
-        }else{
-            s_pix[i] = 0;
-        }
-        
-    }
-    
-    segImg.erode();
-    segImg.flagImageChanged();
-    segMask.allocate(segImg.getWidth(), segImg.getHeight());
-    segMask = segImg;
-    segMask.resize(kinect.width, kinect.height);
-    
-    int numPixels = kinect.width * kinect.height;
-    
-    cfFinder.findContours(segMask, numPixels * minBlob, numPixels * maxBlob, 1, false);
-    segMask.set(0);
-    
-    //make a new mask based based on the contour
-    
-    if(cfFinder.blobs.size() > 0){
-        
-        isUser = true;
-        
-        CvPoint pts[cfFinder.blobs[0].nPts];
-        
-        for(int i = 0; i < cfFinder.blobs[0].nPts; i ++){
-            
-            pts[i].x = cfFinder.blobs[0].pts[i].x;
-            pts[i].y = cfFinder.blobs[0].pts[i].y;
-            
-        }
-        
-        CvPoint * ppt[1] = { pts };
-        
-        int ppt_size[1] = { cfFinder.blobs[0].nPts };
-        
-        cvFillPoly(segMask.getCvImage(), ppt, ppt_size , 1, cvScalarAll(255));
-        
+    if(m_kinectManager.getDancer()){
+        ofPtr<dancer> d = m_kinectManager.getDancer();
+        m_bankManager->update(d->com, m_kinectManager.getDancerHeight(), d->pixels);
     }else{
-        isUser = false;
+        m_bankManager->unTriggerAll();
     }
     
     
 }
 
-void testApp::analyseUser(){
-    
-    userPixels.clear();
-    
-    //create a dense array of rotated userPixels
-    
-    unsigned char * s_pix = segMask.getPixels();
-    
-    ofVec3f total(0,0,0);
-    
-    for(int y = 0; y < kinect.height; y ++){
-        
-        for(int x = 0; x < kinect.width; x ++){
-            
-            if(s_pix[y * kinect.width + x] > 0){
-                ofVec3f cur = kinect.getWorldCoordinateAt(x, y);
-                ofVec3f curR = cur.getRotated(-qangle, qaxis);
-                curR *= ofVec3f(0.001,-0.001,0.001);
-                total += curR;
-                userPixels.push_back(curR);
-                
-                
-            }
-            
-        }
-        
-	}
-    
-    com = total/userPixels.size();
-    
-    
-    
-    vector<ofVec3f>::iterator it = remove_if(userPixels.begin(), userPixels.end(),findOutliers(com, userHeight));
-    
-    userPixels.erase(it, userPixels.end());
-    
-    
-}
 
 //---------------------------------------------------------------
 
@@ -1071,58 +763,18 @@ void testApp::s0Events(ofxUIEventArgs &e){
 void testApp::s1Events(ofxUIEventArgs &e){
     
     string name = e.widget->getName();
+    ofxUISlider *slider = (ofxUISlider *) e.widget;
     
-    if(name == "KN_TILT"){
-        ofxUISlider *slider = (ofxUISlider *) e.widget;
-        kinectAngle = slider->getScaledValue();
-        kinect.setCameraTiltAngle(kinectAngle);
-    }
-    
-    if(name == "SEG_THRESH"){
-        ofxUISlider *slider = (ofxUISlider *) e.widget;
-        segThresh = slider->getScaledValue();
-    }
-    
-    if(name == "NEAR_THRESH"){
-        ofxUISlider *slider = (ofxUISlider *) e.widget;
-        nearThresh = slider->getScaledValue();
-    }
-    
-    if(name == "FAR_THRESH"){
-        ofxUISlider *slider = (ofxUISlider *) e.widget;
-        farThresh = slider->getScaledValue();
-    }
-    
-    if(name == "MIN_BLOB"){
-        ofxUISlider *slider = (ofxUISlider *) e.widget;
-        minBlob = slider->getScaledValue();
-    }
-    
-    if(name == "MAX_BLOB"){
-        ofxUISlider *slider = (ofxUISlider *) e.widget;
-        maxBlob = slider->getScaledValue();
-    }
-    
-    if(name == "MAX_BLOB"){
-        ofxUISlider *slider = (ofxUISlider *) e.widget;
-        maxBlob = slider->getScaledValue();
-    }
-    
-    if(name == "FLOOR_Y"){
-        ofxUISlider *slider = (ofxUISlider *) e.widget;
-        floorY = slider->getScaledValue();
-    }
-    
-    if(name == "USER_HEIGHT"){
-        ofxUISlider *slider = (ofxUISlider *) e.widget;
-        userHeight = slider->getScaledValue();
-    }
-    
-    if(name == "RECORD_BACKGROUND"){
-        recordBg();
-    }
-    
-    
+    if(name == "KN_TILT")m_kinectManager.setKinectAngle(slider->getScaledValue());
+    if(name == "SEG_THRESH")m_kinectManager.setSegThresh(slider->getScaledValue());
+    if(name == "NEAR_THRESH")m_kinectManager.setNearThresh(slider->getScaledValue());
+    if(name == "FAR_THRESH")m_kinectManager.setFarThresh(slider->getScaledValue());
+    if(name == "MIN_BLOB")m_kinectManager.setMinBlob(slider->getScaledValue());
+    if(name == "MAX_BLOB")m_kinectManager.setMaxBlob(slider->getScaledValue());
+    if(name == "MAX_BLOB")m_kinectManager.setMaxBlob(slider->getScaledValue());
+    if(name == "FLOOR_Y")m_kinectManager.setFloorY(slider->getScaledValue());
+    if(name == "USER_HEIGHT")m_kinectManager.setDancerHeight(slider->getScaledValue());
+    if(name == "RECORD_BACKGROUND")m_kinectManager.recordBg();
     
 }
 
@@ -1314,9 +966,13 @@ void testApp::fEvents(ofxUIEventArgs &e){
     string name = e.widget->getName();
     ofxUISlider *slider = (ofxUISlider *) e.widget;
     
-    if(name == "F_POS_X")fakePos.x = slider->getScaledValue();
-    if(name == "F_POS_Y")fakePos.y = slider->getScaledValue();
-    if(name == "F_POS_Z")fakePos.z = slider->getScaledValue();
+    ofVec3f p = m_kinectManager.getFakePos();
+    
+    if(name == "F_POS_X")p.x = slider->getScaledValue();
+    if(name == "F_POS_Y")p.y = slider->getScaledValue();
+    if(name == "F_POS_Z")p.z = slider->getScaledValue();
+    
+    m_kinectManager.setFakePos(p);
     
     
 }
@@ -1516,7 +1172,7 @@ void testApp::draw(){
         
         
         ofPushMatrix();
-        ofTranslate(0, floorY, 0);
+        ofTranslate(0, m_kinectManager.getFloorY(), 0);
         drawFloor();
         ofPopMatrix();
         
@@ -1525,22 +1181,24 @@ void testApp::draw(){
         ofSetColor(255,255,0);
         
         ofPushMatrix();
-        ofRotate(qangle, qaxis.x, qaxis.y, qaxis.z);
+        ofVec3f a = m_kinectManager.getQAxis();
+        ofRotate(m_kinectManager.getQAngle(), a.x, a.y, a.z);
         ofScale(2,0.5,0.5);
         ofBox(0.15);
         ofPopMatrix();
         
         
         if(isViewSegPoints){
-            if(isUser || isFakeUser)drawUserPointCloud();
+            if(m_kinectManager.getDancer())m_kinectManager.drawUserPointCloud();
         }else{
-            drawScenePointCloud();
+            m_kinectManager.drawScenePointCloud();
         }
         
         if(isViewCom){
             ofNoFill();
             ofSetColor(0, 255, 255);
-            ofSphere(com.x, com.y, com.z, userHeight/2);
+            ofVec3f com = m_kinectManager.getDancer()->com;
+            ofSphere(com.x, com.y, com.z, m_kinectManager.getDancerHeight()/2);
         }
         
         
@@ -1560,11 +1218,11 @@ void testApp::draw(){
         
         ofPushMatrix();
         ofTranslate(ofGetWidth() - 750, 50);
-        liveImg.draw(0,0,320,240);
+        m_kinectManager.getLiveImg()->draw(0,0,320,240);
         ofTranslate(0, 260);
         ofDrawBitmapString("live depthMap", 0,0);
         ofTranslate(0, 40);
-        segMask.draw(0,0,320,240);
+        m_kinectManager.getSegMask()->draw(0,0,320,240);
         ofTranslate(0, 260);
         ofDrawBitmapString("segmented depthMap", 0,0);
         ofTranslate(0, 40);
@@ -1576,7 +1234,7 @@ void testApp::draw(){
         ofFill();
         ofSetColor(50);
         ofRect(0,0,320,240);
-        cfFinder.draw(0,0,320,240);
+        m_kinectManager.getCfFinder()->draw(0,0,320,240);
         ofTranslate(0, 260);
         ofSetColor(255);
         ofDrawBitmapString("contour analysis", 0,0);
@@ -1586,37 +1244,7 @@ void testApp::draw(){
     
 }
 
-void testApp::drawScenePointCloud() {
-    
-    glBegin(GL_POINTS);
-    glColor3ub(0, 0, 0);
-    
-    for(int i = 0; i < curDepths.size(); i ++){
-        
-        glVertex3f(curDepths[i].x, curDepths[i].y, curDepths[i].z);
-        
-    }
-    
-    glEnd();
-}
 
-void testApp::drawUserPointCloud() {
-    
-    glBegin(GL_POINTS);
-    glColor3ub(0, 0, 0);
-    
-    
-    for(int i = 0; i < userPixels.size(); i ++){
-        
-        glVertex3f(userPixels[i].x, userPixels[i].y, userPixels[i].z);
-        
-    }
-    
-    glEnd();
-    
-    
-    
-}
 
 void testApp::drawFloor(){
     
@@ -1633,7 +1261,6 @@ void testApp::drawFloor(){
         ofLine(-5, 0 , sz + spacing * i ,5, 0, sz + spacing * i ); //across the z -axis
         
     }
-    
     
     
 }
@@ -1660,8 +1287,8 @@ void testApp::keyPressed(int key){
             break;
             
         case 'F':
-            isFakeUser = !isFakeUser;
-            fakeCanvas->setVisible(isFakeUser);
+            m_kinectManager.toggleFake();
+            fakeCanvas->setVisible(m_kinectManager.getIsFake());
             break;
             
             
@@ -1717,11 +1344,8 @@ void testApp::keyPressed(int key){
     if(isPerfMode){
         
         if(key == OF_KEY_UP)perfChange("B_ITEM_MINUS");
-        
         if(key == OF_KEY_DOWN)perfChange("B_ITEM_PLUS");
-        
         if(key == OF_KEY_LEFT)perfChange("BANK_MINUS");
-        
         if(key == OF_KEY_RIGHT)perfChange("BANK_PLUS");
         
     }
@@ -1778,7 +1402,8 @@ void testApp::dragEvent(ofDragInfo dragInfo){
 
 void testApp::exit(){
     
-    kinect.close();
+    m_kinectManager.exit();
+    
     delete settingsTabBar;
     delete displayTabBar;
     
