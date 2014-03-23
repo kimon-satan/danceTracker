@@ -43,6 +43,7 @@ void testApp::setup(){
     }
     
     mOsc = ofPtr<oscManager>(new oscManager());
+    m_bankManager = ofPtr<bankManager>(new bankManager(mOsc));
     
     pointCloudRotation = 0;
     
@@ -83,16 +84,9 @@ void testApp::setup(){
     
     cm.disableMouseInput();
     
-    ofPtr<scene>  s = ofPtr<scene>(new scene(mOsc));
-    allScenes.push_back(s);
-    currentScene = s;
-    
-    ofPtr<bank> b = ofPtr<bank>(new bank());
-    allBanks.push_back(b);
-    currentBank = b;
-    
+        
     setupGui();
-    updateZoneControls();
+    updateSceneControls(m_bankManager->getCurrentZone());
     
     isFakeUser = false;
     
@@ -197,7 +191,8 @@ void testApp::setupGeneralSettings(){
     sc1Sliders[1] = settingsCanvases[1]->addSlider("NEAR_THRESH", 0, 2, nearThresh, slLength, slHeight);
     sc1Sliders[2] = settingsCanvases[1]->addSlider("FAR_THRESH", 5, 15, farThresh, slLength, slHeight);
     sc1Sliders[3] =  settingsCanvases[1]->addSlider("SEG_THRESH", 0, 1, segThresh, slLength, slHeight);
-    sc1Sliders[4] = settingsCanvases[1]->addSlider("MIN_BLOB", 0, 0.1, minBlob, slLength, slHeight);
+    sc1Sliders[4] = settingsCanvases[1]->addSlider("MIN_BLOB", 0.0, 0.1, minBlob, slLength, slHeight);
+    sc1Sliders[4]->setLabelPrecision(3);
     sc1Sliders[5] = settingsCanvases[1]->addSlider("MAX_BLOB", 0.25, 1, maxBlob, slLength, slHeight);
     
     
@@ -218,7 +213,7 @@ void testApp::setupGeneralSettings(){
     
     settingsCanvases[2]->addLabel("SELECTED SCENE");
     sc2TextInput[0] = settingsCanvases[2]->addTextInput("S_NAME", "");
-    sc2TextInput[0]->setTextString(currentScene->getName());
+    sc2TextInput[0]->setTextString(m_bankManager->getCurrentScene()->getName());
     
     ofxUILabelButton * sb = (ofxUILabelButton *)settingsCanvases[2]->addWidgetDown(new ofxUILabelButton("SCENE_MINUS", true, 25));
     ofxUILabelButton * sc = (ofxUILabelButton *)settingsCanvases[2]->addWidgetRight(new ofxUILabelButton("SCENE_PLUS", true, 25));
@@ -553,134 +548,8 @@ void testApp::saveSettings(string fn){
             XML.popTag();
         }
         
-        XML.addTag("SCENE_SETTINGS");
-        
-        if(XML.pushTag("SCENE_SETTINGS")){
-            
-            vector<ofPtr<scene> >::iterator it;
-            int counter = 0;
-            
-            for(it = allScenes.begin(); it != allScenes.end(); it++){
                 
-                XML.addTag("SCENE");
-                ofPtr<scene> sn = (*it);
-                
-                if(XML.pushTag("SCENE", counter)){
-                    
-                    XML.addValue("NAME", sn->getName());
-                    XML.addValue("UID", sn->getUid());
-                    XML.addValue("FADE_IN", sn->getFadeIn());
-                    XML.addValue("FADE_OUT", sn->getFadeOut());
-                    
-                    vector <ofPtr<triggerZone> > t_tzs = sn->getTriggerZones();
-                    vector <ofPtr<triggerZone> > ::iterator it;
-                    int count = 0;
-                    
-                    for(it = t_tzs.begin(); it != t_tzs.end(); it++){
-                        
-                        XML.addTag("ZONE");
-                        
-                        ofPtr<triggerZone> z = (*it);
-                        
-                        if(XML.pushTag("ZONE", count)){
-                            
-                            XML.addValue("NAME", z->getName());
-                            
-                            
-                            XML.addValue("POS_X", z->getPos().x);
-                            XML.addValue("POS_Y", z->getPos().y);
-                            XML.addValue("POS_Z", z->getPos().z);
-                            
-                            XML.addValue("SHAPE", z->getShape());
-                            
-                            XML.addValue("DIM_X", z->getBoxDims().x);
-                            XML.addValue("DIM_Y", z->getBoxDims().y);
-                            XML.addValue("DIM_Z", z->getBoxDims().z);
-                            XML.addValue("RADIUS", z->getRadius());
-                            XML.addValue("SOUNDFILE", z->getSoundFileName());
-                            XML.addValue("IS_LOOP", z->getIsLoop());
-                            XML.addValue("IS_PLAY_TO_END", z->getIsPlayToEnd());
-                            XML.addValue("INVERTED", z->getIsInverted());
-                            XML.addValue("ENABLED", z->getIsEnabled());
-                            //XML.addValue("SENSITIVITY", z->getSensitivity());
-                            XML.addValue("MIN_REPLAY", z->getMinReplaySecs());
-                            XML.addValue("SYNTH_TYPE", z->getSynthType());
-                            
-                            vector<synthParam> defSp = synthDictionary::getSynthParams(z->getSynthType());
-                            
-                            
-                            for(int i = 0; i < defSp.size(); i++){
-                                
-                                synthParam sp = z->getSynthParam(i);
-                                
-                                XML.addTag(defSp[i].name);
-                                
-                                if(XML.pushTag(defSp[i].name)){
-                                    
-                                    XML.addValue("ABS_VAL", sp.abs_val);
-                                    XML.addValue("MIN_VAL", sp.min_val);
-                                    XML.addValue("MAX_VAL", sp.max_val);
-                                    XML.addValue("MAP", (int)sp.map);
-                                    
-                                    XML.popTag();
-                                }
-                                
-                            }
-                            
-                            count++;
-                            
-                            //zone tag
-                            XML.popTag();
-                        }
-                        
-                        
-                    }
-                    
-                    counter++;
-                    
-                    //scene tag
-                    XML.popTag();
-                }
-                
-                
-            }
-            
-            //scene settings tag
-            XML.popTag();
-        }
-        
-        XML.addTag("BANK_SETTINGS");
-        
-        if(XML.pushTag("BANK_SETTINGS")){
-            
-            for(int i = 0; i < allBanks.size(); i ++){
-            
-                XML.addTag("BANK");
-                
-                if(XML.pushTag("BANK", i)){
-                    
-                    XML.setValue("NAME", allBanks[i]->name);
-                    
-                    int ns = allBanks[i]->scenes.size();
-                    XML.setValue("NUM_ITEMS", ns);
-                    
-                    for(int j = 0; j < ns; j ++){
-                    
-                       XML.setValue("ITEM", allBanks[i]->scenes[j]->getUid(), j); 
-                    
-                    }
-                    
-                
-                    //bank tag
-                    XML.popTag();
-                }
-            
-            }
-            
-            //Bank Settings tag
-            XML.popTag();
-        
-        }
+        m_bankManager->saveSettings(XML);
         
         //danceTracker tag
         XML.popTag();
@@ -692,9 +561,7 @@ void testApp::saveSettings(string fn){
 
 void testApp::loadSettings(string fn){
     
-    currentZone.reset();
-    currentScene.reset();
-    
+
     ofxXmlSettings XML;
     
     if(fn.substr(fn.length()-4, 4) != ".xml")fn += ".xml";
@@ -736,177 +603,14 @@ void testApp::loadSettings(string fn){
             }
             
             
-            if(XML.pushTag("SCENE_SETTINGS")){
-                
-                allScenes.clear();
-                
-                
-                int numScenes = XML.getNumTags("SCENE");
-                
-                for(int sn = 0; sn < numScenes; sn++){
-                    
-                    if(XML.pushTag("SCENE", sn)){
-                        
-                        ofPtr<scene> nScene = ofPtr<scene>(new scene(mOsc));
-                        
-                        nScene->setName(XML.getValue("NAME", ""));
-                        nScene->setUid(XML.getValue("UID", nScene->getUid()));
-                        nScene->setFadeIn(XML.getValue("FADE_IN", 0.01));
-                        nScene->setFadeOut(XML.getValue("FADE_OUT", 0.01));
-                        
-                        int numZones = XML.getNumTags("ZONE");
-                        
-                        for(int tz = 0; tz < numZones; tz++){
-                            
-                            if(XML.pushTag("ZONE", tz)){
-                                
-                                ofPtr<triggerZone> z = nScene->addTriggerZone(currentZone);
-                                
-                                z->setName(XML.getValue("NAME", ""));
-                                z->setShape(XML.getValue("SHAPE", 0));
-                                z->setPosX(XML.getValue("POS_X", 0.0));
-                                z->setPosY(XML.getValue("POS_Y", 0.0));
-                                z->setPosZ(XML.getValue("POS_Z", 0.0));
-                                z->setBoxDimsX( XML.getValue("DIM_X", 0.5));
-                                z->setBoxDimsY( XML.getValue("DIM_Y", 0.5));
-                                z->setBoxDimsZ( XML.getValue("DIM_Z", 0.5));
-                                z->setRadius(XML.getValue("RADIUS",1.0));
-                                z->setSoundFile(XML.getValue("SOUNDFILE", ""));
-                                z->setIsPlayToEnd(XML.getValue("IS_PLAY_TO_END", false));
-                                z->setIsInverted(XML.getValue("INVERTED", false));
-                                z->setIsLoop(XML.getValue("IS_LOOP", true));
-                                z->setIsEnabled(XML.getValue("ENABLED", false));
-                                //z->setSensitivity(XML.getValue("SENSITIVITY", 1.0));
-                                z->setMinReplaySecs(XML.getValue("MIN_REPLAY", 0.0));
-                                z->setSynthType(XML.getValue("SYNTH_TYPE", 0));
-                                
-                                vector<synthParam> defSp = synthDictionary::getSynthParams(z->getSynthType());
-                                
-                                
-                                for(int i = 0; i < defSp.size(); i++){
-                                    
-                                    
-                                    synthParam sp = defSp[i];
-                                    
-                                    if(XML.pushTag(defSp[i].name)){
-                                        
-                                        sp.abs_val = XML.getValue("ABS_VAL", defSp[i].abs_val);
-                                        sp.min_val = XML.getValue("MIN_VAL", defSp[i].min_val);
-                                        sp.max_val = XML.getValue("MAX_VAL", defSp[i].max_val);
-                                        sp.map = mapType(XML.getValue("MAP", defSp[i].map));
-                                        
-                                        z->setSynthParam(i, sp);
-                                        
-                                        XML.popTag();
-                                    }
-                                    
-                                }
-                                
-                                
-                                
-                                //zone tag
-                                XML.popTag();
-                                
-                                
-                            }
-                            
-                            
-                        }
-                        
-                        
-                        allScenes.push_back(nScene);
-                        
-                        //scene tag
-                        XML.popTag();
-                    }
-                    
-                    
-                    
-                    
-                }
-                
-                currentScene = (*allScenes.begin());
-                sc2TextInput[0]->setTextString(currentScene->getName());
-                //there will probably be more to update here later
-                
-                if(currentScene->getNumTriggerZones() > 0){
-                    currentZone = currentScene->getFirstTriggerZone();
-                    updateTZGuiElements();
-                }else{
-                    //potentially refactor into a disableZoneElements
-                    sc2TextInput[1]->setTextString("none");
-                    sc2TextInput[2]->setTextString("none");
-                }
-                
-                //scene settings tag
-                XML.popTag();
-            }
-            
-            
-            
-            if(XML.pushTag("BANK_SETTINGS")){
-                
-                allBanks.clear();
-                
-                int nb = XML.getNumTags("BANK");
-                
-                for(int i = 0; i < nb; i ++){
-                    
-                    
-                    if(XML.pushTag("BANK", i)){
-                        
-                        ofPtr<bank> tb = ofPtr<bank>(new bank());
-                        
-                        tb->name = XML.getValue("NAME","none");
-                        
-                        int ns = XML.getValue("NUM_ITEMS", 0);
-                        
-                        
-                        for(int j = 0; j < ns; j ++){
-                            
-                            string item = XML.getValue("ITEM", "", j);
-                            
-                            vector<ofPtr<scene> >::iterator it = find_if(allScenes.begin(), allScenes.end(), matchSceneIndex(item));
-                            tb->scenes.push_back((*it));
-                            
-                        }
-                        
-                        allBanks.push_back(tb);
-                        //bank tag
-                        XML.popTag();
-                    }
-                    
-                }
-                
-                if(allBanks.size() > 0)currentBank = allBanks[0];
-                
-                updateBankElements();
-                
-                //Bank Settings tag
-                XML.popTag();
-                
-
-     
-            }else{
-        
-               
-                allBanks.clear();
-                ofPtr<bank> tb = ofPtr<bank>(new bank());
-                allBanks.push_back(tb);
-                currentBank = tb;
-                updateBankElements();
-            
-            }
-            
-
+            //load settings call
+            m_bankManager->loadSettings(XML);
             
             //danceTracker Tag
             XML.popTag();
         }
         
-        
-        
-        
+    
         
     }else{
         
@@ -1176,8 +880,8 @@ void testApp::settingsEvents(ofxUIEventArgs &e){
     
     if(name == "Scene Setup"){
         
-        currentZone = currentScene->getFirstTriggerZone();
-        updateZoneControls();
+        m_bankManager->selectFirstZone();
+        updateSceneControls(m_bankManager->getCurrentZone());
         
     }else{
         
@@ -1188,9 +892,8 @@ void testApp::settingsEvents(ofxUIEventArgs &e){
     
     if(name == "Setup Banks"){
         
-        updateBankElements();
-        if(currentZone)currentZone->setIsSelected(false);
-        currentZone.reset();
+        updateBankElements(m_bankManager->getCurrentBank(), m_bankManager->getCurrentScene());
+        m_bankManager->deselectCurrentZone();
     
     }
     
@@ -1215,7 +918,7 @@ void testApp::settingsEvents(ofxUIEventArgs &e){
         }
 
         mOsc->newScene(currentScene->getFadeIn(), currentScene->getFadeOut());
-        updateBankElements();
+          updateBankElements(m_bankManager->getCurrentBank(), m_bankManager->getCurrentScene());;
         isPerfMode = true;
         
     }else if(isPerfMode){
@@ -1230,7 +933,7 @@ void testApp::settingsEvents(ofxUIEventArgs &e){
         currentScene = allScenes[0];
         currentZone = currentScene->getFirstTriggerZone();
         sc2TextInput[0]->setTextString(currentScene->getName());
-        updateZoneControls();
+        updateSceneControls();
         isPerfMode = false;
     }
     
@@ -1260,7 +963,7 @@ void testApp::dispEvents(ofxUIEventArgs &e){
         isCamKey = true;
         
         if(settingsTabBar->getActiveCanvas()){
-            if(settingsTabBar->getActiveCanvas()->getName() == "Scene Setup")updateZoneControls();
+            if(settingsTabBar->getActiveCanvas()->getName() == "Scene Setup")updateSceneControls();
         }
     }
     
@@ -1484,7 +1187,7 @@ void testApp::s2Events(ofxUIEventArgs &e){
                     else
                         currentZone->setIsEnabled(false);
                     
-                    updateZoneControls();
+                    updateSceneControls();
                 }
             }
             
@@ -1519,7 +1222,7 @@ void testApp::s2Events(ofxUIEventArgs &e){
             currentScene = selectNextScene(currentScene);
             sc2TextInput[0]->setTextString(currentScene->getName());
             currentZone = currentScene->getFirstTriggerZone();
-            updateZoneControls();
+            updateSceneControls();
             hideSynthCanvas();
             
         }
@@ -1532,7 +1235,7 @@ void testApp::s2Events(ofxUIEventArgs &e){
             currentScene = selectPrevScene(currentScene);
             sc2TextInput[0]->setTextString(currentScene->getName());
             currentZone = currentScene->getFirstTriggerZone();
-            updateZoneControls();
+            updateSceneControls();
             hideSynthCanvas();
             
         }
@@ -1547,7 +1250,7 @@ void testApp::s2Events(ofxUIEventArgs &e){
             allScenes.insert(getInsertIt(currentScene), t);
             currentScene = t;
             sc2TextInput[0]->setTextString(currentScene->getName());
-            updateZoneControls();
+            updateSceneControls();
             hideSynthCanvas();
         }
         
@@ -1561,7 +1264,7 @@ void testApp::s2Events(ofxUIEventArgs &e){
                 allScenes.erase(it);
                 sc2TextInput[0]->setTextString(currentScene->getName());
                 currentZone = currentScene->getFirstTriggerZone();
-                updateZoneControls();
+                updateSceneControls();
                 hideSynthCanvas();
                 
             }
@@ -1593,7 +1296,7 @@ void testApp::s2Events(ofxUIEventArgs &e){
             
             currentZone = currentScene->getFirstTriggerZone();
             sc2TextInput[0]->setTextString(currentScene->getName());
-            updateZoneControls();
+            updateSceneControls();
             hideSynthCanvas();
         }
         
@@ -1602,7 +1305,7 @@ void testApp::s2Events(ofxUIEventArgs &e){
             
             currentScene->deselectAll();
             currentZone = currentScene->addTriggerZone(currentZone);
-            updateZoneControls();
+            updateSceneControls();
             hideSynthCanvas();
         }
         
@@ -1610,7 +1313,7 @@ void testApp::s2Events(ofxUIEventArgs &e){
             
             currentZone->setIsSelected(false);
             currentZone = currentScene->copyTriggerZone(currentZone);
-            updateZoneControls();
+            updateSceneControls();
             hideSynthCanvas();
             
         }
@@ -1624,7 +1327,7 @@ void testApp::s2Events(ofxUIEventArgs &e){
                 ofPtr<triggerZone> tz = currentScene->getNextTriggerZone(currentZone);
                 currentZone->setIsSelected(false);
                 currentZone = tz;
-                updateZoneControls();
+                updateSceneControls();
                 hideSynthCanvas();
                 
                 
@@ -1635,7 +1338,7 @@ void testApp::s2Events(ofxUIEventArgs &e){
                 ofPtr<triggerZone> tz = currentScene->getPrevTriggerZone(currentZone);
                 currentZone->setIsSelected(false);
                 currentZone = tz;
-                updateZoneControls();
+                updateSceneControls();
                 hideSynthCanvas();
                 
             }
@@ -1646,7 +1349,7 @@ void testApp::s2Events(ofxUIEventArgs &e){
                 ofPtr<triggerZone> tz = currentZone;
                 currentZone = currentScene->getNextTriggerZone(currentZone);
                 currentScene->removeTriggerZone(tz);
-                updateZoneControls();
+                updateSceneControls();
                 hideSynthCanvas();
                 
             }
@@ -1661,12 +1364,12 @@ void testApp::s2Events(ofxUIEventArgs &e){
         
         if(name == "sphere"){
             currentZone->setShape(0);
-            updateZoneControls();
+            updateSceneControls();
         }
         
         if(name == "box"){
             currentZone->setShape(1);
-            updateZoneControls();
+            updateSceneControls();
         }
         
         if(name == "EDIT_SYNTH_PARAMS"){
@@ -1762,7 +1465,7 @@ void testApp::s2Events(ofxUIEventArgs &e){
                 
                 int i = max(0, currentZone->getSynthType() - 1);
                 currentZone->setSynthType(i);
-                updateZoneControls();
+                updateSceneControls();
                 hideSynthCanvas();
             }
             
@@ -1770,7 +1473,7 @@ void testApp::s2Events(ofxUIEventArgs &e){
                 
                 int i = min(ST_COUNT - 1, currentZone->getSynthType() + 1);
                 currentZone->setSynthType(i);
-                updateZoneControls();
+                updateSceneControls();
                 hideSynthCanvas();
                 
             }
@@ -1815,21 +1518,21 @@ void testApp::s3Events(ofxUIEventArgs &e){
         if(name == "BANK_MINUS"){
             
             currentBank = selectPrevBank(currentBank);
-            updateBankElements();
+              updateBankElements(m_bankManager->getCurrentBank(), m_bankManager->getCurrentScene());;
         
         }
         
         if(name == "BANK_PLUS"){
             
             currentBank = selectNextBank(currentBank);
-            updateBankElements();
+              updateBankElements(m_bankManager->getCurrentBank(), m_bankManager->getCurrentScene());;
         }
         
         if(name == "CREATE_BANK"){
             ofPtr<bank> b = ofPtr<bank>(new bank());
             allBanks.insert(getInsertIt(currentBank), b);
             currentBank = b;
-            updateBankElements();
+              updateBankElements(m_bankManager->getCurrentBank(), m_bankManager->getCurrentScene());;
         }
         
         if(name == "DELETE_BANK"){
@@ -1838,7 +1541,7 @@ void testApp::s3Events(ofxUIEventArgs &e){
                 ofPtr<bank> db = currentBank;
                 currentBank = selectPrevBank(currentBank);
                 allBanks.erase(find(allBanks.begin(), allBanks.end(), db));
-                updateBankElements();
+                  updateBankElements(m_bankManager->getCurrentBank(), m_bankManager->getCurrentScene());;
             }
         }
         
@@ -1846,7 +1549,7 @@ void testApp::s3Events(ofxUIEventArgs &e){
             
             currentScene->unTriggerAll();
             currentScene = selectNextScene(currentScene);
-            updateBankElements();
+              updateBankElements(m_bankManager->getCurrentBank(), m_bankManager->getCurrentScene());;
         
         }
         
@@ -1854,34 +1557,34 @@ void testApp::s3Events(ofxUIEventArgs &e){
             
             currentScene->unTriggerAll();
             currentScene = selectPrevScene(currentScene);
-            updateBankElements();
+              updateBankElements(m_bankManager->getCurrentBank(), m_bankManager->getCurrentScene());;
 
         }
         
         if(name == "ADD_SCENE_TO_BANK"){
         
             currentBank->insertScene(currentScene);
-            updateBankElements();
+              updateBankElements(m_bankManager->getCurrentBank(), m_bankManager->getCurrentScene());;
         }
         
         if(name == "B_ITEM_MINUS"){
         
             currentBank->prevScene();
-            updateBankElements();
+              updateBankElements(m_bankManager->getCurrentBank(), m_bankManager->getCurrentScene());;
             
         }
         
         if(name == "B_ITEM_PLUS"){
             
             currentBank->nextScene();
-            updateBankElements();
+              updateBankElements(m_bankManager->getCurrentBank(), m_bankManager->getCurrentScene());;
         
         }
         
         if(name == "REMOVE_ITEM"){
         
             currentBank->removeScene();
-            updateBankElements();
+              updateBankElements(m_bankManager->getCurrentBank(), m_bankManager->getCurrentScene());;
             
         }
         
@@ -1952,7 +1655,7 @@ void testApp::fEvents(ofxUIEventArgs &e){
 
 //-----------------------------------------------------
 
-void testApp::updateZoneControls(){
+void testApp::updateSceneControls(ofPtr<triggerZone> zn){
     
     fInSlid->setValue(currentScene->getFadeIn());
     fOutSlid->setValue(currentScene->getFadeOut());
@@ -1982,36 +1685,36 @@ void testApp::updateZoneControls(){
     
 }
 
-void testApp::updateTZGuiElements(){
+void testApp::updateTZGuiElements(ofPtr<triggerZone> zn){
     
-    sc2TextInput[1]->setTextString(currentZone->getName());
-    sc2TextInput[2]->setTextString(currentZone->getSoundFileName());
+    sc2TextInput[1]->setTextString(zn->getName());
+    sc2TextInput[2]->setTextString(zn->getSoundFileName());
     
-    ofVec3f tp = currentZone->getPos();
+    ofVec3f tp = zn->getPos();
     tPosX->setValue(tp.x);
     tPosY->setValue(tp.y);
     tPosZ->setValue(tp.z);
     
-    radSlid->setValue(currentZone->getRadius());
-    eblTog->setValue(currentZone->getIsEnabled());
-    loopTog->setValue(currentZone->getIsLoop());
-    playToEndTog->setValue(currentZone->getIsPlayToEnd());
-    invertedTog->setValue(currentZone->getIsInverted());
+    radSlid->setValue(zn->getRadius());
+    eblTog->setValue(zn->getIsEnabled());
+    loopTog->setValue(zn->getIsLoop());
+    playToEndTog->setValue(zn->getIsPlayToEnd());
+    invertedTog->setValue(zn->getIsInverted());
     
-    xDimSlid->setValue(currentZone->getBoxDims().x);
-    yDimSlid->setValue(currentZone->getBoxDims().y);
-    zDimSlid->setValue(currentZone->getBoxDims().z);
-    (currentZone->getShape() == 0) ? shapeRad->activateToggle("sphere") : shapeRad->activateToggle("box");
+    xDimSlid->setValue(zn->getBoxDims().x);
+    yDimSlid->setValue(zn->getBoxDims().y);
+    zDimSlid->setValue(zn->getBoxDims().z);
+    (zn->getShape() == 0) ? shapeRad->activateToggle("sphere") : shapeRad->activateToggle("box");
     
-    //sensSlider->setValue(currentZone->getSensitivity());
-    repSlider->setValue(currentZone->getMinReplaySecs());
-    synthTypeDisp->setLabel("SYNTH_TYPE: " + synthDictionary::getSynthString(currentZone->getSynthType()));
-    currentZone->setIsSelected(true);
+    //sensSlider->setValue(zn->getSensitivity());
+    repSlider->setValue(zn->getMinReplaySecs());
+    synthTypeDisp->setLabel("SYNTH_TYPE: " + synthDictionary::getSynthString(zn->getSynthType()));
+    zn->setIsSelected(true);
     
     
 }
 
-void testApp::populateSynthCanvas(){
+void testApp::populateSynthCanvas(ofPtr<triggerZone> zn){
     
     if(synthCanvas != NULL)delete synthCanvas;
     
@@ -2023,7 +1726,7 @@ void testApp::populateSynthCanvas(){
     synthCanvas->setVisible(false);
     synthCanvas->setSnapping(false);
     
-    vector<synthParam> sp =  synthDictionary::getSynthParams(currentZone->getSynthType());
+    vector<synthParam> sp =  synthDictionary::getSynthParams(zn->getSynthType());
     
     mapTypeLabels.clear();
     
@@ -2031,7 +1734,7 @@ void testApp::populateSynthCanvas(){
         
         synthCanvas->addLabel(sp[i].name, OFX_UI_FONT_MEDIUM);
         
-        synthParam c_sp = currentZone->getSynthParam(i);
+        synthParam c_sp = zn->getSynthParam(i);
         
         ofxUISlider * absl = new ofxUISlider("abs_val" , sp[i].sl_min, sp[i].sl_max, c_sp.abs_val , 100,20);
         synthCanvas->addWidgetDown(absl);
@@ -2076,21 +1779,21 @@ void testApp::hideSynthCanvas(){
     
 }
 
-void testApp::updateBankElements(){
+void testApp::updateBankElements(ofPtr<bank> b, ofPtr<scene> s){
 
     
-    sc3TextInput->setTextString(currentBank->name);
-    perfBankText->setTextString(currentBank->name);
-    string nm = currentScene->getName();
+    sc3TextInput->setTextString(b->name);
+    perfBankText->setTextString(b->name);
+    string nm = s->getName();
     if(nm.length() > 30)nm.resize(30);
     sceneText->setTextString(nm);
     
     string b_str = "\n\n";
     
-    for(int i = 0; i < currentBank->scenes.size(); i++){
+    for(int i = 0; i < b->scenes.size(); i++){
         
-        b_str += "   " + currentBank->scenes[i]->getName();
-        b_str += (i == currentBank->selSceneIndex) ? "   <--- \n\n" : "\n\n";
+        b_str += "   " + b->scenes[i]->getName();
+        b_str += (i == b->selSceneIndex) ? "   <--- \n\n" : "\n\n";
     
     }
     
@@ -2115,7 +1818,7 @@ void testApp::perfChange(string name){
                 currentScene->unTriggerAll();
                 mOsc->newScene(currentScene->getFadeIn(), currentScene->getFadeOut());
             }
-            updateBankElements();
+              updateBankElements(m_bankManager->getCurrentBank(), m_bankManager->getCurrentScene());;
         }
         
     }
@@ -2132,7 +1835,7 @@ void testApp::perfChange(string name){
                 currentScene->unTriggerAll();
                mOsc->newScene(currentScene->getFadeIn(), currentScene->getFadeOut());
             }
-            updateBankElements();
+              updateBankElements(m_bankManager->getCurrentBank(), m_bankManager->getCurrentScene());;
         }
     }
     
@@ -2144,7 +1847,7 @@ void testApp::perfChange(string name){
             currentScene->unTriggerAll();
            mOsc->newScene(currentScene->getFadeIn(), currentScene->getFadeOut());
         }
-        updateBankElements();
+          updateBankElements(m_bankManager->getCurrentBank(), m_bankManager->getCurrentScene());;
     }
     
     if(name == "B_ITEM_PLUS"){
@@ -2156,56 +1859,12 @@ void testApp::perfChange(string name){
             currentScene->unTriggerAll();
             mOsc->newScene(currentScene->getFadeIn(), currentScene->getFadeOut());
         }
-        updateBankElements();
+          updateBankElements(m_bankManager->getCurrentBank(), m_bankManager->getCurrentScene());;
         
     }
 
 }
 
-void testApp::checkUniqueId(ofPtr<scene> sn){
-    
-    bool isUnique = false;
-    
-    while (!isUnique) {
-        
-        bool isFound = false;
-        vector<ofPtr<scene> >::iterator it = allScenes.begin();
-        for(it = allScenes.begin(); it != allScenes.end(); it++){
-            if(sn->getUid() == (*it)->getUid())isFound = true;
-        }
-        
-        if(isFound){
-            sn->newIndex();
-        }else{
-            isUnique = true;
-        }
-    }
-    
-}
-
-vector<ofPtr<scene> >::iterator testApp::getInsertIt(ofPtr<scene> sn){
-
-    vector<ofPtr<scene> >::iterator it;
-    if(allScenes.size() == 1)
-        return allScenes.end();
-    else
-        it = find(allScenes.begin(), allScenes.end(), sn);
-        it ++;
-        return it;
-    
-}
-
-vector<ofPtr<bank> >::iterator testApp::getInsertIt(ofPtr<bank> bk){
-    
-    vector<ofPtr<bank> >::iterator it;
-    if(allBanks.size() == 1)
-        return allBanks.end();
-    else
-        it = find(allBanks.begin(), allBanks.end(), bk);
-    it ++;
-    return it;
-    
-}
 
 //--------------------------------------------------------------
 void testApp::draw(){
@@ -2375,7 +2034,7 @@ void testApp::keyPressed(int key){
             if(!isSettingsGui)
                 for(int i = 0; i < 3; i++)zoneCanvases[i]->setVisible(false);
             else
-                if(settingsTabBar->getActiveCanvas()->getName() == "Scene Setup")updateZoneControls();
+                if(settingsTabBar->getActiveCanvas()->getName() == "Scene Setup")updateSceneControls();
             break;
             
         case OF_KEY_RETURN:
@@ -2452,61 +2111,7 @@ void testApp::keyPressed(int key){
     
 }
 
-void testApp::cleanUpBanks(){
 
-    //for when deleting a scene
-    
-    //FIXME - modify to work with new indexing
-    
-    /*for(int i = 0; i < allBanks.size(); i ++){
-       
-    
-        vector<ofPtr<scene> >::iterator it = remove_if(allBanks[i]->scenes.begin(), allBanks[i]->scenes.end(), matchSceneIndex(currentScene->getIndex()));
-        
-        allBanks[i]->scenes.erase(it, allBanks[i]->scenes.end());
-       
-    }*/
-    
-    
-}
-
-ofPtr<scene> testApp::selectNextScene(ofPtr<scene> sn){
-
-    if(allScenes.size() == 1)return sn;
-    vector< ofPtr<scene> >::iterator it = find(allScenes.begin(), allScenes.end(), sn);
-    it++;
-    if(it == allScenes.end())it--;
-    return(*it);
-    
-}
-
-ofPtr<scene> testApp::selectPrevScene(ofPtr<scene> sn){
-    
-    if(allScenes.size() == 1)return sn;
-    vector< ofPtr<scene> >::iterator it = find(allScenes.begin(), allScenes.end(), sn);
-    if(it != allScenes.begin())it--;
-    return(*it);
-    
-}
-
-ofPtr<bank> testApp::selectNextBank(ofPtr<bank> bk){
-    
-    if(allBanks.size() == 1)return bk;
-    vector< ofPtr<bank> >::iterator it = find(allBanks.begin(), allBanks.end(), bk);
-    it++;
-    if(it == allBanks.end())it--;
-    return(*it);
-    
-}
-
-ofPtr<bank> testApp::selectPrevBank(ofPtr<bank> bk){
-    
-    if(allBanks.size() == 1)return bk;
-    vector< ofPtr<bank> >::iterator it = find(allBanks.begin(), allBanks.end(), bk);
-    if(it != allBanks.begin())it--;
-    return(*it);
-    
-}
 
 void testApp::keyReleased(int key){
     

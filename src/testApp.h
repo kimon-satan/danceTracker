@@ -4,12 +4,12 @@
 #include "ofxKinect.h"
 #include "ofxOpenCv.h"
 #include "ofxUI.h"
-#include "ofxXmlSettings.h"
 
-#include "bank.h"
+
+#include "bankManager.h"
 
 #define NUM_SETTINGS_CANVASES 5
-#define USE_KINECT true
+#define USE_KINECT false
 
 enum dtDisplayMode{
     
@@ -37,21 +37,6 @@ public:
 };
 
 
-class matchSceneIndex{
-
-    string searchIndex;
-    
-    
-public:
-    
-    matchSceneIndex(string searchIndex):searchIndex(searchIndex){};
-    
-    bool operator()(ofPtr<scene> s) const{
-    
-        return (s->getUid() == searchIndex);
-    };
-
-};
 
 
 
@@ -104,31 +89,20 @@ public:
     void segment();
     void analyseUser();
     
-    void checkUniqueId(ofPtr<scene> sn);
-    
     void drawScenePointCloud();
     void drawUserPointCloud();
     void drawFloor();
     
+    void updateSceneControls(ofPtr<triggerZone> zn);
+    void updateTZGuiElements(ofPtr<triggerZone> zn);
+    void updateBankElements(ofPtr<bank> b, ofPtr<scene> s);
     
-    void updateZoneControls();
-    void updateTZGuiElements();
-    void updateBankElements();
-    
-    void populateSynthCanvas();
+    void populateSynthCanvas(ofPtr<triggerZone> zn);
     void hideSynthCanvas();
     
     void perfChange(string name);
-    void cleanUpBanks();
     
-    //should be refactored
-    ofPtr<scene> selectNextScene(ofPtr<scene> sn);
-    ofPtr<scene> selectPrevScene(ofPtr<scene> sn);
-    ofPtr<bank> selectNextBank(ofPtr<bank> bk); 
-    ofPtr<bank> selectPrevBank(ofPtr<bank> bk);
-    
-    vector<ofPtr<scene> >::iterator getInsertIt(ofPtr<scene> sn);
-    vector<ofPtr<bank> >::iterator getInsertIt(ofPtr<bank> bk);
+    ofPtr<bankManager> m_bankManager;
     
     //kinect variables
     
@@ -178,15 +152,6 @@ public:
     ofVec3f fakePos;
     float fakeRadius;
     int numFakePoints;
-    
-    //Banks, Scenes, Zones
-    
-    vector<ofPtr<scene> > allScenes;
-    vector<ofPtr<bank> >allBanks;
-    
-    ofPtr<scene> currentScene;
-    ofPtr<triggerZone> currentZone;
-    ofPtr<bank>currentBank;
     
     
     //UI Variables
