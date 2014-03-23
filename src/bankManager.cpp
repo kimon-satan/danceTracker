@@ -796,13 +796,12 @@ void bankManager::setCSceneFadeOut(float f){
 
 
 void bankManager::incCZoneSynthType(){
-    int i = max(0, currentZone->getSynthType() - 1);
+    int i = min(ST_COUNT - 1, currentZone->getSynthType() + 1);
     currentZone->setSynthType(i);
-
 }
 
 void bankManager::decCZoneSynthType(){
-    int i = min(ST_COUNT - 1, currentZone->getSynthType() + 1);
+    int i = max(0, currentZone->getSynthType() - 1);
     currentZone->setSynthType(i);
 
 }

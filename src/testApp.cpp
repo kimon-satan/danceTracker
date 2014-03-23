@@ -7,9 +7,9 @@
  
  TODO:
  
-    The testApp file is in desparate need of refactoring
-        - AllScenes should be absorbed into a specialised bank
-        - A separate manager class leaving only the gui functions here
+ The testApp file is in desparate need of refactoring
+ - AllScenes should be absorbed into a specialised bank
+ - A separate manager class leaving only the gui functions here
  
  
  
@@ -84,7 +84,7 @@ void testApp::setup(){
     
     cm.disableMouseInput();
     
-        
+    
     setupGui();
     updateSceneControls(m_bankManager->getCurrentScene(), m_bankManager->getCurrentZone());
     
@@ -174,7 +174,7 @@ void testApp::setupGeneralSettings(){
     settingsTabBar->addCanvas(settingsCanvases[0]);
     settingsCanvases[0]->autoSizeToFitWidgets();
     
-  
+    
     
     //---------------------------
     
@@ -344,14 +344,14 @@ void testApp::setupGeneralSettings(){
     bplus->setLabelText("+");
     bmin->setLabelText("-");
     
-
+    
     
     ofAddListener(settingsCanvases[4]->newGUIEvent,this,&testApp::s4Events);
     settingsTabBar->addCanvas(settingsCanvases[4]);
     settingsCanvases[4]->autoSizeToFitWidgets();
-
     
-  
+    
+    
     
 }
 
@@ -548,7 +548,7 @@ void testApp::saveSettings(string fn){
             XML.popTag();
         }
         
-                
+        
         m_bankManager->saveSettings(XML);
         
         //danceTracker tag
@@ -561,7 +561,7 @@ void testApp::saveSettings(string fn){
 
 void testApp::loadSettings(string fn){
     
-
+    
     ofxXmlSettings XML;
     
     if(fn.substr(fn.length()-4, 4) != ".xml")fn += ".xml";
@@ -613,7 +613,7 @@ void testApp::loadSettings(string fn){
             XML.popTag();
         }
         
-    
+        
         
     }else{
         
@@ -682,7 +682,7 @@ void testApp::update(){
             p += fakePos;
             userPixels.push_back(p);
         }
-    
+        
         m_bankManager->update(fakePos, fakeRadius * 3, userPixels);
         
     }
@@ -892,7 +892,7 @@ void testApp::settingsEvents(ofxUIEventArgs &e){
         
         updateBankElements(m_bankManager->getCurrentBank(), m_bankManager->getCurrentScene());
         m_bankManager->deselectCurrentZone();
-    
+        
     }
     
     if(name == "Performance Mode"){
@@ -1015,10 +1015,10 @@ void testApp::s0Events(ofxUIEventArgs &e){
         }
         
     }
-
+    
     
     if(isMouseDown){
-    
+        
         if(!isSaveDialog && !isLoadDialog){
             if(name == "SAVE"){
                 confLab->setLabel("CONFIRM SAVE FILE");
@@ -1060,11 +1060,11 @@ void testApp::s0Events(ofxUIEventArgs &e){
         }
         
         
-       
+        
         
     }
     
-      
+    
 	
 }
 
@@ -1127,7 +1127,8 @@ void testApp::s1Events(ofxUIEventArgs &e){
 }
 
 void testApp::s2Events(ofxUIEventArgs &e){
-    
+
+    bool isHideSC = false;
     string name = e.widget->getName();
     ofxUISlider *slider = (ofxUISlider *) e.widget;
     ofxUIToggle *tog = (ofxUIToggle *) e.widget;
@@ -1158,74 +1159,66 @@ void testApp::s2Events(ofxUIEventArgs &e){
     if(name == "FADE_IN")m_bankManager->setCSceneFadeIn(slider->getScaledValue());
     if(name == "FADE_OUT")m_bankManager->setCSceneFadeOut(slider->getScaledValue());
     
+    
+    
+    //all actions in which the synthCanvas is hidden
+
     if(isMouseDown){
-        
-        //all actions in which the synthCanvas is hidden
-        
-        if(name == "SCENE_PLUS")m_bankManager->incrementScene();
-        if(name == "SCENE_MINUS")m_bankManager->decrementScene();
-        if(name == "CREATE_SCENE")m_bankManager->createScene();
-        if(name == "DELETE_SCENE")m_bankManager->deleteScene();
-        if(name == "COPY_SCENE")m_bankManager->copyScene();
-        if(name == "CREATE_ZONE")m_bankManager->createZone();
-        if(name == "COPY_ZONE")m_bankManager->copyZone();
-        if(name == "ZONE_PLUS")m_bankManager->incrementZone();
-        if(name == "ZONE_MINUS")m_bankManager->decrementZone();
-        if(name == "DELETE_ZONE")m_bankManager->deleteZone();
-        if(name == "ST_MINUS")m_bankManager->incCZoneSynthType();
-        if(name == "ST_PLUS")m_bankManager->incCZoneSynthType();
-        
-        hideSynthCanvas();
-        
+        //problem of double trigger
+        if(name == "SCENE_PLUS"){isHideSC = true; m_bankManager->incrementScene();}
+        if(name == "SCENE_MINUS"){isHideSC = true; m_bankManager->decrementScene();}
+        if(name == "CREATE_SCENE"){isHideSC = true; m_bankManager->createScene();}
+        if(name == "DELETE_SCENE"){isHideSC = true; m_bankManager->deleteScene();}
+        if(name == "COPY_SCENE"){isHideSC = true; m_bankManager->copyScene();}
+        if(name == "CREATE_ZONE"){isHideSC = true; m_bankManager->createZone();}
+        if(name == "COPY_ZONE"){isHideSC = true; m_bankManager->copyZone();}
+        if(name == "ZONE_PLUS"){isHideSC = true; m_bankManager->incrementZone();}
+        if(name == "ZONE_MINUS"){isHideSC = true; m_bankManager->decrementZone();}
+        if(name == "DELETE_ZONE"){isHideSC = true; m_bankManager->deleteZone();}
+        if(name == "ST_MINUS"){isHideSC = true; m_bankManager->decCZoneSynthType();}
+        if(name == "ST_PLUS"){isHideSC = true; m_bankManager->incCZoneSynthType();}
     }
-        
     if(name == "sphere")m_bankManager->setCZoneShape(0);
     if(name == "box")m_bankManager->setCZoneShape(1);
+    if(name == "ENABLED")tog->setValue(m_bankManager->setCZoneEnabled(tog->getValue()));
+    if(name == "LOOP")m_bankManager->setCZoneLoop(tog->getValue());
+    if(name == "PLAY_TO_END")m_bankManager->setCZonePlayToEnd(tog->getValue());
+    if(name == "INVERTED")m_bankManager->setCZoneInverted(tog->getValue());
+    if(name == "MIN_REPLAY")m_bankManager->setCZoneMinReplay(slider->getScaledValue());
+    if(name == "RADIUS")m_bankManager->setCZoneRadius(slider->getScaledValue());
     
-   
+    if(name == "EDIT_SYNTH_PARAMS"){
         
-        if(name == "EDIT_SYNTH_PARAMS"){
-            
-            //make synth panel visible and populate
-            if(!isSynthView){
-                populateSynthCanvas(m_bankManager->getCurrentZone());
-                isSynthView = true;
-            }else{
-                isSynthView = false;
-            }
-            
-            synthCanvas->setVisible(isSynthView);
-            
+        //make synth panel visible and populate
+        if(!isSynthView){
+            populateSynthCanvas(m_bankManager->getCurrentZone());
+            isSynthView = true;
+        }else{
+            isSynthView = false;
         }
         
-        if(name == "RADIUS")m_bankManager->setCZoneRadius(slider->getScaledValue());
-    
-        if(name.substr(0,4) == "T_POS"){
-            ofVec3f p = m_bankManager->getCurrentZone()->getPos();
-            if(name.substr(6) == "X")p.x = slider->getScaledValue();
-            if(name.substr(6) == "Y")p.y = slider->getScaledValue();
-            if(name.substr(6) == "Z")p.z = slider->getScaledValue();
-            m_bankManager->setCZonePosition(p);
-        }
-    
-        if(name.substr(2,3) == "DIM"){
-            ofVec3f bd = m_bankManager->getCurrentZone()->getBoxDims();
-            if(name.substr(0,1) == "X")bd.x = slider->getScaledValue();
-            if(name.substr(0,1) == "Y")bd.y = slider->getScaledValue();
-            if(name.substr(0,1) == "Z")bd.z = slider->getScaledValue();
-            m_bankManager->setCZoneBoxDims(bd);
-        }
+        synthCanvas->setVisible(isSynthView);
         
-
-        
-        if(name == "ENABLED")tog->setValue(m_bankManager->setCZoneEnabled(tog->getValue()));
-        if(name == "LOOP")m_bankManager->setCZoneLoop(tog->getValue());
-        if(name == "PLAY_TO_END")m_bankManager->setCZonePlayToEnd(tog->getValue());
-        if(name == "INVERTED")m_bankManager->setCZoneInverted(tog->getValue());
-        if(name == "MIN_REPLAY")m_bankManager->setCZoneMinReplay(slider->getValue());
-            
-        updateSceneControls(m_bankManager->getCurrentScene(), m_bankManager->getCurrentZone());
+    }
     
+    if(name.substr(0,4) == "T_POS"){
+        ofVec3f p = m_bankManager->getCurrentZone()->getPos();
+        if(name.substr(6) == "X")p.x = slider->getScaledValue();
+        if(name.substr(6) == "Y")p.y = slider->getScaledValue();
+        if(name.substr(6) == "Z")p.z = slider->getScaledValue();
+        m_bankManager->setCZonePosition(p);
+    }
+    
+    if(name.substr(2,3) == "DIM"){
+        ofVec3f bd = m_bankManager->getCurrentZone()->getBoxDims();
+        if(name.substr(0,1) == "X")bd.x = slider->getScaledValue();
+        if(name.substr(0,1) == "Y")bd.y = slider->getScaledValue();
+        if(name.substr(0,1) == "Z")bd.z = slider->getScaledValue();
+        m_bankManager->setCZoneBoxDims(bd);
+    }
+    
+    updateSceneControls(m_bankManager->getCurrentScene(), m_bankManager->getCurrentZone());
+    if(isHideSC)hideSynthCanvas();
     
 }
 
@@ -1250,7 +1243,7 @@ void testApp::s3Events(ofxUIEventArgs &e){
     }
     
     if(isMouseDown){
-    
+        
         if(name == "BANK_MINUS")m_bankManager->decrementBank();
         if(name == "BANK_PLUS")m_bankManager->incrementBank();
         if(name == "CREATE_BANK")m_bankManager->createBank();
@@ -1263,13 +1256,13 @@ void testApp::s3Events(ofxUIEventArgs &e){
         if(name == "REMOVE_ITEM")m_bankManager->bankRemoveScene();
         
         updateBankElements(m_bankManager->getCurrentBank(), m_bankManager->getCurrentScene());;
-              
+        
     }
     
 }
 
 void testApp::s4Events(ofxUIEventArgs &e){
-
+    
     string name = e.widget->getName();
     
     if(isMouseDown)perfChange(name);
@@ -1457,7 +1450,7 @@ void testApp::hideSynthCanvas(){
 }
 
 void testApp::updateBankElements(ofPtr<bank> b, ofPtr<scene> s){
-
+    
     
     sc3TextInput->setTextString(b->name);
     perfBankText->setTextString(b->name);
@@ -1471,17 +1464,17 @@ void testApp::updateBankElements(ofPtr<bank> b, ofPtr<scene> s){
         
         b_str += "   " + b->scenes[i]->getName();
         b_str += (i == b->selSceneIndex) ? "   <--- \n\n" : "\n\n";
-    
+        
     }
     
     bankText->setTextString(b_str);
     perfSceneText->setTextString(b_str);
-        
-
+    
+    
 }
 
 void testApp::perfChange(string name){
-
+    
     if(name == "BANK_MINUS")m_bankManager->perfBankDecrement();
     if(name == "BANK_PLUS")m_bankManager->perfBankIncrement();
     if(name == "B_ITEM_MINUS")m_bankManager->perfBankDecrement();
@@ -1595,7 +1588,7 @@ void testApp::draw(){
 
 void testApp::drawScenePointCloud() {
     
-	glBegin(GL_POINTS);
+    glBegin(GL_POINTS);
     glColor3ub(0, 0, 0);
     
     for(int i = 0; i < curDepths.size(); i ++){
@@ -1604,12 +1597,12 @@ void testApp::drawScenePointCloud() {
         
     }
     
-	glEnd();
+    glEnd();
 }
 
 void testApp::drawUserPointCloud() {
     
-	glBegin(GL_POINTS);
+    glBegin(GL_POINTS);
     glColor3ub(0, 0, 0);
     
     
@@ -1617,9 +1610,9 @@ void testApp::drawUserPointCloud() {
         
         glVertex3f(userPixels[i].x, userPixels[i].y, userPixels[i].z);
         
-	}
+    }
     
-	glEnd();
+    glEnd();
     
     
     
@@ -1722,7 +1715,7 @@ void testApp::keyPressed(int key){
     }
     
     if(isPerfMode){
-    
+        
         if(key == OF_KEY_UP)perfChange("B_ITEM_MINUS");
         
         if(key == OF_KEY_DOWN)perfChange("B_ITEM_PLUS");
@@ -1730,7 +1723,7 @@ void testApp::keyPressed(int key){
         if(key == OF_KEY_LEFT)perfChange("BANK_MINUS");
         
         if(key == OF_KEY_RIGHT)perfChange("BANK_PLUS");
-            
+        
     }
     
 }
@@ -1786,7 +1779,7 @@ void testApp::dragEvent(ofDragInfo dragInfo){
 void testApp::exit(){
     
     kinect.close();
-	delete settingsTabBar;
+    delete settingsTabBar;
     delete displayTabBar;
     
     for(int i = 0; i < NUM_SETTINGS_CANVASES; i ++)delete settingsCanvases[i];
@@ -1799,4 +1792,3 @@ void testApp::exit(){
     
 }
 
-    
