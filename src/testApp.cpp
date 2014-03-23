@@ -86,7 +86,7 @@ void testApp::setup(){
     
         
     setupGui();
-    updateSceneControls(m_bankManager->getCurrentZone());
+    updateSceneControls(m_bankManager->getCurrentScene(), m_bankManager->getCurrentZone());
     
     isFakeUser = false;
     
@@ -213,7 +213,7 @@ void testApp::setupGeneralSettings(){
     
     settingsCanvases[2]->addLabel("SELECTED SCENE");
     sc2TextInput[0] = settingsCanvases[2]->addTextInput("S_NAME", "");
-    sc2TextInput[0]->setTextString(m_bankManager->getCurrentScene()->getName());
+    
     
     ofxUILabelButton * sb = (ofxUILabelButton *)settingsCanvases[2]->addWidgetDown(new ofxUILabelButton("SCENE_MINUS", true, 25));
     ofxUILabelButton * sc = (ofxUILabelButton *)settingsCanvases[2]->addWidgetRight(new ofxUILabelButton("SCENE_PLUS", true, 25));
@@ -606,6 +606,9 @@ void testApp::loadSettings(string fn){
             //load settings call
             m_bankManager->loadSettings(XML);
             
+            updateSceneControls(m_bankManager->getCurrentScene(), m_bankManager->getCurrentZone());
+            updateBankElements(m_bankManager->getCurrentBank(), m_bankManager->getCurrentScene());
+            
             //danceTracker Tag
             XML.popTag();
         }
@@ -663,9 +666,9 @@ void testApp::update(){
             if(isUser){
                 
                 analyseUser();
-                currentScene->update(com, userHeight, userPixels);
+                m_bankManager->update(com, userHeight, userPixels);
             }else{
-                currentScene->unTriggerAll();
+                m_bankManager->unTriggerAll();
             }
         }
         
@@ -679,15 +682,10 @@ void testApp::update(){
             p += fakePos;
             userPixels.push_back(p);
         }
-        
-        
-        currentScene->update(fakePos, fakeRadius * 3, userPixels);
-        
+    
+        m_bankManager->update(fakePos, fakeRadius * 3, userPixels);
         
     }
-    
-    
-    
     
     
 }
@@ -881,7 +879,7 @@ void testApp::settingsEvents(ofxUIEventArgs &e){
     if(name == "Scene Setup"){
         
         m_bankManager->selectFirstZone();
-        updateSceneControls(m_bankManager->getCurrentZone());
+        updateSceneControls(m_bankManager->getCurrentScene(), m_bankManager->getCurrentZone());
         
     }else{
         
@@ -899,41 +897,16 @@ void testApp::settingsEvents(ofxUIEventArgs &e){
     
     if(name == "Performance Mode"){
         
-        vector<ofPtr<scene> >:: iterator it;
-        
-        
-        for(it = allScenes.begin(); it != allScenes.end(); it++){
-            (*it)->unTriggerAll();
-            (*it)->deselectAll();
-        }
-        
-        currentBank = allBanks[0];
-        currentBank->firstScene();
-        currentZone.reset();
-        
-        if(currentBank->scenes.size() > 0){
-            currentScene = currentBank->selScene;
-        }else{
-            currentScene = allScenes[0];
-        }
-
-        mOsc->newScene(currentScene->getFadeIn(), currentScene->getFadeOut());
-          updateBankElements(m_bankManager->getCurrentBank(), m_bankManager->getCurrentScene());;
+        m_bankManager->resetForPerformance();
+        updateBankElements(m_bankManager->getCurrentBank(), m_bankManager->getCurrentScene());;
         isPerfMode = true;
         
     }else if(isPerfMode){
         
-        vector<ofPtr<scene> >:: iterator it;
+        m_bankManager->resetScenes();
         
-        for(it = allScenes.begin(); it != allScenes.end(); it++){
-            (*it)->unTriggerAll();
-            (*it)->deselectAll();
-        }
+        updateSceneControls(m_bankManager->getCurrentScene(), m_bankManager->getCurrentZone());
         
-        currentScene = allScenes[0];
-        currentZone = currentScene->getFirstTriggerZone();
-        sc2TextInput[0]->setTextString(currentScene->getName());
-        updateSceneControls();
         isPerfMode = false;
     }
     
@@ -963,7 +936,7 @@ void testApp::dispEvents(ofxUIEventArgs &e){
         isCamKey = true;
         
         if(settingsTabBar->getActiveCanvas()){
-            if(settingsTabBar->getActiveCanvas()->getName() == "Scene Setup")updateSceneControls();
+            if(settingsTabBar->getActiveCanvas()->getName() == "Scene Setup")updateSceneControls(m_bankManager->getCurrentScene(), m_bankManager->getCurrentZone());
         }
     }
     
@@ -1156,6 +1129,8 @@ void testApp::s1Events(ofxUIEventArgs &e){
 void testApp::s2Events(ofxUIEventArgs &e){
     
     string name = e.widget->getName();
+    ofxUISlider *slider = (ofxUISlider *) e.widget;
+    ofxUIToggle *tog = (ofxUIToggle *) e.widget;
     
     isTextFocus = false;
     
@@ -1170,213 +1145,50 @@ void testApp::s2Events(ofxUIEventArgs &e){
             t->setTriggerType(OFX_UI_TEXTINPUT_ON_FOCUS);
             isTextFocus = false;
             
-            if(name == "S_NAME"){
-                currentScene->setName(t->getTextString());
-            }
+            if(name == "S_NAME")m_bankManager->setCSceneName(t->getTextString());
+            if(name == "Z_NAME")m_bankManager->setCZoneName(t->getTextString());
+            if(name == "SOUNDFILE")m_bankManager->setCZoneSoundFile(t->getTextString());
             
-            if(currentScene->getNumTriggerZones() > 0){
-                if(name == "Z_NAME"){
-                    currentZone->setName(t->getTextString());
-                }
-                
-                if(name == "SOUNDFILE"){
-                    
-                    currentZone->setSoundFile(t->getTextString());
-                    if(currentZone->getIsAudioLoaded())
-                        currentZone->setIsEnabled(currentZone->getIsEnabled());
-                    else
-                        currentZone->setIsEnabled(false);
-                    
-                    updateSceneControls();
-                }
-            }
-            
-            
+            updateSceneControls(m_bankManager->getCurrentScene(), m_bankManager->getCurrentZone());
             
         }
         
-        
     }
     
-    if(name == "FADE_IN"){
-        
-        ofxUISlider *slider = (ofxUISlider *) e.widget;
-        currentScene->setFadeIn(slider->getScaledValue());
-    }
-    
-    if(name == "FADE_OUT"){
-        
-        ofxUISlider *slider = (ofxUISlider *) e.widget;
-        currentScene->setFadeOut(slider->getScaledValue());
-    
-    }
-    
+    if(name == "FADE_IN")m_bankManager->setCSceneFadeIn(slider->getScaledValue());
+    if(name == "FADE_OUT")m_bankManager->setCSceneFadeOut(slider->getScaledValue());
     
     if(isMouseDown){
         
-        if(name == "SCENE_PLUS"){
-            
-            currentScene->unTriggerAll();
-            currentScene->deselectAll();
-           
-            currentScene = selectNextScene(currentScene);
-            sc2TextInput[0]->setTextString(currentScene->getName());
-            currentZone = currentScene->getFirstTriggerZone();
-            updateSceneControls();
-            hideSynthCanvas();
-            
-        }
+        //all actions in which the synthCanvas is hidden
         
-        if(name == "SCENE_MINUS"){
-            
-            currentScene->unTriggerAll();
-            currentScene->deselectAll();
-            
-            currentScene = selectPrevScene(currentScene);
-            sc2TextInput[0]->setTextString(currentScene->getName());
-            currentZone = currentScene->getFirstTriggerZone();
-            updateSceneControls();
-            hideSynthCanvas();
-            
-        }
+        if(name == "SCENE_PLUS")m_bankManager->incrementScene();
+        if(name == "SCENE_MINUS")m_bankManager->decrementScene();
+        if(name == "CREATE_SCENE")m_bankManager->createScene();
+        if(name == "DELETE_SCENE")m_bankManager->deleteScene();
+        if(name == "COPY_SCENE")m_bankManager->copyScene();
+        if(name == "CREATE_ZONE")m_bankManager->createZone();
+        if(name == "COPY_ZONE")m_bankManager->copyZone();
+        if(name == "ZONE_PLUS")m_bankManager->incrementZone();
+        if(name == "ZONE_MINUS")m_bankManager->decrementZone();
+        if(name == "DELETE_ZONE")m_bankManager->deleteZone();
+        if(name == "ST_MINUS")m_bankManager->incCZoneSynthType();
+        if(name == "ST_PLUS")m_bankManager->incCZoneSynthType();
         
-        if(name == "CREATE_SCENE"){
-            
-            currentScene->unTriggerAll();
-            currentScene->deselectAll();
-            
-            ofPtr<scene> t = ofPtr<scene>(new scene(mOsc));
-            checkUniqueId(t);
-            allScenes.insert(getInsertIt(currentScene), t);
-            currentScene = t;
-            sc2TextInput[0]->setTextString(currentScene->getName());
-            updateSceneControls();
-            hideSynthCanvas();
-        }
-        
-        if(name == "DELETE_SCENE"){
-            
-            if(allScenes.size() > 1){
-                cleanUpBanks();
-                ofPtr<scene> t = currentScene;
-                currentScene = selectPrevScene(currentScene);
-                vector <ofPtr<scene> > :: iterator it = find(allScenes.begin(),allScenes.end(), t);
-                allScenes.erase(it);
-                sc2TextInput[0]->setTextString(currentScene->getName());
-                currentZone = currentScene->getFirstTriggerZone();
-                updateSceneControls();
-                hideSynthCanvas();
-                
-            }
-        }
-        
-        if(name == "COPY_SCENE"){
-            
-            currentScene->unTriggerAll();
-            currentScene->deselectAll();
-            
-            ofPtr<scene> t = ofPtr<scene>(new scene(*currentScene));
-            t->newIndex();
-            checkUniqueId(t);
-            string s = t->getName();
-            string s_a = "_" + t->getUid() + "_copy";
-            if(s.length() > 5){
-                if(s.substr(s.length()- 5,5) != "_copy"){
-                    t->setName(s + s_a);
-                }else{
-                    t->setName(s.substr(0,s.length()-16) + s_a);
-                }
-            }else{
-                t->setName(s + s_a);
-            }
-         
-            t->deepCopyTriggerZones();
-            allScenes.insert(getInsertIt(currentScene), t);
-            currentScene = t;
-            
-            currentZone = currentScene->getFirstTriggerZone();
-            sc2TextInput[0]->setTextString(currentScene->getName());
-            updateSceneControls();
-            hideSynthCanvas();
-        }
-        
-        
-        if(name == "CREATE_ZONE"){
-            
-            currentScene->deselectAll();
-            currentZone = currentScene->addTriggerZone(currentZone);
-            updateSceneControls();
-            hideSynthCanvas();
-        }
-        
-        if(name == "COPY_ZONE" && currentZone){
-            
-            currentZone->setIsSelected(false);
-            currentZone = currentScene->copyTriggerZone(currentZone);
-            updateSceneControls();
-            hideSynthCanvas();
-            
-        }
-        
-        
-        
-        if(currentScene->getNumTriggerZones() > 0){
-            
-            if(name == "ZONE_PLUS"){
-                
-                ofPtr<triggerZone> tz = currentScene->getNextTriggerZone(currentZone);
-                currentZone->setIsSelected(false);
-                currentZone = tz;
-                updateSceneControls();
-                hideSynthCanvas();
-                
-                
-            }
-            
-            if(name == "ZONE_MINUS"){
-                
-                ofPtr<triggerZone> tz = currentScene->getPrevTriggerZone(currentZone);
-                currentZone->setIsSelected(false);
-                currentZone = tz;
-                updateSceneControls();
-                hideSynthCanvas();
-                
-            }
-            
-            
-            if(name == "DELETE_ZONE" && currentZone){
-                
-                ofPtr<triggerZone> tz = currentZone;
-                currentZone = currentScene->getNextTriggerZone(currentZone);
-                currentScene->removeTriggerZone(tz);
-                updateSceneControls();
-                hideSynthCanvas();
-                
-            }
-            
-            
-        }
-        
+        hideSynthCanvas();
         
     }
+        
+    if(name == "sphere")m_bankManager->setCZoneShape(0);
+    if(name == "box")m_bankManager->setCZoneShape(1);
     
-    if(currentScene->getNumTriggerZones() > 0 ){
-        
-        if(name == "sphere"){
-            currentZone->setShape(0);
-            updateSceneControls();
-        }
-        
-        if(name == "box"){
-            currentZone->setShape(1);
-            updateSceneControls();
-        }
+   
         
         if(name == "EDIT_SYNTH_PARAMS"){
             
             //make synth panel visible and populate
             if(!isSynthView){
-                populateSynthCanvas();
+                populateSynthCanvas(m_bankManager->getCurrentZone());
                 isSynthView = true;
             }else{
                 isSynthView = false;
@@ -1386,101 +1198,33 @@ void testApp::s2Events(ofxUIEventArgs &e){
             
         }
         
-        if(name == "RADIUS"){
-            ofxUISlider *slider = (ofxUISlider *) e.widget;
-            currentZone->setRadius(slider->getScaledValue());
+        if(name == "RADIUS")m_bankManager->setCZoneRadius(slider->getScaledValue());
+    
+        if(name.substr(0,4) == "T_POS"){
+            ofVec3f p = m_bankManager->getCurrentZone()->getPos();
+            if(name.substr(6) == "X")p.x = slider->getScaledValue();
+            if(name.substr(6) == "Y")p.y = slider->getScaledValue();
+            if(name.substr(6) == "Z")p.z = slider->getScaledValue();
+            m_bankManager->setCZonePosition(p);
+        }
+    
+        if(name.substr(2,3) == "DIM"){
+            ofVec3f bd = m_bankManager->getCurrentZone()->getBoxDims();
+            if(name.substr(0,1) == "X")bd.x = slider->getScaledValue();
+            if(name.substr(0,1) == "Y")bd.y = slider->getScaledValue();
+            if(name.substr(0,1) == "Z")bd.z = slider->getScaledValue();
+            m_bankManager->setCZoneBoxDims(bd);
         }
         
-        if(name == "T_POS_X"){
-            ofxUISlider *slider = (ofxUISlider *) e.widget;
-            currentZone->setPosX(slider->getScaledValue());
-        }
+
         
-        if(name == "T_POS_Y"){
-            ofxUISlider *slider = (ofxUISlider *) e.widget;
-            currentZone->setPosY(slider->getScaledValue());
-        }
-        
-        if(name == "T_POS_Z"){
-            ofxUISlider *slider = (ofxUISlider *) e.widget;
-            currentZone->setPosZ(slider->getScaledValue());
-        }
-        
-        
-        if(name == "X_DIM"){
-            ofxUISlider *slider = (ofxUISlider *) e.widget;
-            currentZone->setBoxDimsX(slider->getScaledValue());
-        }
-        
-        if(name == "Y_DIM"){
-            ofxUISlider *slider = (ofxUISlider *) e.widget;
-            currentZone->setBoxDimsY(slider->getScaledValue());
-        }
-        
-        if(name == "Z_DIM"){
-            ofxUISlider *slider = (ofxUISlider *) e.widget;
-            currentZone->setBoxDimsZ(slider->getScaledValue());
-        }
-        
-        if(name == "ENABLED"){
-            ofxUIToggle *tog = (ofxUIToggle *) e.widget;
-            if(currentZone->getIsAudioLoaded()){
-                currentZone->setIsEnabled(tog->getValue());
-            }else{
-                tog->setValue(false);
-            }
-        }
-        
-        if(name == "LOOP"){
-            ofxUIToggle *tog = (ofxUIToggle *) e.widget;
-            currentZone->setIsLoop(tog->getValue());
-        }
-        
-        if(name == "PLAY_TO_END"){
-            ofxUIToggle *tog = (ofxUIToggle *) e.widget;
-            currentZone->setIsPlayToEnd(tog->getValue());
-        }
-        
-        if(name == "INVERTED"){
-            ofxUIToggle *tog = (ofxUIToggle *) e.widget;
-            currentZone->setIsInverted(tog->getValue());
-        }
-        
-        if(name == "SENSITIVITY"){
-            ofxUISlider *slider = (ofxUISlider *) e.widget;
-            currentZone->setSensitivity(slider->getScaledValue());
-        }
-        
-        if(name == "MIN_REPLAY"){
-            ofxUISlider *slider = (ofxUISlider *) e.widget;
-            currentZone->setMinReplaySecs(slider->getScaledValue());
-        }
-        
-        
-        if(isMouseDown){
+        if(name == "ENABLED")tog->setValue(m_bankManager->setCZoneEnabled(tog->getValue()));
+        if(name == "LOOP")m_bankManager->setCZoneLoop(tog->getValue());
+        if(name == "PLAY_TO_END")m_bankManager->setCZonePlayToEnd(tog->getValue());
+        if(name == "INVERTED")m_bankManager->setCZoneInverted(tog->getValue());
+        if(name == "MIN_REPLAY")m_bankManager->setCZoneMinReplay(slider->getValue());
             
-            //buttons must go in here
-            
-            if(name == "ST_MINUS"){
-                
-                int i = max(0, currentZone->getSynthType() - 1);
-                currentZone->setSynthType(i);
-                updateSceneControls();
-                hideSynthCanvas();
-            }
-            
-            if(name == "ST_PLUS"){
-                
-                int i = min(ST_COUNT - 1, currentZone->getSynthType() + 1);
-                currentZone->setSynthType(i);
-                updateSceneControls();
-                hideSynthCanvas();
-                
-            }
-        }
-        
-        
-    }
+        updateSceneControls(m_bankManager->getCurrentScene(), m_bankManager->getCurrentZone());
     
     
 }
@@ -1501,94 +1245,25 @@ void testApp::s3Events(ofxUIEventArgs &e){
         }else{
             t->setTriggerType(OFX_UI_TEXTINPUT_ON_FOCUS);
             isTextFocus = false;
-            
-            if(name == "B_NAME"){
-                currentBank->name = t->getTextString();
-            }
-            
-            
-            
+            if(name == "B_NAME")m_bankManager->getCurrentBank()->name = t->getTextString();
         }
-        
-        
     }
     
     if(isMouseDown){
     
-        if(name == "BANK_MINUS"){
-            
-            currentBank = selectPrevBank(currentBank);
-              updateBankElements(m_bankManager->getCurrentBank(), m_bankManager->getCurrentScene());;
+        if(name == "BANK_MINUS")m_bankManager->decrementBank();
+        if(name == "BANK_PLUS")m_bankManager->incrementBank();
+        if(name == "CREATE_BANK")m_bankManager->createBank();
+        if(name == "DELETE_BANK")m_bankManager->deleteBank();
+        if(name == "B_SCENE_PLUS")m_bankManager->incrementScene();
+        if(name == "B_SCENE_MINUS")m_bankManager->decrementScene();
+        if(name == "ADD_SCENE_TO_BANK")m_bankManager->bankAddScene();
+        if(name == "B_ITEM_MINUS")m_bankManager->bankDecrementScene();
+        if(name == "B_ITEM_PLUS")m_bankManager->bankIncrementScene();
+        if(name == "REMOVE_ITEM")m_bankManager->bankRemoveScene();
         
-        }
-        
-        if(name == "BANK_PLUS"){
-            
-            currentBank = selectNextBank(currentBank);
-              updateBankElements(m_bankManager->getCurrentBank(), m_bankManager->getCurrentScene());;
-        }
-        
-        if(name == "CREATE_BANK"){
-            ofPtr<bank> b = ofPtr<bank>(new bank());
-            allBanks.insert(getInsertIt(currentBank), b);
-            currentBank = b;
-              updateBankElements(m_bankManager->getCurrentBank(), m_bankManager->getCurrentScene());;
-        }
-        
-        if(name == "DELETE_BANK"){
-        
-            if(allBanks.size() > 1){
-                ofPtr<bank> db = currentBank;
-                currentBank = selectPrevBank(currentBank);
-                allBanks.erase(find(allBanks.begin(), allBanks.end(), db));
-                  updateBankElements(m_bankManager->getCurrentBank(), m_bankManager->getCurrentScene());;
-            }
-        }
-        
-        if(name == "B_SCENE_PLUS"){
-            
-            currentScene->unTriggerAll();
-            currentScene = selectNextScene(currentScene);
-              updateBankElements(m_bankManager->getCurrentBank(), m_bankManager->getCurrentScene());;
-        
-        }
-        
-        if(name == "B_SCENE_MINUS"){
-            
-            currentScene->unTriggerAll();
-            currentScene = selectPrevScene(currentScene);
-              updateBankElements(m_bankManager->getCurrentBank(), m_bankManager->getCurrentScene());;
-
-        }
-        
-        if(name == "ADD_SCENE_TO_BANK"){
-        
-            currentBank->insertScene(currentScene);
-              updateBankElements(m_bankManager->getCurrentBank(), m_bankManager->getCurrentScene());;
-        }
-        
-        if(name == "B_ITEM_MINUS"){
-        
-            currentBank->prevScene();
-              updateBankElements(m_bankManager->getCurrentBank(), m_bankManager->getCurrentScene());;
-            
-        }
-        
-        if(name == "B_ITEM_PLUS"){
-            
-            currentBank->nextScene();
-              updateBankElements(m_bankManager->getCurrentBank(), m_bankManager->getCurrentScene());;
-        
-        }
-        
-        if(name == "REMOVE_ITEM"){
-        
-            currentBank->removeScene();
-              updateBankElements(m_bankManager->getCurrentBank(), m_bankManager->getCurrentScene());;
-            
-        }
-        
-        
+        updateBankElements(m_bankManager->getCurrentBank(), m_bankManager->getCurrentScene());;
+              
     }
     
 }
@@ -1607,7 +1282,7 @@ void testApp::synthEvents(ofxUIEventArgs &e){
     string name = e.widget->getName();
     int id = e.widget->getID();
     
-    synthParam sp = currentZone->getSynthParam(id);
+    synthParam sp = m_bankManager->getCurrentZone()->getSynthParam(id);
     
     if(name == "abs_val"){
         ofxUISlider *slider = (ofxUISlider *) e.widget;
@@ -1637,7 +1312,7 @@ void testApp::synthEvents(ofxUIEventArgs &e){
         }
     }
     
-    currentZone->setSynthParam(id, sp);
+    m_bankManager->setCZoneSynthParam(id, sp);
     
 }
 
@@ -1655,18 +1330,20 @@ void testApp::fEvents(ofxUIEventArgs &e){
 
 //-----------------------------------------------------
 
-void testApp::updateSceneControls(ofPtr<triggerZone> zn){
+void testApp::updateSceneControls(ofPtr<scene> s, ofPtr<triggerZone> zn){
     
-    fInSlid->setValue(currentScene->getFadeIn());
-    fOutSlid->setValue(currentScene->getFadeOut());
+    sc2TextInput[0]->setTextString(s->getName());
     
-    if(currentScene->getNumTriggerZones() > 0){
+    fInSlid->setValue(s->getFadeIn());
+    fOutSlid->setValue(s->getFadeOut());
+    
+    if(s->getNumTriggerZones() > 0){
         
         if(displayMode == DT_DM_3D){
             
             zoneCanvases[0]->setVisible(true);
             
-            if(currentZone->getShape() == 0){
+            if(zn->getShape() == 0){
                 zoneCanvases[1]->setVisible(true);
                 zoneCanvases[2]->setVisible(false);
             }else{
@@ -1675,7 +1352,7 @@ void testApp::updateSceneControls(ofPtr<triggerZone> zn){
             }
         }
         
-        updateTZGuiElements();
+        updateTZGuiElements(zn);
         
     }else{
         for(int i = 0; i < 3; i++)zoneCanvases[i]->setVisible(false);
@@ -1805,64 +1482,13 @@ void testApp::updateBankElements(ofPtr<bank> b, ofPtr<scene> s){
 
 void testApp::perfChange(string name){
 
+    if(name == "BANK_MINUS")m_bankManager->perfBankDecrement();
+    if(name == "BANK_PLUS")m_bankManager->perfBankIncrement();
+    if(name == "B_ITEM_MINUS")m_bankManager->perfBankDecrement();
+    if(name == "B_ITEM_PLUS")m_bankManager->perfBankIncrement();
     
-    if(name == "BANK_MINUS"){
-        
-        ofPtr<bank> b = selectPrevBank(currentBank);
-        
-        if(currentBank != b){
-            currentBank = b;
-            currentBank->firstScene();
-            if(currentBank->scenes.size() > 0){
-                currentScene = currentBank->selScene;
-                currentScene->unTriggerAll();
-                mOsc->newScene(currentScene->getFadeIn(), currentScene->getFadeOut());
-            }
-              updateBankElements(m_bankManager->getCurrentBank(), m_bankManager->getCurrentScene());;
-        }
-        
-    }
+    updateBankElements(m_bankManager->getCurrentBank(), m_bankManager->getCurrentScene());
     
-    if(name == "BANK_PLUS"){
-        
-        ofPtr<bank> b = selectNextBank(currentBank);
-        
-        if(currentBank != b){
-            currentBank = b;
-            currentBank->firstScene();
-            if(currentBank->scenes.size() > 0){
-                currentScene = currentBank->selScene;
-                currentScene->unTriggerAll();
-               mOsc->newScene(currentScene->getFadeIn(), currentScene->getFadeOut());
-            }
-              updateBankElements(m_bankManager->getCurrentBank(), m_bankManager->getCurrentScene());;
-        }
-    }
-    
-    if(name == "B_ITEM_MINUS"){
-        
-        if(currentBank->scenes.size() > 0){
-            currentBank->prevScene();
-            currentScene = currentBank->selScene;
-            currentScene->unTriggerAll();
-           mOsc->newScene(currentScene->getFadeIn(), currentScene->getFadeOut());
-        }
-          updateBankElements(m_bankManager->getCurrentBank(), m_bankManager->getCurrentScene());;
-    }
-    
-    if(name == "B_ITEM_PLUS"){
-        
-        
-        if(currentBank->scenes.size() > 0){
-            currentBank->nextScene();
-            currentScene = currentBank->selScene;
-            currentScene->unTriggerAll();
-            mOsc->newScene(currentScene->getFadeIn(), currentScene->getFadeOut());
-        }
-          updateBankElements(m_bankManager->getCurrentBank(), m_bankManager->getCurrentScene());;
-        
-    }
-
 }
 
 
@@ -1925,10 +1551,8 @@ void testApp::draw(){
         }
         
         
-        if(isViewCScene){
-            
-            currentScene->draw(cm.getPosition());
-        }
+        if(isViewCScene)m_bankManager->getCurrentScene()->draw(cm.getPosition());
+        
         
         cm.end();
         
@@ -2034,7 +1658,7 @@ void testApp::keyPressed(int key){
             if(!isSettingsGui)
                 for(int i = 0; i < 3; i++)zoneCanvases[i]->setVisible(false);
             else
-                if(settingsTabBar->getActiveCanvas()->getName() == "Scene Setup")updateSceneControls();
+                if(settingsTabBar->getActiveCanvas()->getName() == "Scene Setup")updateSceneControls(m_bankManager->getCurrentScene(), m_bankManager->getCurrentZone());
             break;
             
         case OF_KEY_RETURN:

@@ -39,13 +39,42 @@ class bankManager{
     void saveSettings(ofxXmlSettings XML);
     void loadSettings(ofxXmlSettings XML);
     
+    void update(ofVec3f com, float userHeight,vector<ofVec3f> & pc);
+    void unTriggerAll();
+    void resetForPerformance();
+    void resetScenes();
+    
     //selection tools
+    
+    void incrementBank();
+    void decrementBank();
+    void createBank();
+    void deleteBank();
+    
+    void bankAddScene();
+    void bankRemoveScene();
+    void bankIncrementScene();
+    void bankDecrementScene();
+    
+    void perfBankIncrement();
+    void perfBankDecrement();
+    void perfSceneIncrement();
+    void perfSceneDecrement();
+    
+    
+    void incrementScene();
+    void decrementScene();
+    void createScene();
+    void deleteScene();
+    void copyScene();
+    
     void selectFirstZone();
     
-    ofPtr<scene> selectNextScene(ofPtr<scene> sn);
-    ofPtr<scene> selectPrevScene(ofPtr<scene> sn);
-    ofPtr<bank> selectNextBank(ofPtr<bank> bk);
-    ofPtr<bank> selectPrevBank(ofPtr<bank> bk);
+    void incrementZone();
+    void decrementZone();
+    void createZone();
+    void copyZone();
+    void deleteZone();
     
     void deselectCurrentZone();
     
@@ -60,6 +89,29 @@ class bankManager{
     const ofPtr<triggerZone> getCurrentZone();
     const ofPtr<scene> getCurrentScene();
     const ofPtr<bank> getCurrentBank();
+    
+    void setCSceneName(string s);
+    void setCZoneName(string s);
+    void setCZoneSoundFile(string s);
+    
+    void incCZoneSynthType();
+    void decCZoneSynthType();
+    
+    void setCZoneShape(int i);
+    void setCZoneRadius(float f);
+    void setCZonePosition(ofVec3f p);
+    void setCZoneBoxDims(ofVec3f bd);
+    bool setCZoneEnabled(bool b);
+    void setCZoneLoop(bool b);
+    void setCZonePlayToEnd(bool b);
+    void setCZoneInverted(bool b);
+    void setCZoneMinReplay(float f);
+    
+    void setCZoneSynthParam(int id, synthParam sp);
+    
+    void setCSceneFadeIn(float f);
+    void setCSceneFadeOut(float f);
+    
     
     private:
     
@@ -76,6 +128,12 @@ class bankManager{
     void loadScene(ofxXmlSettings XML, ofPtr<scene> sn);
     void loadZone(ofxXmlSettings XML, ofPtr<triggerZone> zn);
     void loadSynth(ofxXmlSettings XML, ofPtr<triggerZone> zn);
+    
+    //selection tools
+    ofPtr<scene> selectNextScene(ofPtr<scene> sn);
+    ofPtr<scene> selectPrevScene(ofPtr<scene> sn);
+    ofPtr<bank> selectNextBank(ofPtr<bank> bk);
+    ofPtr<bank> selectPrevBank(ofPtr<bank> bk);
     
     
     ofPtr<oscManager>  pOsc;

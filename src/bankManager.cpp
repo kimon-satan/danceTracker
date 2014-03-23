@@ -223,26 +223,12 @@ void bankManager::loadScenes(ofxXmlSettings XML){
                 XML.popTag();
             }
             
-            
-            
-            
         }
-        
-        //TODO GUI methods back into testApp
         
         currentScene = (*allScenes.begin());
-        //sc2TextInput[0]->setTextString(currentScene->getName());
-        //there will probably be more to update here later
         
-        if(currentScene->getNumTriggerZones() > 0){
-            currentZone = currentScene->getFirstTriggerZone();
-            //updateTZGuiElements();
-        }else{
-            //potentially refactor into a disableZoneElements
-            //sc2TextInput[1]->setTextString("none");
-            //sc2TextInput[2]->setTextString("none");
-        }
-        
+        if(currentScene->getNumTriggerZones() > 0)currentZone = currentScene->getFirstTriggerZone();
+             
         //scene settings tag
         XML.popTag();
     }
@@ -369,11 +355,9 @@ void bankManager::loadBanks(ofxXmlSettings XML){
             
         }
         
-        //TODO sort out updateBankElements in GUI
         
         if(allBanks.size() > 0)currentBank = allBanks[0];
-        
-        //updateBankElements();
+
         
         //Bank Settings tag
         XML.popTag();
@@ -387,7 +371,6 @@ void bankManager::loadBanks(ofxXmlSettings XML){
         ofPtr<bank> tb = ofPtr<bank>(new bank());
         allBanks.push_back(tb);
         currentBank = tb;
-       // updateBankElements();
         
     }
 
@@ -395,6 +378,239 @@ void bankManager::loadBanks(ofxXmlSettings XML){
     
 }
 
+void bankManager::update(ofVec3f com, float userHeight, vector<ofVec3f> & pc){
+    currentScene->update(com, userHeight, pc);
+}
+
+
+void bankManager::incrementBank(){currentBank = selectNextBank(currentBank);}
+void bankManager::decrementBank(){currentBank = selectPrevBank(currentBank);}
+
+void bankManager::perfBankIncrement(){
+    
+    ofPtr<bank> b = selectNextBank(currentBank);
+    
+    if(currentBank != b){
+        currentBank = b;
+        currentBank->firstScene();
+        if(currentBank->scenes.size() > 0){
+            currentScene = currentBank->selScene;
+            currentScene->unTriggerAll();
+            pOsc->newScene(currentScene->getFadeIn(), currentScene->getFadeOut());
+        }
+    }
+
+}
+
+void bankManager::perfBankDecrement(){
+    
+    ofPtr<bank> b = selectPrevBank(currentBank);
+    
+    if(currentBank != b){
+        currentBank = b;
+        currentBank->firstScene();
+        if(currentBank->scenes.size() > 0){
+            currentScene = currentBank->selScene;
+            currentScene->unTriggerAll();
+            pOsc->newScene(currentScene->getFadeIn(), currentScene->getFadeOut());
+        }
+    }
+
+    
+}
+
+void bankManager::perfSceneIncrement(){
+    
+    if(currentBank->scenes.size() > 0){
+        currentBank->nextScene();
+        currentScene = currentBank->selScene;
+        currentScene->unTriggerAll();
+        pOsc->newScene(currentScene->getFadeIn(), currentScene->getFadeOut());
+    }
+}
+
+void bankManager::perfSceneDecrement(){
+    if(currentBank->scenes.size() > 0){
+        currentBank->prevScene();
+        currentScene = currentBank->selScene;
+        currentScene->unTriggerAll();
+        pOsc->newScene(currentScene->getFadeIn(), currentScene->getFadeOut());
+    }
+
+}
+
+
+void bankManager::createBank(){
+    ofPtr<bank> b = ofPtr<bank>(new bank());
+    allBanks.insert(getInsertIt(currentBank), b);
+    currentBank = b;
+}
+
+void bankManager::deleteBank(){
+    if(allBanks.size() > 1){
+        ofPtr<bank> db = currentBank;
+        currentBank = selectPrevBank(currentBank);
+        allBanks.erase(find(allBanks.begin(), allBanks.end(), db));
+    }
+}
+
+
+void bankManager::bankAddScene(){
+    currentBank->insertScene(currentScene);
+}
+
+void bankManager::bankRemoveScene(){
+     currentBank->removeScene();
+}
+
+void bankManager::bankIncrementScene(){
+    currentBank->nextScene();
+}
+
+void bankManager::bankDecrementScene(){
+    currentBank->prevScene();
+}
+
+void bankManager::incrementScene(){
+    
+    currentScene->unTriggerAll();
+    currentScene->deselectAll();
+    
+    currentScene = selectNextScene(currentScene);
+    currentZone = currentScene->getFirstTriggerZone();
+    
+}
+
+void bankManager::decrementScene(){
+    
+    currentScene->unTriggerAll();
+    currentScene->deselectAll();
+    
+    currentScene = selectPrevScene(currentScene);
+    currentZone = currentScene->getFirstTriggerZone();
+}
+
+void bankManager::createScene(){
+    
+    currentScene->unTriggerAll();
+    currentScene->deselectAll();
+    
+    ofPtr<scene> t = ofPtr<scene>(new scene(pOsc));
+    checkUniqueId(t);
+    allScenes.insert(getInsertIt(currentScene), t);
+    currentScene = t;
+
+}
+
+void bankManager::deleteScene(){
+    
+    if(allScenes.size() < 1)return;
+    
+    ofPtr<scene> t = currentScene;
+    currentScene = selectPrevScene(currentScene);
+    vector <ofPtr<scene> > :: iterator it = find(allScenes.begin(),allScenes.end(), t);
+    allScenes.erase(it);
+    currentZone = currentScene->getFirstTriggerZone();
+
+}
+
+void bankManager::copyScene(){
+
+    currentScene->unTriggerAll();
+    currentScene->deselectAll();
+    
+    ofPtr<scene> t = ofPtr<scene>(new scene(*currentScene));
+    t->newIndex();
+    checkUniqueId(t);
+    string s = t->getName();
+    string s_a = "_" + t->getUid() + "_copy";
+    if(s.length() > 5){
+        if(s.substr(s.length()- 5,5) != "_copy"){
+            t->setName(s + s_a);
+        }else{
+            t->setName(s.substr(0,s.length()-16) + s_a);
+        }
+    }else{
+        t->setName(s + s_a);
+    }
+    
+    t->deepCopyTriggerZones();
+    allScenes.insert(getInsertIt(currentScene), t);
+    currentScene = t;
+    
+    currentZone = currentScene->getFirstTriggerZone();
+
+}
+
+void bankManager::incrementZone(){
+    if(!currentZone)return;
+    ofPtr<triggerZone> tz = currentScene->getNextTriggerZone(currentZone);
+    currentZone->setIsSelected(false);
+    currentZone = tz;
+}
+
+void bankManager::decrementZone(){
+    if(!currentZone)return;
+    ofPtr<triggerZone> tz = currentScene->getPrevTriggerZone(currentZone);
+    currentZone->setIsSelected(false);
+    currentZone = tz;
+}
+
+void bankManager::createZone(){
+    currentScene->deselectAll();
+    currentZone = currentScene->addTriggerZone(currentZone);
+}
+
+void bankManager::copyZone(){
+    if(!currentZone)return;
+    currentZone->setIsSelected(false);
+    currentZone = currentScene->copyTriggerZone(currentZone);
+}
+
+void bankManager::deleteZone(){
+    if(!currentZone)return;
+    ofPtr<triggerZone> tz = currentZone;
+    currentZone = currentScene->getNextTriggerZone(currentZone);
+    currentScene->removeTriggerZone(tz);
+}
+
+
+void bankManager::unTriggerAll(){
+    currentScene->unTriggerAll();
+}
+
+void bankManager::resetForPerformance(){
+    
+    resetScenes();
+    
+    currentBank = allBanks[0];
+    currentBank->firstScene();
+    currentZone.reset();
+    
+    if(currentBank->scenes.size() > 0){
+        currentScene = currentBank->selScene;
+    }else{
+        currentScene = allScenes[0];
+    }
+    
+    pOsc->newScene(currentScene->getFadeIn(), currentScene->getFadeOut());
+
+}
+
+
+void bankManager::resetScenes(){
+
+    vector<ofPtr<scene> >:: iterator it;
+    
+    for(it = allScenes.begin(); it != allScenes.end(); it++){
+        (*it)->unTriggerAll();
+        (*it)->deselectAll();
+    }
+    
+    currentScene = allScenes[0];
+    currentZone = currentScene->getFirstTriggerZone();
+    
+}
 
 void bankManager::checkUniqueId(ofPtr<scene> sn){
     
@@ -499,6 +715,96 @@ const ofPtr<bank> bankManager::getCurrentBank(){return currentBank;}
 
 void bankManager::setOsc(ofPtr<oscManager> t){
     pOsc = t;
+}
+
+
+void bankManager::setCSceneName(string s){
+    currentScene->setName(s);
+}
+
+void bankManager::setCZoneName(string s){
+    if(currentZone)currentZone->setName(s);
+}
+
+void bankManager::setCZoneSoundFile(string s){
+    
+    if(!currentZone)return;
+    
+    currentZone->setSoundFile(s);
+    if(currentZone->getIsAudioLoaded()){
+        currentZone->setIsEnabled(currentZone->getIsEnabled());
+    }else{
+        currentZone->setIsEnabled(false);
+    }
+
+
+}
+
+void bankManager::setCZoneShape(int i){currentZone->setShape(i);}
+void bankManager::setCZoneRadius(float f){currentZone->setRadius(f);}
+
+void bankManager::setCZonePosition(ofVec3f p){
+    currentZone->setPosX(p.x);
+    currentZone->setPosY(p.y);
+    currentZone->setPosZ(p.z);
+}
+void bankManager::setCZoneBoxDims(ofVec3f bd){
+    currentZone->setBoxDimsX(bd.x);
+    currentZone->setBoxDimsX(bd.y);
+    currentZone->setBoxDimsX(bd.z);
+}
+
+bool bankManager::setCZoneEnabled(bool b){
+    //returns false when can't enable bacuase of audio
+    if(currentZone->getIsAudioLoaded()){
+        currentZone->setIsEnabled(b);
+        return b;
+    }else{
+        return false;
+    }
+    
+}
+
+void bankManager::setCZoneLoop(bool b){
+    currentZone->setIsLoop(b);
+}
+
+void bankManager::setCZonePlayToEnd(bool b){
+    currentZone->setIsPlayToEnd(b);
+}
+
+void bankManager::setCZoneInverted(bool b){
+    currentZone->setIsInverted(b);
+}
+
+void bankManager::setCZoneMinReplay(float f){
+    currentZone->setMinReplaySecs(f);
+}
+
+void bankManager::setCZoneSynthParam(int id, synthParam sp){
+    currentZone->setSynthParam(id, sp);
+}
+
+void bankManager::setCSceneFadeIn(float f){
+    currentScene->setFadeIn(f);
+}
+
+void bankManager::setCSceneFadeOut(float f){
+    currentScene->setFadeOut(f);
+}
+
+
+
+void bankManager::incCZoneSynthType(){
+    int i = max(0, currentZone->getSynthType() - 1);
+    currentZone->setSynthType(i);
+
+}
+
+void bankManager::decCZoneSynthType(){
+    int i = min(ST_COUNT - 1, currentZone->getSynthType() + 1);
+    currentZone->setSynthType(i);
+
 }
 
 

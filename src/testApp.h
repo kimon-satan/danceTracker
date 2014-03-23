@@ -93,10 +93,10 @@ public:
     void drawUserPointCloud();
     void drawFloor();
     
-    void updateSceneControls(ofPtr<triggerZone> zn);
-    void updateTZGuiElements(ofPtr<triggerZone> zn);
     void updateBankElements(ofPtr<bank> b, ofPtr<scene> s);
-    
+    void updateSceneControls(ofPtr<scene> s, ofPtr<triggerZone> zn);
+    void updateTZGuiElements(ofPtr<triggerZone> zn);
+   
     void populateSynthCanvas(ofPtr<triggerZone> zn);
     void hideSynthCanvas();
     
