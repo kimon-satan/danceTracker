@@ -312,9 +312,9 @@ void testApp::setupZonePanels(){
     for(int i = 0; i < 3; i ++){
         
         if(i == 0)
-            zoneCanvases[i] = new ofxUICanvas(ofGetWidth()/2 - 400, ofGetHeight() - 200, 600, 200);
+            zoneCanvases[i] = new ofxUICanvas(ofGetWidth()/2 - 400, ofGetHeight() - 230, 600, 230);
         else
-            zoneCanvases[i] = new ofxUICanvas(ofGetWidth()/2 + 210, ofGetHeight() - 200, 300, 200);
+            zoneCanvases[i] = new ofxUICanvas(ofGetWidth()/2 + 210, ofGetHeight() - 230, 300, 230);
         
         zoneCanvases[i]->setColorFill(ofxUIColor(200));
         zoneCanvases[i]->setColorFillHighlight(ofxUIColor(255));
@@ -363,11 +363,15 @@ void testApp::setupZonePanels(){
     
     loopTog = new ofxUIToggle("LOOP", true, 20,20,0,0, OFX_UI_FONT_SMALL);
     playToEndTog = new ofxUIToggle("PLAY_TO_END", false, 20,20,0,0, OFX_UI_FONT_SMALL);
-    invertedTog = new ofxUIToggle("INVERTED", false, 20,20,0,0, OFX_UI_FONT_SMALL);
+    occInvTog = new ofxUIToggle("OCC_INVERT", false, 20,20,0,0, OFX_UI_FONT_SMALL);
+    movEnaTog = new ofxUIToggle("MOV_ENABLED", false, 20,20,0,0, OFX_UI_FONT_SMALL);
+    movInvTog = new ofxUIToggle("MOV_INVERT", false, 20,20,0,0, OFX_UI_FONT_SMALL);
     
     zoneCanvases[0]->addWidgetDown(loopTog);
     zoneCanvases[0]->addWidgetRight(playToEndTog);
-    zoneCanvases[0]->addWidgetRight(invertedTog);
+    zoneCanvases[0]->addWidgetRight(occInvTog);
+    zoneCanvases[0]->addWidgetRight(movEnaTog);
+    zoneCanvases[0]->addWidgetRight(movInvTog);
     
     // a bit crap
     //sensSlider = new ofxUISlider("SENSITIVITY", 0.75, 1.0, 1.0, slw, 10);
@@ -375,7 +379,7 @@ void testApp::setupZonePanels(){
     
     repSlider = new ofxUISlider("MIN_REPLAY", 0, 5.0, 0.05, slw, 10);
     
-    zoneCanvases[0]->addWidgetRight(repSlider);
+    zoneCanvases[0]->addWidgetDown(repSlider);
     
     zoneCanvases[0]->addSpacer();
     
@@ -539,6 +543,8 @@ void testApp::updateMainSettingsGui(){
     sc1Sliders[5]->setValue(m_kinectManager.getMaxBlob());
     sc1Sliders[6]->setValue(m_kinectManager.getFloorY());
     sc1Sliders[7]->setValue(m_kinectManager.getDancerHeight());
+    sc1Sliders[8]->setValue(m_kinectManager.getMovThresh());
+    sc1Sliders[9]->setValue(m_kinectManager.getMovBuff());
     
 }
 
@@ -838,7 +844,10 @@ void testApp::s2Events(ofxUIEventArgs &e){
     if(name == "ENABLED")tog->setValue(m_bankManager->setCZoneEnabled(tog->getValue()));
     if(name == "LOOP")m_bankManager->setCZoneLoop(tog->getValue());
     if(name == "PLAY_TO_END")m_bankManager->setCZonePlayToEnd(tog->getValue());
-    if(name == "INVERTED")m_bankManager->setCZoneInverted(tog->getValue());
+    if(name == "OCC_INVERT")m_bankManager->setCZoneOccInvert(tog->getValue());
+    if(name == "MOV_ENABLED")m_bankManager->setCZoneMovEnabled(tog->getValue());
+    if(name == "MOV_INVERT")m_bankManager->setCZoneMovInvert(tog->getValue());
+    if(name == "OCC_INVERT")m_bankManager->setCZoneOccInvert(tog->getValue());
     if(name == "MIN_REPLAY")m_bankManager->setCZoneMinReplay(slider->getScaledValue());
     if(name == "RADIUS")m_bankManager->setCZoneRadius(slider->getScaledValue());
     
@@ -1041,7 +1050,7 @@ void testApp::updateTZGuiElements(ofPtr<triggerZone> zn){
     eblTog->setValue(zn->getIsEnabled());
     loopTog->setValue(zn->getIsLoop());
     playToEndTog->setValue(zn->getIsPlayToEnd());
-    invertedTog->setValue(zn->getIsInverted());
+    occInvTog->setValue(zn->getIsOccInvert());
     
     xDimSlid->setValue(zn->getBoxDims().x);
     yDimSlid->setValue(zn->getBoxDims().y);

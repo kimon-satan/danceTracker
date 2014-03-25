@@ -93,8 +93,14 @@ public:
     synthParam getSynthParam(int i);
     void setSynthParam(int i, synthParam p);
     
-    bool getIsInverted();
-    void setIsInverted(bool b);
+    bool getIsOccInvert();
+    void setIsOccInvert(bool b);
+    
+    bool getIsMovEnabled();
+    void setIsMovEnabled(bool b);
+    
+    bool getIsMovInvert();
+    void setIsMovInvert(bool b);
     
     void newIndex();
     string getUid();
@@ -122,7 +128,7 @@ private:
     bool isOccupied, isEnabled, isSelected, isSound;
     
     bool isLoop, isPlayToEnd, isOccInvert, isMovEnabled, isMovInvert, isMoving;
-    int playCount, silentCount;
+    int  silentCount;
     
     ofPtr<oscManager> mOsc;
     

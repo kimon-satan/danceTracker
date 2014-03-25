@@ -124,7 +124,7 @@ public:
     ofxUISlider * sensSlider, * repSlider;
     ofxUISlider * radSlid, * tPosX, * tPosY, * tPosZ;
     ofxUISlider * xDimSlid, * yDimSlid, * zDimSlid;
-    ofxUIToggle * eblTog, *loopTog, *playToEndTog, *dispSynthTog, *invertedTog;
+    ofxUIToggle * eblTog, *loopTog, *playToEndTog, *dispSynthTog, *occInvTog, *movEnaTog, *movInvTog;
     ofxUILabel * synthTypeDisp;
     
     

@@ -25,7 +25,6 @@ triggerZone::triggerZone(ofPtr<oscManager> o) : mOsc(o){
     isSelected = false;
     isSound = false;
     
-    playCount = 0;
     silentCount = 0;
     
     isLoop = true;
@@ -508,13 +507,27 @@ void triggerZone::setSynthType(int i){
 synthParam triggerZone::getSynthParam(int i){return synthParams[i];}
 void triggerZone::setSynthParam(int i, synthParam p){synthParams[i] = p;}
 
-bool triggerZone::getIsInverted(){return isOccInvert;}
-void triggerZone::setIsInverted(bool b){
+bool triggerZone::getIsOccInvert(){return isOccInvert;}
+void triggerZone::setIsOccInvert(bool b){
     
     isOccInvert = b;
-    playCount = 0;
-    silentCount = 0;
+    evaluate();
+}
+
+
+
+bool triggerZone::getIsMovInvert(){return isMovInvert;}
+void triggerZone::setIsMovInvert(bool b){
     
+    isMovInvert = b;
+    evaluate();
+}
+
+
+bool triggerZone::getIsMovEnabled(){return isMovEnabled;}
+void triggerZone::setIsMovEnabled(bool b){
+    
+    isMovEnabled = b;
     evaluate();
 }
 

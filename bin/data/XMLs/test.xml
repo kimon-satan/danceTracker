@@ -29,10 +29,12 @@
                 <RADIUS>0.250000000</RADIUS>
                 <SOUNDFILE>origamiNew/foldTheRight.wav</SOUNDFILE>
                 <IS_LOOP>1</IS_LOOP>
-                <IS_PLAY_TO_END>0</IS_PLAY_TO_END>
+                <IS_PLAY_TO_END>1</IS_PLAY_TO_END>
                 <INVERTED>0</INVERTED>
+                <MOV_ENABLED>1</MOV_ENABLED>
+                <MOV_INVERTED>1</MOV_INVERTED>
                 <ENABLED>1</ENABLED>
-                <MIN_REPLAY>1.020942450</MIN_REPLAY>
+                <MIN_REPLAY>2.722513199</MIN_REPLAY>
                 <SYNTH_TYPE>0</SYNTH_TYPE>
                 <pan>
                     <ABS_VAL>0.000000000</ABS_VAL>

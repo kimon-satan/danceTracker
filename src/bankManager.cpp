@@ -117,7 +117,9 @@ void bankManager::saveZone(ofxXmlSettings & XML, ofPtr<triggerZone> z){
     XML.addValue("SOUNDFILE", z->getSoundFileName());
     XML.addValue("IS_LOOP", z->getIsLoop());
     XML.addValue("IS_PLAY_TO_END", z->getIsPlayToEnd());
-    XML.addValue("INVERTED", z->getIsInverted());
+    XML.addValue("INVERTED", z->getIsOccInvert()); //left as is for compatability
+    XML.addValue("MOV_ENABLED", z->getIsMovEnabled());
+    XML.addValue("MOV_INVERTED", z->getIsMovInvert());
     XML.addValue("ENABLED", z->getIsEnabled());
     //XML.addValue("SENSITIVITY", z->getSensitivity());
     XML.addValue("MIN_REPLAY", z->getMinReplaySecs());
@@ -282,7 +284,9 @@ void bankManager::loadZone(ofxXmlSettings & XML, ofPtr<triggerZone> z){
     z->setRadius(XML.getValue("RADIUS",1.0));
     z->setSoundFile(XML.getValue("SOUNDFILE", ""));
     z->setIsPlayToEnd(XML.getValue("IS_PLAY_TO_END", false));
-    z->setIsInverted(XML.getValue("INVERTED", false));
+    z->setIsOccInvert(XML.getValue("INVERTED", false));
+    z->setIsMovEnabled(XML.getValue("MOV_ENABLED", false));
+    z->setIsMovInvert(XML.getValue("MOV_INVERTED", false));
     z->setIsLoop(XML.getValue("IS_LOOP", true));
     z->setIsEnabled(XML.getValue("ENABLED", false));
     //z->setSensitivity(XML.getValue("SENSITIVITY", 1.0));
@@ -775,8 +779,16 @@ void bankManager::setCZonePlayToEnd(bool b){
     currentZone->setIsPlayToEnd(b);
 }
 
-void bankManager::setCZoneInverted(bool b){
-    currentZone->setIsInverted(b);
+void bankManager::setCZoneOccInvert(bool b){
+    currentZone->setIsOccInvert(b);
+}
+
+void bankManager::setCZoneMovInvert(bool b){
+    currentZone->setIsMovInvert(b);
+}
+
+void bankManager::setCZoneMovEnabled(bool b){
+    currentZone->setIsMovEnabled(b);
 }
 
 void bankManager::setCZoneMinReplay(float f){

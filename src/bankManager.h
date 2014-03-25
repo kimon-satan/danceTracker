@@ -104,7 +104,9 @@ class bankManager{
     bool setCZoneEnabled(bool b);
     void setCZoneLoop(bool b);
     void setCZonePlayToEnd(bool b);
-    void setCZoneInverted(bool b);
+    void setCZoneOccInvert(bool b);
+    void setCZoneMovInvert(bool b);
+    void setCZoneMovEnabled(bool b);
     void setCZoneMinReplay(float f);
     
     void setCZoneSynthParam(int id, synthParam sp);
