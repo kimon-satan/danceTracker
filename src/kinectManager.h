@@ -14,30 +14,11 @@
 #include "ofxOpenCv.h"
 #include "ofxXmlSettings.h"
 
+#include "dancer.h"
+
 #define USE_KINECT true
 #define OFX_KINECT_GRAVITY 9.80665
 
-class dancer {
-
-    public:
-    
-    dancer(){
-        
-        isMoving = false;
-        movAmt = 0;
-        stillCount = 0;
-        movCount = 0;
-        com.set(0,0,0);
-        
-    };
-    
-    ofVec3f com;
-    bool isMoving;
-    int movAmt;
-    int stillCount, movCount;
-    vector<ofVec3f> pixels;
-
-};
 
 
 class findOutliers{

@@ -31,6 +31,7 @@ triggerZone::triggerZone(ofPtr<oscManager> o) : mOsc(o){
     isLoop = true;
     isPlayToEnd = false;
     isInverted = false;
+    isMovZone = true;
     
     sensitivity = 1.0;
     minReplaySecs = 0.0;
@@ -107,11 +108,11 @@ void triggerZone::draw(ofVec3f camPos){
 }
 
 
-void triggerZone::checkPoints(vector<ofVec3f> & pc){
+void triggerZone::checkPoints(ofPtr<dancer> d){
     
     
-    numUp = pc.size();
-    int targetAmt = max(1, (int)(pc.size() * (1-sensitivity)));
+    numUp = d->pixels.size();
+    int targetAmt = max(1, (int)(d->pixels.size() * (1-sensitivity)));
     inTotal = 0;
     
     vector<ofVec3f>::iterator it;
@@ -122,7 +123,7 @@ void triggerZone::checkPoints(vector<ofVec3f> & pc){
     
     if(shape == TZ_SPHERE){
     
-        for(it = pc.begin(); it != pc.end(); it++){
+        for(it = d->pixels.begin(); it != d->pixels.end(); it++){
             
             if(it->distance(center) < radius){
                 
@@ -140,7 +141,7 @@ void triggerZone::checkPoints(vector<ofVec3f> & pc){
         
     }else if(shape == TZ_BOX){
     
-        for(it = pc.begin(); it != pc.end(); it++){
+        for(it = d->pixels.begin(); it != d->pixels.end(); it++){
             
             if(it->x <= center.x + boxDims.x/2 && it->x >= center.x - boxDims.x/2){
                 
@@ -215,28 +216,28 @@ void triggerZone::checkPoints(vector<ofVec3f> & pc){
     
 }
 
-bool triggerZone::checkInRange(ofVec3f com, float userHeight){
+bool triggerZone::checkInRange(ofPtr<dancer> d){
    
     
     bool inRange;
 
-    mCom.set(com);
+    mCom.set(d->com);
     
     if(shape == TZ_SPHERE){
         
-        float d = com.distance(center);
-        inRange = (d <= userHeight/2 + radius);
+        float dist = d->com.distance(center);
+        inRange = (dist <= d->height/2 + radius);
         
     }else{
     
-        ofVec3f d(boxDims);
-        d += userHeight/2;
+        ofVec3f dims(boxDims);
+        dims += d->height/2;
         
-        if(com.x <= center.x + d.x/2 && com.x >= center.x - d.x/2){
+        if(d->com.x <= center.x + dims.x/2 && d->com.x >= center.x - dims.x/2){
             
-            if(com.y <= center.y + d.y/2 && com.y >= center.y - d.y/2){
+            if(d->com.y <= center.y + dims.y/2 && d->com.y >= center.y - dims.y/2){
                 
-                if(com.z <= center.z + d.z/2 && com.z >= center.z - d.z/2){
+                if(d->com.z <= center.z + dims.z/2 && d->com.z >= center.z - dims.z/2){
                     
                     inRange = true;
                     

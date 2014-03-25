@@ -549,8 +549,7 @@ void testApp::update(){
     m_kinectManager.update();
     
     if(m_kinectManager.getDancer()){
-        ofPtr<dancer> d = m_kinectManager.getDancer();
-        m_bankManager->update(d->com, m_kinectManager.getDancerHeight(), d->pixels);
+        m_bankManager->update(m_kinectManager.getDancer());
     }else{
         m_bankManager->unTriggerAll();
     }

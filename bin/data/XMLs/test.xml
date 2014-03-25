@@ -1,28 +1,28 @@
 <DANCE_TRACKER>
     <MAIN_SETTINGS>
         <KN_TILT>0.000000000</KN_TILT>
-        <FLOOR_Y>-1.185410500</FLOOR_Y>
+        <FLOOR_Y>-1.214891553</FLOOR_Y>
         <SEG_FRESH>0.200000003</SEG_FRESH>
         <USER_HEIGHT>1.875000000</USER_HEIGHT>
         <NEAR_THRESH>0.500000000</NEAR_THRESH>
         <FAR_THRESH>12.000000000</FAR_THRESH>
         <MIN_BLOB>0.005000000</MIN_BLOB>
         <MAX_BLOB>0.500000000</MAX_BLOB>
-        <MOV_THRESH>20</MOV_THRESH>
+        <MOV_THRESH>9</MOV_THRESH>
         <MOV_BUFF>5</MOV_BUFF>
     </MAIN_SETTINGS>
     <SCENE_SETTINGS>
         <SCENE>
-            <NAME>scene_Zuzzv9J0WV</NAME>
-            <UID>Zuzzv9J0WV</UID>
+            <NAME>scene_dZjfDXbU6c</NAME>
+            <UID>dZjfDXbU6c</UID>
             <FADE_IN>0.010000000</FADE_IN>
             <FADE_OUT>0.010000000</FADE_OUT>
             <ZONE>
-                <NAME>zone_BNOnnfj5Cu</NAME>
+                <NAME>zone_jwsgAJR5SI</NAME>
                 <POS_X>0.000000000</POS_X>
                 <POS_Y>0.000000000</POS_Y>
                 <POS_Z>2.000000000</POS_Z>
-                <SHAPE>1</SHAPE>
+                <SHAPE>0</SHAPE>
                 <DIM_X>0.500000000</DIM_X>
                 <DIM_Y>0.250000000</DIM_Y>
                 <DIM_Z>0.500000000</DIM_Z>
@@ -32,7 +32,7 @@
                 <IS_PLAY_TO_END>0</IS_PLAY_TO_END>
                 <INVERTED>0</INVERTED>
                 <ENABLED>1</ENABLED>
-                <MIN_REPLAY>0.942408383</MIN_REPLAY>
+                <MIN_REPLAY>0.000000000</MIN_REPLAY>
                 <SYNTH_TYPE>0</SYNTH_TYPE>
                 <pan>
                     <ABS_VAL>0.000000000</ABS_VAL>
@@ -69,7 +69,7 @@
     </SCENE_SETTINGS>
     <BANK_SETTINGS>
         <BANK>
-            <NAME>bank_kDL7Nvgll1</NAME>
+            <NAME>bank_BElOoKtRxM</NAME>
             <NUM_ITEMS>0</NUM_ITEMS>
         </BANK>
     </BANK_SETTINGS>

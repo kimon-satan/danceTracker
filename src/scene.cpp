@@ -34,7 +34,7 @@ void scene::draw(ofVec3f camPos){
 
 }
 
-void scene::update(ofVec3f com, float userHeight, vector<ofVec3f> & pc){
+void scene::update(ofPtr<dancer> d){
 
     vector<ofPtr<triggerZone> >::iterator it;
     
@@ -42,7 +42,7 @@ void scene::update(ofVec3f com, float userHeight, vector<ofVec3f> & pc){
         
         if((*it)->getIsEnabled()){
             
-            if((*it)->checkInRange(com, userHeight))(*it)->checkPoints(pc);
+            if((*it)->checkInRange(d))(*it)->checkPoints(d);
             (*it)->update();
             
         }

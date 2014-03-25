@@ -17,7 +17,7 @@ class scene{
     
     scene(ofPtr<oscManager> o);
     void draw(ofVec3f camPos);
-    void update(ofVec3f com, float userHeight,vector<ofVec3f> & pc);
+    void update(ofPtr<dancer> d);
     
     ofPtr<triggerZone> addTriggerZone(ofPtr<triggerZone> tz);
     ofPtr<triggerZone> copyTriggerZone(ofPtr<triggerZone> tz);

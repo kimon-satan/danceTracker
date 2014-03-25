@@ -379,8 +379,8 @@ void bankManager::loadBanks(ofxXmlSettings & XML){
     
 }
 
-void bankManager::update(ofVec3f com, float userHeight, vector<ofVec3f> & pc){
-    currentScene->update(com, userHeight, pc);
+void bankManager::update(ofPtr<dancer> d){
+    currentScene->update(d);
 }
 
 

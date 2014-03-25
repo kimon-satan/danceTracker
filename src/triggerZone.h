@@ -12,6 +12,7 @@
 #include "ofMain.h"
 #include "oscManager.h"
 #include "synthDictionary.h"
+#include "dancer.h"
 #include "dt_utils.h"
 
 enum tzShape{
@@ -22,7 +23,6 @@ enum tzShape{
 };
 
 
-
 class triggerZone{
     
 public:
@@ -31,8 +31,8 @@ public:
     
     void draw(ofVec3f camPos);
     
-    bool checkInRange(ofVec3f com, float userHeight);
-    void checkPoints(vector<ofVec3f> & pc);
+    bool checkInRange(ofPtr<dancer> d);
+    void checkPoints(ofPtr<dancer> d);
     
     void updateAllAudio();
     
@@ -120,7 +120,7 @@ private:
     
     bool isOccupied, isEnabled, isSelected, isSound;
     
-    bool isLoop, isPlayToEnd, isInverted;
+    bool isLoop, isPlayToEnd, isInverted, isMovZone;
     int occupyCount, emptyCount;
     
     ofPtr<oscManager> mOsc;

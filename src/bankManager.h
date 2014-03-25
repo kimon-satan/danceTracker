@@ -39,7 +39,7 @@ class bankManager{
     void saveSettings(ofxXmlSettings & XML);
     void loadSettings(ofxXmlSettings & XML);
     
-    void update(ofVec3f com, float userHeight,vector<ofVec3f> & pc);
+    void update(ofPtr<dancer> d);
     void unTriggerAll();
     void resetForPerformance();
     void resetScenes();

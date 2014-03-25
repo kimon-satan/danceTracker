@@ -51,7 +51,7 @@ kinectManager::kinectManager(){
     maxBlob = 0.5;
     
     mDancer = ofPtr<dancer>(new dancer());
-    dancerHeight = 1.80;
+    mDancer->height = 1.80;
 
     isFakeUser = false;
     numFakePoints = 2000;
@@ -75,7 +75,7 @@ void kinectManager::saveSettings(ofxXmlSettings & XML){
         XML.addValue("KN_TILT", kinect.getTargetCameraTiltAngle());
         XML.addValue("FLOOR_Y", floorY);
         XML.addValue("SEG_FRESH", segThresh);
-        XML.addValue("USER_HEIGHT", dancerHeight);
+        XML.addValue("USER_HEIGHT", mDancer->height);
         XML.addValue("NEAR_THRESH", nearThresh);
         XML.addValue("FAR_THRESH", farThresh);
         XML.addValue("MIN_BLOB", minBlob);
@@ -101,7 +101,7 @@ void kinectManager::loadSettings(ofxXmlSettings & XML){
         minBlob = XML.getValue("MIN_BLOB", 0.005);
         maxBlob = XML.getValue("MAX_BLOB", 10.0);
         floorY = XML.getValue("FLOOR_Y", 1.0);
-        dancerHeight = XML.getValue("USER_HEIGHT", 1.8);
+        mDancer->height = XML.getValue("USER_HEIGHT", 1.8);
         movThresh = XML.getValue("MOV_THRESH", movThresh);
         movBuff = XML.getValue("MOV_BUFF", movBuff);
         
@@ -398,7 +398,7 @@ void kinectManager::analyseUser(){
     
     mDancer->com = total/mDancer->pixels.size();
     
-    vector<ofVec3f>::iterator it = remove_if(mDancer->pixels.begin(), mDancer->pixels.end(),findOutliers(mDancer->com, dancerHeight));
+    vector<ofVec3f>::iterator it = remove_if(mDancer->pixels.begin(), mDancer->pixels.end(),findOutliers(mDancer->com, mDancer->height));
     
     mDancer->pixels.erase(it, mDancer->pixels.end());
     
@@ -470,8 +470,8 @@ void kinectManager::setMaxBlob(float f){maxBlob = f;}
 float kinectManager::getFloorY(){return floorY;}
 void kinectManager::setFloorY(float f){floorY = f;}
 
-float kinectManager::getDancerHeight(){ return dancerHeight;}
-void kinectManager::setDancerHeight(float f){dancerHeight = f;}
+float kinectManager::getDancerHeight(){ return mDancer->height;}
+void kinectManager::setDancerHeight(float f){mDancer->height = f;}
 
 float kinectManager::getQAngle(){return qangle;}
 ofVec3f kinectManager::getQAxis(){return qaxis;}
