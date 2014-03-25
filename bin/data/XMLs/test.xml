@@ -1,9 +1,9 @@
 <DANCE_TRACKER>
     <MAIN_SETTINGS>
         <KN_TILT>0.000000000</KN_TILT>
-        <FLOOR_Y>-1.000000000</FLOOR_Y>
+        <FLOOR_Y>-1.185410500</FLOOR_Y>
         <SEG_FRESH>0.200000003</SEG_FRESH>
-        <USER_HEIGHT>1.799999952</USER_HEIGHT>
+        <USER_HEIGHT>1.875000000</USER_HEIGHT>
         <NEAR_THRESH>0.500000000</NEAR_THRESH>
         <FAR_THRESH>12.000000000</FAR_THRESH>
         <MIN_BLOB>0.005000000</MIN_BLOB>
@@ -11,15 +11,63 @@
     </MAIN_SETTINGS>
     <SCENE_SETTINGS>
         <SCENE>
-            <NAME>scene_sh8JJO0Egk</NAME>
-            <UID>sh8JJO0Egk</UID>
+            <NAME>scene_Zuzzv9J0WV</NAME>
+            <UID>Zuzzv9J0WV</UID>
             <FADE_IN>0.010000000</FADE_IN>
             <FADE_OUT>0.010000000</FADE_OUT>
+            <ZONE>
+                <NAME>zone_BNOnnfj5Cu</NAME>
+                <POS_X>0.000000000</POS_X>
+                <POS_Y>0.000000000</POS_Y>
+                <POS_Z>2.000000000</POS_Z>
+                <SHAPE>1</SHAPE>
+                <DIM_X>0.500000000</DIM_X>
+                <DIM_Y>0.250000000</DIM_Y>
+                <DIM_Z>0.500000000</DIM_Z>
+                <RADIUS>0.250000000</RADIUS>
+                <SOUNDFILE>nonono.wav</SOUNDFILE>
+                <IS_LOOP>1</IS_LOOP>
+                <IS_PLAY_TO_END>0</IS_PLAY_TO_END>
+                <INVERTED>0</INVERTED>
+                <ENABLED>1</ENABLED>
+                <MIN_REPLAY>0.942408383</MIN_REPLAY>
+                <SYNTH_TYPE>0</SYNTH_TYPE>
+                <pan>
+                    <ABS_VAL>0.000000000</ABS_VAL>
+                    <MIN_VAL>-1.000000000</MIN_VAL>
+                    <MAX_VAL>1.000000000</MAX_VAL>
+                    <MAP>3</MAP>
+                </pan>
+                <amp>
+                    <ABS_VAL>0.500000000</ABS_VAL>
+                    <MIN_VAL>0.000000000</MIN_VAL>
+                    <MAX_VAL>1.000000000</MAX_VAL>
+                    <MAP>0</MAP>
+                </amp>
+                <rate>
+                    <ABS_VAL>1.000000000</ABS_VAL>
+                    <MIN_VAL>-2.000000000</MIN_VAL>
+                    <MAX_VAL>2.000000000</MAX_VAL>
+                    <MAP>0</MAP>
+                </rate>
+                <fadeIn>
+                    <ABS_VAL>0.010000000</ABS_VAL>
+                    <MIN_VAL>0.010000000</MIN_VAL>
+                    <MAX_VAL>2.000000000</MAX_VAL>
+                    <MAP>0</MAP>
+                </fadeIn>
+                <fadeOut>
+                    <ABS_VAL>0.010000000</ABS_VAL>
+                    <MIN_VAL>0.010000000</MIN_VAL>
+                    <MAX_VAL>2.000000000</MAX_VAL>
+                    <MAP>0</MAP>
+                </fadeOut>
+            </ZONE>
         </SCENE>
     </SCENE_SETTINGS>
     <BANK_SETTINGS>
         <BANK>
-            <NAME>bank_gr1j6IbyMi</NAME>
+            <NAME>bank_kDL7Nvgll1</NAME>
             <NUM_ITEMS>0</NUM_ITEMS>
         </BANK>
     </BANK_SETTINGS>

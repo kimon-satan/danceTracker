@@ -110,8 +110,6 @@ private:
 
     float radius;
     ofVec3f corners[2];
-    ofSoundPlayer mSound;
-    ofTrueTypeFont font;
     
     synthType synth;
     vector<synthParam> synthParams;

@@ -112,7 +112,7 @@ void kinectManager::update(){
         
     }
     
-    if((kinect.isFrameNew() || numBlankFrames == 10) && kinect.isConnected()){
+    if((kinect.isFrameNew() || numBlankFrames == 10) && (kinect.isConnected() && ! isFakeUser)){
         
         numBlankFrames = 0;
         
@@ -154,6 +154,8 @@ void kinectManager::update(){
             p += fakePos;
             mDancer->pixels.push_back(p);
         }
+        
+        mDancer->com.set(fakePos);
         
     }
     
@@ -359,9 +361,9 @@ void kinectManager::analyseUser(){
         
 	}
     
-    com = total/mDancer->pixels.size();
+    mDancer->com = total/mDancer->pixels.size();
     
-    vector<ofVec3f>::iterator it = remove_if(mDancer->pixels.begin(), mDancer->pixels.end(),findOutliers(com, dancerHeight));
+    vector<ofVec3f>::iterator it = remove_if(mDancer->pixels.begin(), mDancer->pixels.end(),findOutliers(mDancer->com, dancerHeight));
     
     mDancer->pixels.erase(it, mDancer->pixels.end());
     

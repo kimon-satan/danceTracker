@@ -830,6 +830,7 @@ void testApp::s2Events(ofxUIEventArgs &e){
         if(name == "ST_MINUS"){isHideSC = true; m_bankManager->decCZoneSynthType();}
         if(name == "ST_PLUS"){isHideSC = true; m_bankManager->incCZoneSynthType();}
     }
+    
     if(name == "sphere")m_bankManager->setCZoneShape(0);
     if(name == "box")m_bankManager->setCZoneShape(1);
     if(name == "ENABLED")tog->setValue(m_bankManager->setCZoneEnabled(tog->getValue()));
@@ -852,20 +853,34 @@ void testApp::s2Events(ofxUIEventArgs &e){
         synthCanvas->setVisible(isSynthView);
         
     }
+
+    string t_str = name;
+    t_str = t_str.substr(0,5);
     
-    if(name.substr(0,4) == "T_POS"){
+    
+    if(t_str == "T_POS"){
+        t_str = name;
+        t_str = t_str.substr(6);
         ofVec3f p = m_bankManager->getCurrentZone()->getPos();
-        if(name.substr(6) == "X")p.x = slider->getScaledValue();
-        if(name.substr(6) == "Y")p.y = slider->getScaledValue();
-        if(name.substr(6) == "Z")p.z = slider->getScaledValue();
+        if(t_str == "X")p.x = slider->getScaledValue();
+        if(t_str == "Y")p.y = slider->getScaledValue();
+        if(t_str == "Z")p.z = slider->getScaledValue();
         m_bankManager->setCZonePosition(p);
     }
     
-    if(name.substr(2,3) == "DIM"){
+
+    t_str = name;
+    t_str = t_str.substr(2,3);
+    
+    
+    if(t_str == "DIM"){
+        t_str = name;
+        t_str = t_str.substr(0,1);
+        cout << t_str << endl;
         ofVec3f bd = m_bankManager->getCurrentZone()->getBoxDims();
-        if(name.substr(0,1) == "X")bd.x = slider->getScaledValue();
-        if(name.substr(0,1) == "Y")bd.y = slider->getScaledValue();
-        if(name.substr(0,1) == "Z")bd.z = slider->getScaledValue();
+        if(t_str == "X")bd.x = slider->getScaledValue();
+        if(t_str == "Y")bd.y = slider->getScaledValue();
+        if(t_str == "Z")bd.z = slider->getScaledValue();
         m_bankManager->setCZoneBoxDims(bd);
     }
     

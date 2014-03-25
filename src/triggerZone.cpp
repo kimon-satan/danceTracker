@@ -21,7 +21,6 @@ triggerZone::triggerZone(ofPtr<oscManager> o) : mOsc(o){
     
    
     mSoundFileName = "none";
-    font.loadFont("NewMedia.ttf", 15);
     
     isSelected = false;
     isSound = false;
@@ -64,7 +63,7 @@ void triggerZone::draw(ofVec3f camPos){
         
             ofPushMatrix();
             (isSelected) ? ofSetColor(0,255,255) : ofSetColor(170);
-                ofRectangle r = font.getStringBoundingBox(mName, 0, 0);
+            //ofRectangle r = font.getStringBoundingBox(mName, 0, 0);
     
             if(shape == TZ_SPHERE)
                 ofTranslate(0, radius * 1.5, 0);
@@ -176,7 +175,7 @@ void triggerZone::checkPoints(vector<ofVec3f> & pc){
         
         if(occupyCount == 0){
            
-            if((float)emptyCount/60.0 >= minReplaySecs){
+            if((float)emptyCount/ofGetFrameRate() >= minReplaySecs){
                 
                 if(!isInverted){
                     mOsc->playZone(u_id);

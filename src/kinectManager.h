@@ -14,7 +14,7 @@
 #include "ofxOpenCv.h"
 #include "ofxXmlSettings.h"
 
-#define USE_KINECT false
+#define USE_KINECT true
 #define OFX_KINECT_GRAVITY 9.80665
 
 class dancer {
@@ -135,7 +135,6 @@ class kinectManager{
     bool isBgRecorded;
     
     float floorY;
-    ofVec3f com;
     
     float dancerHeight;
     

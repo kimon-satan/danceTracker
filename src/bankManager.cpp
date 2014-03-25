@@ -84,6 +84,7 @@ void bankManager::saveScene(ofxXmlSettings & XML, ofPtr<scene> sn){
         
         if(XML.pushTag("ZONE", count)){
             
+            saveZone(XML, z);
                         
             count++;
             
@@ -749,6 +750,8 @@ void bankManager::setCZonePosition(ofVec3f p){
     currentZone->setPosZ(p.z);
 }
 void bankManager::setCZoneBoxDims(ofVec3f bd){
+    cout << bd << endl;
+    //wierd error on box dims
     currentZone->setBoxDimsX(bd.x);
     currentZone->setBoxDimsX(bd.y);
     currentZone->setBoxDimsX(bd.z);
