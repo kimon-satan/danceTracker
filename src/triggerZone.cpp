@@ -133,6 +133,7 @@ void triggerZone::checkPoints(ofPtr<dancer> d){
                 
                 if(inTotal >= targetAmt){
                     isOccupied = true;
+                    break;
                 }
                 
             }
@@ -155,6 +156,7 @@ void triggerZone::checkPoints(ofPtr<dancer> d){
                         
                         if(inTotal >= targetAmt){
                             isOccupied = true;
+                            break;
                         }
                        
                         
@@ -170,13 +172,19 @@ void triggerZone::checkPoints(ofPtr<dancer> d){
     
     }
     
-    if(isOccupied){
+   
+    bool isMovPlay = ((isMovZone && d->isMoving)|| !isMovZone);
+    
+    
+    if(isOccupied && isMovPlay){
         
         iCom /= inTotal;
         
         if(occupyCount == 0){
            
             if((float)emptyCount/ofGetFrameRate() >= minReplaySecs){
+                
+         
                 
                 if(!isInverted){
                     mOsc->playZone(u_id);
@@ -198,6 +206,8 @@ void triggerZone::checkPoints(ofPtr<dancer> d){
         }
         
     }else{
+        
+        isOccupied = false;
         
         if(occupyCount > 0){
             if(isInverted){

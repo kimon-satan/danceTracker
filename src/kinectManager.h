@@ -61,7 +61,6 @@ class kinectManager{
     ofVec3f getFakePos();
     void setFakePos(ofVec3f p);
     
-    
     int getKinectAngle();
     void setKinectAngle(int f);
     

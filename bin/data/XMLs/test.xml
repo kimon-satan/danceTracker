@@ -21,11 +21,11 @@
                 <NAME>zone_jwsgAJR5SI</NAME>
                 <POS_X>0.000000000</POS_X>
                 <POS_Y>0.000000000</POS_Y>
-                <POS_Z>2.000000000</POS_Z>
-                <SHAPE>0</SHAPE>
-                <DIM_X>0.500000000</DIM_X>
-                <DIM_Y>0.250000000</DIM_Y>
-                <DIM_Z>0.500000000</DIM_Z>
+                <POS_Z>3.193717241</POS_Z>
+                <SHAPE>1</SHAPE>
+                <DIM_X>3.798287392</DIM_X>
+                <DIM_Y>0.437328786</DIM_Y>
+                <DIM_Z>4.002739906</DIM_Z>
                 <RADIUS>0.250000000</RADIUS>
                 <SOUNDFILE>nonono.wav</SOUNDFILE>
                 <IS_LOOP>1</IS_LOOP>
