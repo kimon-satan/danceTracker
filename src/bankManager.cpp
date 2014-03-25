@@ -750,11 +750,10 @@ void bankManager::setCZonePosition(ofVec3f p){
     currentZone->setPosZ(p.z);
 }
 void bankManager::setCZoneBoxDims(ofVec3f bd){
-    cout << bd << endl;
-    //wierd error on box dims
+
     currentZone->setBoxDimsX(bd.x);
-    currentZone->setBoxDimsX(bd.y);
-    currentZone->setBoxDimsX(bd.z);
+    currentZone->setBoxDimsY(bd.y);
+    currentZone->setBoxDimsZ(bd.z);
 }
 
 bool bankManager::setCZoneEnabled(bool b){

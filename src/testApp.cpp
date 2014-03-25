@@ -876,7 +876,6 @@ void testApp::s2Events(ofxUIEventArgs &e){
     if(t_str == "DIM"){
         t_str = name;
         t_str = t_str.substr(0,1);
-        cout << t_str << endl;
         ofVec3f bd = m_bankManager->getCurrentZone()->getBoxDims();
         if(t_str == "X")bd.x = slider->getScaledValue();
         if(t_str == "Y")bd.y = slider->getScaledValue();
