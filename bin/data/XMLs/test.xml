@@ -1,14 +1,14 @@
 <DANCE_TRACKER>
     <MAIN_SETTINGS>
         <KN_TILT>0.000000000</KN_TILT>
-        <FLOOR_Y>-1.214891553</FLOOR_Y>
+        <FLOOR_Y>-1.209215164</FLOOR_Y>
         <SEG_FRESH>0.200000003</SEG_FRESH>
         <USER_HEIGHT>1.875000000</USER_HEIGHT>
         <NEAR_THRESH>0.500000000</NEAR_THRESH>
         <FAR_THRESH>12.000000000</FAR_THRESH>
         <MIN_BLOB>0.005000000</MIN_BLOB>
         <MAX_BLOB>0.500000000</MAX_BLOB>
-        <MOV_THRESH>9</MOV_THRESH>
+        <MOV_THRESH>8</MOV_THRESH>
         <MOV_BUFF>5</MOV_BUFF>
     </MAIN_SETTINGS>
     <SCENE_SETTINGS>
@@ -27,12 +27,12 @@
                 <DIM_Y>0.437328786</DIM_Y>
                 <DIM_Z>4.002739906</DIM_Z>
                 <RADIUS>0.250000000</RADIUS>
-                <SOUNDFILE>nonono.wav</SOUNDFILE>
+                <SOUNDFILE>origamiNew/foldTheRight.wav</SOUNDFILE>
                 <IS_LOOP>1</IS_LOOP>
                 <IS_PLAY_TO_END>0</IS_PLAY_TO_END>
                 <INVERTED>0</INVERTED>
                 <ENABLED>1</ENABLED>
-                <MIN_REPLAY>0.000000000</MIN_REPLAY>
+                <MIN_REPLAY>1.020942450</MIN_REPLAY>
                 <SYNTH_TYPE>0</SYNTH_TYPE>
                 <pan>
                     <ABS_VAL>0.000000000</ABS_VAL>

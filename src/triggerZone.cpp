@@ -25,13 +25,15 @@ triggerZone::triggerZone(ofPtr<oscManager> o) : mOsc(o){
     isSelected = false;
     isSound = false;
     
-    occupyCount = 0;
-    emptyCount = 0;
+    playCount = 0;
+    silentCount = 0;
     
     isLoop = true;
     isPlayToEnd = false;
-    isInverted = false;
-    isMovZone = true;
+    
+    isOccInvert = false;
+    isMovInvert = false;
+    isMovEnabled = false;
     
     sensitivity = 1.0;
     minReplaySecs = 0.0;
@@ -173,55 +175,7 @@ void triggerZone::checkPoints(ofPtr<dancer> d){
     }
     
    
-    bool isMovPlay = ((isMovZone && d->isMoving)|| !isMovZone);
-    
-    
-    if(isOccupied && isMovPlay){
-        
-        iCom /= inTotal;
-        
-        if(occupyCount == 0){
-           
-            if((float)emptyCount/ofGetFrameRate() >= minReplaySecs){
-                
-         
-                
-                if(!isInverted){
-                    mOsc->playZone(u_id);
-                    isSound = true;
-                }else{
-                    mOsc->stopZone(u_id);
-                    isSound = false;
-                }
-                
-                emptyCount = 0;
-                occupyCount +=1;
-                
-            }else{
-                
-                isOccupied = false;
-                emptyCount += 1;
-            }
-           
-        }
-        
-    }else{
-        
-        isOccupied = false;
-        
-        if(occupyCount > 0){
-            if(isInverted){
-                mOsc->playZone(u_id);
-                isSound = true;
-            }else{
-                mOsc->stopZone(u_id);
-                isSound = false;
-            }
-            occupyCount = 0;
-        }
-        
-    }
-    
+    if(isOccupied)iCom /= inTotal;
     
     
 }
@@ -261,22 +215,8 @@ bool triggerZone::checkInRange(ofPtr<dancer> d){
     }
     
     
-    if(!inRange && isOccupied){
+    if(!inRange && isOccupied)isOccupied = false;
         
-        if(isInverted){
-            mOsc->playZone(u_id);
-            isSound = true;
-        }else{
-            mOsc->stopZone(u_id);
-            isSound = false;
-        }
-        
-        isOccupied = false;
-        occupyCount = 0;
-        emptyCount = 0;
-        
-    }
-    
     return inRange;
 
 }
@@ -389,18 +329,11 @@ void triggerZone::updateSynthParams(){
     
 }
 
-void triggerZone::update(){
+void triggerZone::update(ofPtr<dancer> d){
 
-    if(!isOccupied){
-        
-        if(emptyCount == 0 && isInverted){
-            mOsc->playZone(u_id);
-            isSound = true;
-        }
-        
-        emptyCount += 1;
-        
-    }
+    isMoving = d->isMoving;
+    
+    evaluate();
     
     if(isSound){
         updateSynthParams();
@@ -410,6 +343,36 @@ void triggerZone::update(){
     
 }
 
+
+void triggerZone::evaluate(){
+
+    bool b = isEnabled;
+    b *= (isOccInvert)? !isOccupied : isOccupied;
+    if(isMovEnabled)b *= (isMovInvert)? !isMoving : isMoving;
+    
+    //minReplay check for replay
+    if(!isSound){
+        silentCount += 1;
+        b *= ((float)silentCount/ofGetFrameRate() >= minReplaySecs);
+    }
+    
+    if(!isSound && b){
+        
+        //turn on the sound
+        mOsc->playZone(u_id);
+        isSound = true;
+
+        
+    }else if(isSound && !b){
+        
+        //turn off the sound
+        silentCount = 0;
+        mOsc->stopZone(u_id);
+        isSound = false;
+        
+    }
+    
+}
 
 
 void triggerZone::reloadSound(){ //when loading settings from file
@@ -453,12 +416,10 @@ string triggerZone::getSoundFileName(){return mSoundFileName;}
 void triggerZone::setIsEnabled(bool b){
 
     isEnabled = b;
-    if(!isEnabled){
-        mOsc->stopZone(u_id);
-        isSound = false;
-    }
+    evaluate();
 
 }
+
 bool triggerZone::getIsEnabled(){return isEnabled;}
 
 ofVec3f triggerZone::getPos(){return center;}
@@ -521,21 +482,10 @@ bool triggerZone::getIsAudioLoaded(){
 
 void triggerZone::deselect(){
     
-    if(!isInverted){
-        if(isOccupied){
-            mOsc->stopZone(u_id);
-            isSound = false;
-        }
-    }else{
-        if(!isOccupied){
-           mOsc->stopZone(u_id);
-            isSound = false;
-        }
-        
-    }
     isOccupied = false;
-    emptyCount = 0;
-    occupyCount = 0;
+    isMoving = false;
+    silentCount = 0;
+    evaluate();
     
 }
 
@@ -558,24 +508,14 @@ void triggerZone::setSynthType(int i){
 synthParam triggerZone::getSynthParam(int i){return synthParams[i];}
 void triggerZone::setSynthParam(int i, synthParam p){synthParams[i] = p;}
 
-bool triggerZone::getIsInverted(){return isInverted;}
+bool triggerZone::getIsInverted(){return isOccInvert;}
 void triggerZone::setIsInverted(bool b){
     
-    if(!isInverted){
-        if(isOccupied){
-            mOsc->stopZone(u_id);
-            isSound = false;
-        }
-    }else{
-        if(!isOccupied){
-            mOsc->stopZone(u_id);
-            isSound = false;
-        }
-    }
+    isOccInvert = b;
+    playCount = 0;
+    silentCount = 0;
     
-    isInverted = b;
-    occupyCount = 0;
-    emptyCount = 0;
+    evaluate();
 }
 
 

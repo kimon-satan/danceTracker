@@ -36,7 +36,7 @@ public:
     
     void updateAllAudio();
     
-    void update();
+    void update(ofPtr<dancer> d);
     
     void reloadSound();
     
@@ -102,6 +102,7 @@ public:
     
 private:
     
+    void evaluate();
     void updateSynthParams();
     
     tzShape shape;
@@ -120,8 +121,8 @@ private:
     
     bool isOccupied, isEnabled, isSelected, isSound;
     
-    bool isLoop, isPlayToEnd, isInverted, isMovZone;
-    int occupyCount, emptyCount;
+    bool isLoop, isPlayToEnd, isOccInvert, isMovEnabled, isMovInvert, isMoving;
+    int playCount, silentCount;
     
     ofPtr<oscManager> mOsc;
     

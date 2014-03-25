@@ -43,7 +43,7 @@ void scene::update(ofPtr<dancer> d){
         if((*it)->getIsEnabled()){
             
             if((*it)->checkInRange(d))(*it)->checkPoints(d);
-            (*it)->update();
+            (*it)->update(d);
             
         }
         
