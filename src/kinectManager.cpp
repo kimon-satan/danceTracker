@@ -39,6 +39,7 @@ kinectManager::kinectManager(){
     
     liveImg.allocate(kinect.width,kinect.height);
     segMask.allocate(kinect.width, kinect.height);
+    fdImg.allocate(kinect.width, kinect.height);
     
     isBgRecorded = false;
     isUser = false;
@@ -50,6 +51,7 @@ kinectManager::kinectManager(){
     minBlob = 0.005;
     maxBlob = 0.5;
     
+    mDancer_o = ofPtr<dancer>(new dancer());
     mDancer = ofPtr<dancer>(new dancer());
     dancerHeight = 1.80;
     mDancer->com.set(0, 0, 0);
@@ -58,6 +60,8 @@ kinectManager::kinectManager(){
     numFakePoints = 2000;
     fakePos.set(0,0,0);
     fakeRadius = 0.5;
+    
+    segImg.allocate(kinect.width/segRes, kinect.height/segRes);
 
     
 }
@@ -116,7 +120,10 @@ void kinectManager::update(){
         
         numBlankFrames = 0;
         
+        
         liveImg.setFromPixels(kinect.getDepthPixels(), kinect.width, kinect.height);
+        
+        
         calcQ();
         //rotate the pixels
         
@@ -139,6 +146,9 @@ void kinectManager::update(){
         
         if(isBgRecorded){
             
+            mDancer_o->pixels = mDancer->pixels;
+            mDancer_o->com = mDancer->com;
+          
             segment();
             if(isUser)analyseUser();
            
@@ -263,9 +273,14 @@ void kinectManager::recordBg(){
     
 }
 
-void kinectManager::segment(){
+
+void kinectManager::frameDiff(){
+
     
-    segImg.allocate(kinect.width/segRes, kinect.height/segRes);
+
+}
+
+void kinectManager::segment(){
     
     unsigned char * s_pix = segImg.getPixels();
     
@@ -337,6 +352,8 @@ void kinectManager::analyseUser(){
     
     mDancer->pixels.clear();
     
+    int mov = 0;
+
     //create a dense array of rotated mDancer->pixels
     
     unsigned char * s_pix = segMask.getPixels();
@@ -352,7 +369,19 @@ void kinectManager::analyseUser(){
                 ofVec3f curR = cur.getRotated(-qangle, qaxis);
                 curR *= ofVec3f(0.001,-0.001,0.001);
                 total += curR;
+                
+                
+                
+                if(kDepths.size() > 0){
+                    int f = 0;
+                    f = abs(kDepths[y * kinect.width + x] - kinect.getDistanceAt(x, y));
+                    if(f > 1000)mov += f;
+                }
+                
+                
                 mDancer->pixels.push_back(curR);
+                    
+                
                 
                 
             }
@@ -367,6 +396,13 @@ void kinectManager::analyseUser(){
     
     mDancer->pixels.erase(it, mDancer->pixels.end());
     
+    kDepths.setFromPixels(kinect.getRawDepthPixels(), kinect.width, kinect.height, 1);
+    
+    
+    //average movement of a depth pixel
+    //gives good indication of moving or still
+    mov /= mDancer->pixels.size();
+    cout << mov << endl;
     
 }
 
@@ -422,6 +458,7 @@ void kinectManager::setDancerHeight(float f){dancerHeight = f;}
 float kinectManager::getQAngle(){return qangle;}
 ofVec3f kinectManager::getQAxis(){return qaxis;}
 
+ofxCvGrayscaleImage * kinectManager::getFdImg(){return &fdImg;}
 ofxCvGrayscaleImage * kinectManager::getLiveImg(){return &liveImg;}
 ofxCvGrayscaleImage * kinectManager::getSegMask(){return &segMask;}
 ofxCvContourFinder * kinectManager::getCfFinder(){return &cfFinder;}

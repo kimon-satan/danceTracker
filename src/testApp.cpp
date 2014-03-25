@@ -1175,10 +1175,6 @@ void testApp::draw(){
         
         ofNoFill();
         
-        // topLight.draw();
-        // ambientLight.enable();
-        // topLight.enable();
-        
         ofPushMatrix();
         ofScale(0.05, 0.05, 0.05);
         ofDrawGrid();
@@ -1241,6 +1237,7 @@ void testApp::draw(){
         ofDrawBitmapString("segmented depthMap", 0,0);
         ofTranslate(0, 40);
         
+        
         ofPopMatrix();
         
         ofPushMatrix();
@@ -1252,6 +1249,10 @@ void testApp::draw(){
         ofTranslate(0, 260);
         ofSetColor(255);
         ofDrawBitmapString("contour analysis", 0,0);
+        ofTranslate(0, 40);
+        m_kinectManager.getFdImg()->draw(0,0,320,240);
+        ofTranslate(0, 260);
+        ofDrawBitmapString("frameDiff", 0,0);
         ofPopMatrix();
         
     }
