@@ -148,7 +148,8 @@ void testApp::setupGeneralSettings(){
     settingsCanvases[1]->addSpacer();
     sc1Sliders[6] = settingsCanvases[1]->addSlider("FLOOR_Y", -10, -0.5, m_kinectManager.getFloorY(), slLength, slHeight);
     sc1Sliders[7] = settingsCanvases[1]->addSlider("USER_HEIGHT", 1, 2, m_kinectManager.getDancerHeight(), slLength, slHeight);
-    
+    sc1Sliders[8] = settingsCanvases[1]->addSlider("MOV_THRESH", 0, 100, m_kinectManager.getMovThresh(), slLength, slHeight);
+    sc1Sliders[9] = settingsCanvases[1]->addSlider("MOV_BUFF", 0, 60, m_kinectManager.getMovBuff(), slLength, slHeight);
     
     ofAddListener(settingsCanvases[1]->newGUIEvent,this,&testApp::s1Events);
     settingsTabBar->addCanvas(settingsCanvases[1]);
@@ -774,6 +775,8 @@ void testApp::s1Events(ofxUIEventArgs &e){
     if(name == "MAX_BLOB")m_kinectManager.setMaxBlob(slider->getScaledValue());
     if(name == "FLOOR_Y")m_kinectManager.setFloorY(slider->getScaledValue());
     if(name == "USER_HEIGHT")m_kinectManager.setDancerHeight(slider->getScaledValue());
+    if(name == "MOV_THRESH")m_kinectManager.setMovThresh(slider->getScaledValue());
+    if(name == "MOV_BUFF")m_kinectManager.setMovBuff(slider->getScaledValue());
     if(name == "RECORD_BACKGROUND")m_kinectManager.recordBg();
     
 }
@@ -1249,10 +1252,6 @@ void testApp::draw(){
         ofTranslate(0, 260);
         ofSetColor(255);
         ofDrawBitmapString("contour analysis", 0,0);
-        ofTranslate(0, 40);
-        m_kinectManager.getFdImg()->draw(0,0,320,240);
-        ofTranslate(0, 260);
-        ofDrawBitmapString("frameDiff", 0,0);
         ofPopMatrix();
         
     }

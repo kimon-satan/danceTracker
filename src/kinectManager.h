@@ -21,9 +21,20 @@ class dancer {
 
     public:
     
-    dancer(){};
+    dancer(){
+        
+        isMoving = false;
+        movAmt = 0;
+        stillCount = 0;
+        movCount = 0;
+        com.set(0,0,0);
+        
+    };
     
     ofVec3f com;
+    bool isMoving;
+    int movAmt;
+    int stillCount, movCount;
     vector<ofVec3f> pixels;
 
 };
@@ -97,10 +108,16 @@ class kinectManager{
     float getQAngle();
     ofVec3f getQAxis();
     
-    ofxCvGrayscaleImage * getFdImg();
+    int getMovThresh();
+    void setMovThresh(int i);
+    
+    int getMovBuff();
+    void setMovBuff(int i);
+    
     ofxCvGrayscaleImage * getLiveImg();
     ofxCvGrayscaleImage * getSegMask();
     ofxCvContourFinder * getCfFinder();
+    
     
     private:
     
@@ -129,7 +146,6 @@ class kinectManager{
     
     ofShortPixels kDepths;
     
-    ofxCvGrayscaleImage fdImg;
     ofxCvGrayscaleImage liveImg;
     ofxCvGrayscaleImage segImg;
     ofxCvGrayscaleImage segMask;
@@ -138,14 +154,14 @@ class kinectManager{
     int segRes;
     float segThresh, nearThresh, farThresh, minBlob, maxBlob;
     
+    int movThresh, movBuff;
+    
     bool isUser;
     bool isBgRecorded;
     
     float floorY;
-    
     float dancerHeight;
     
-    ofPtr<dancer> mDancer_o;
     ofPtr<dancer> mDancer;
     
     //for fake users

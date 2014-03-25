@@ -39,7 +39,6 @@ kinectManager::kinectManager(){
     
     liveImg.allocate(kinect.width,kinect.height);
     segMask.allocate(kinect.width, kinect.height);
-    fdImg.allocate(kinect.width, kinect.height);
     
     isBgRecorded = false;
     isUser = false;
@@ -51,17 +50,18 @@ kinectManager::kinectManager(){
     minBlob = 0.005;
     maxBlob = 0.5;
     
-    mDancer_o = ofPtr<dancer>(new dancer());
     mDancer = ofPtr<dancer>(new dancer());
     dancerHeight = 1.80;
-    mDancer->com.set(0, 0, 0);
 
     isFakeUser = false;
     numFakePoints = 2000;
-    fakePos.set(0,0,0);
+    fakePos.set(0,0,5);
     fakeRadius = 0.5;
     
     segImg.allocate(kinect.width/segRes, kinect.height/segRes);
+    
+    movThresh = 20;
+    movBuff = 5;
 
     
 }
@@ -80,6 +80,8 @@ void kinectManager::saveSettings(ofxXmlSettings & XML){
         XML.addValue("FAR_THRESH", farThresh);
         XML.addValue("MIN_BLOB", minBlob);
         XML.addValue("MAX_BLOB", maxBlob);
+        XML.addValue("MOV_THRESH", movThresh);
+        XML.addValue("MOV_BUFF", movBuff);
         
         XML.popTag();
     }
@@ -100,7 +102,8 @@ void kinectManager::loadSettings(ofxXmlSettings & XML){
         maxBlob = XML.getValue("MAX_BLOB", 10.0);
         floorY = XML.getValue("FLOOR_Y", 1.0);
         dancerHeight = XML.getValue("USER_HEIGHT", 1.8);
-
+        movThresh = XML.getValue("MOV_THRESH", movThresh);
+        movBuff = XML.getValue("MOV_BUFF", movBuff);
         
         XML.popTag();
     }
@@ -146,11 +149,18 @@ void kinectManager::update(){
         
         if(isBgRecorded){
             
-            mDancer_o->pixels = mDancer->pixels;
-            mDancer_o->com = mDancer->com;
-          
             segment();
-            if(isUser)analyseUser();
+            
+            if(isUser){
+                analyseUser();
+            }else{
+                mDancer->movAmt = 0;
+                mDancer->movCount = 0;
+                mDancer->stillCount = 0;
+                mDancer->pixels.clear();
+                mDancer->isMoving = false;
+                kDepths.clear();
+            }
            
         }
         
@@ -190,8 +200,10 @@ void kinectManager::drawScenePointCloud() {
 void kinectManager::drawUserPointCloud() {
     
     glBegin(GL_POINTS);
-    glColor3ub(0, 0, 0);
-    
+    if(mDancer->isMoving)
+        glColor3ub(0, 0, 255);
+    else
+        glColor3ub(0, 0, 0);
     
     for(int i = 0; i < mDancer->pixels.size(); i ++){
         
@@ -370,19 +382,13 @@ void kinectManager::analyseUser(){
                 curR *= ofVec3f(0.001,-0.001,0.001);
                 total += curR;
                 
-                
-                
                 if(kDepths.size() > 0){
                     int f = 0;
                     f = abs(kDepths[y * kinect.width + x] - kinect.getDistanceAt(x, y));
-                    if(f > 1000)mov += f;
+                    if(f > 500)mov += f;
                 }
                 
-                
                 mDancer->pixels.push_back(curR);
-                    
-                
-                
                 
             }
             
@@ -402,7 +408,19 @@ void kinectManager::analyseUser(){
     //average movement of a depth pixel
     //gives good indication of moving or still
     mov /= mDancer->pixels.size();
-    cout << mov << endl;
+    mDancer->movAmt += mov;
+    mDancer->movAmt /= 2; //a running averge
+    
+    if(mDancer->movAmt > movThresh){
+         mDancer->movCount += 1;
+         mDancer->stillCount = 0;
+        if(mDancer->movCount > movBuff)mDancer->isMoving = true;
+    }else{
+        mDancer->stillCount += 1;
+        mDancer->movCount = 0;
+        if(mDancer->stillCount > movBuff)mDancer->isMoving = false;
+    }
+        
     
 }
 
@@ -458,7 +476,12 @@ void kinectManager::setDancerHeight(float f){dancerHeight = f;}
 float kinectManager::getQAngle(){return qangle;}
 ofVec3f kinectManager::getQAxis(){return qaxis;}
 
-ofxCvGrayscaleImage * kinectManager::getFdImg(){return &fdImg;}
+int kinectManager::getMovThresh(){ return movThresh;}
+void kinectManager::setMovThresh(int i){ movThresh = i;}
+
+int kinectManager::getMovBuff(){return movBuff;}
+void kinectManager::setMovBuff(int i){movBuff = i;}
+
 ofxCvGrayscaleImage * kinectManager::getLiveImg(){return &liveImg;}
 ofxCvGrayscaleImage * kinectManager::getSegMask(){return &segMask;}
 ofxCvContourFinder * kinectManager::getCfFinder(){return &cfFinder;}

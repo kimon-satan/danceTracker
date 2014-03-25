@@ -111,7 +111,7 @@ public:
     
     //canvas 1
     
-    ofxUISlider * sc1Sliders[8];
+    ofxUISlider * sc1Sliders[10];
     
     //canvas 2
     
