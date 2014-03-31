@@ -509,10 +509,10 @@ void bankManager::createScene(){
 
 void bankManager::deleteScene(){
     
-    if(allScenes.size() < 1)return;
+    if(allScenes.size() <= 1)return;
     
     ofPtr<scene> t = currentScene;
-    currentScene = selectPrevScene(currentScene);
+    currentScene = selectPrevScene(currentScene, true); //TO DO : might need wrap function
     vector <ofPtr<scene> > :: iterator it = find(allScenes.begin(),allScenes.end(), t);
     allScenes.erase(it);
     currentZone = currentScene->getFirstTriggerZone();
@@ -678,21 +678,30 @@ void bankManager::deselectCurrentZone(){
     currentZone.reset();
 }
 
-ofPtr<scene> bankManager::selectNextScene(ofPtr<scene> sn){
+ofPtr<scene> bankManager::selectNextScene(ofPtr<scene> sn, bool isWrap){
     
     if(allScenes.size() == 1)return sn;
     vector< ofPtr<scene> >::iterator it = find(allScenes.begin(), allScenes.end(), sn);
     it++;
-    if(it == allScenes.end())it--;
+    if(!isWrap){
+        if(it == allScenes.end())it--;
+    }else{
+        if(it == allScenes.end())it = allScenes.begin();
+    }
     return(*it);
     
 }
 
-ofPtr<scene> bankManager::selectPrevScene(ofPtr<scene> sn){
+ofPtr<scene> bankManager::selectPrevScene(ofPtr<scene> sn, bool isWrap){
     
     if(allScenes.size() == 1)return sn;
     vector< ofPtr<scene> >::iterator it = find(allScenes.begin(), allScenes.end(), sn);
-    if(it != allScenes.begin())it--;
+    if(!isWrap){
+        if(it != allScenes.begin())it--;
+    }else{
+        if(it == allScenes.begin())it = allScenes.end();
+        it--;
+    }
     return(*it);
     
 }

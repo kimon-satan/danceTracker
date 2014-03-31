@@ -132,8 +132,8 @@ class bankManager{
     void loadSynth(ofxXmlSettings & XML, ofPtr<triggerZone> zn);
     
     //selection tools
-    ofPtr<scene> selectNextScene(ofPtr<scene> sn);
-    ofPtr<scene> selectPrevScene(ofPtr<scene> sn);
+    ofPtr<scene> selectNextScene(ofPtr<scene> sn, bool isWrap = false);
+    ofPtr<scene> selectPrevScene(ofPtr<scene> sn, bool isWrap = false);
     ofPtr<bank> selectNextBank(ofPtr<bank> bk);
     ofPtr<bank> selectPrevBank(ofPtr<bank> bk);
     
