@@ -22,8 +22,8 @@ class scene{
     ofPtr<triggerZone> addTriggerZone(ofPtr<triggerZone> tz);
     ofPtr<triggerZone> copyTriggerZone(ofPtr<triggerZone> tz);
     ofPtr<triggerZone> getFirstTriggerZone();
-    ofPtr<triggerZone> getNextTriggerZone(ofPtr<triggerZone> tz);
-    ofPtr<triggerZone> getPrevTriggerZone(ofPtr<triggerZone> tz);
+    ofPtr<triggerZone> getNextTriggerZone(ofPtr<triggerZone> tz, bool isWrap = false);
+    ofPtr<triggerZone> getPrevTriggerZone(ofPtr<triggerZone> tz, bool isWrap = false);
     
     void removeTriggerZone(ofPtr<triggerZone> tz);
     void deepCopyTriggerZones();

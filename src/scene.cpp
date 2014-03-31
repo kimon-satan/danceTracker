@@ -73,27 +73,36 @@ void scene::unTriggerAll(){
     
 }
 
-ofPtr<triggerZone> scene::getNextTriggerZone(ofPtr<triggerZone> tz){
+ofPtr<triggerZone> scene::getNextTriggerZone(ofPtr<triggerZone> tz, bool isWrap){
     
     if(!tz){
         return tz; //return the empty pointer
     }else{
         vector< ofPtr<triggerZone> >::iterator it = find(triggerZones.begin(), triggerZones.end(), tz);
         it++;
-        if(it == triggerZones.end())it--;
+        if(!isWrap){
+            if(it == triggerZones.end())it--;
+        }else{
+            if(it == triggerZones.end())it = triggerZones.begin();
+        }
         return (*it);
     }
     
 }
 
-ofPtr<triggerZone> scene::getPrevTriggerZone(ofPtr<triggerZone> tz){
+ofPtr<triggerZone> scene::getPrevTriggerZone(ofPtr<triggerZone> tz , bool isWrap){
     
     if(!tz){
         return tz; //return the empty pointer
     }else{
         
         vector< ofPtr<triggerZone> >::iterator it = find(triggerZones.begin(), triggerZones.end(), tz);
-        if(it != triggerZones.begin())it--;
+        if(!isWrap){
+            if(it != triggerZones.begin())it--;
+        }else{
+            if(it == triggerZones.begin())it = triggerZones.end();
+            it--;
+        }
         return (*it);
     }
     
@@ -143,6 +152,7 @@ ofPtr<triggerZone> scene::copyTriggerZone(ofPtr<triggerZone> tz){
 
 void scene::removeTriggerZone(ofPtr<triggerZone> tz){
 
+    if(!tz)return;
     mOsc->removeZone(tz->getUid());
     triggerZones.erase(find(triggerZones.begin(), triggerZones.end(), tz));
     

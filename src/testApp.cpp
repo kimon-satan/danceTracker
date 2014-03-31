@@ -788,6 +788,7 @@ void testApp::s1Events(ofxUIEventArgs &e){
 
 void testApp::s2Events(ofxUIEventArgs &e){
 
+    if(!isMouseDown)return;
     bool isHideSC = false;
     string name = e.widget->getName();
     ofxUISlider *slider = (ofxUISlider *) e.widget;
@@ -820,24 +821,23 @@ void testApp::s2Events(ofxUIEventArgs &e){
     if(name == "FADE_OUT")m_bankManager->setCSceneFadeOut(slider->getScaledValue());
     
     
-    
     //all actions in which the synthCanvas is hidden
 
-    if(isMouseDown){
-        //problem of double trigger
-        if(name == "SCENE_PLUS"){isHideSC = true; m_bankManager->incrementScene();}
-        if(name == "SCENE_MINUS"){isHideSC = true; m_bankManager->decrementScene();}
-        if(name == "CREATE_SCENE"){isHideSC = true; m_bankManager->createScene();}
-        if(name == "DELETE_SCENE"){isHideSC = true; m_bankManager->deleteScene();}
-        if(name == "COPY_SCENE"){isHideSC = true; m_bankManager->copyScene();}
-        if(name == "CREATE_ZONE"){isHideSC = true; m_bankManager->createZone();}
-        if(name == "COPY_ZONE"){isHideSC = true; m_bankManager->copyZone();}
-        if(name == "ZONE_PLUS"){isHideSC = true; m_bankManager->incrementZone();}
-        if(name == "ZONE_MINUS"){isHideSC = true; m_bankManager->decrementZone();}
-        if(name == "DELETE_ZONE"){isHideSC = true; m_bankManager->deleteZone();}
-        if(name == "ST_MINUS"){isHideSC = true; m_bankManager->decCZoneSynthType();}
-        if(name == "ST_PLUS"){isHideSC = true; m_bankManager->incCZoneSynthType();}
-    }
+  
+    //problem of double trigger
+    if(name == "SCENE_PLUS"){isHideSC = true; m_bankManager->incrementScene();}
+    if(name == "SCENE_MINUS"){isHideSC = true; m_bankManager->decrementScene();}
+    if(name == "CREATE_SCENE"){isHideSC = true; m_bankManager->createScene();}
+    if(name == "DELETE_SCENE"){isHideSC = true; m_bankManager->deleteScene();}
+    if(name == "COPY_SCENE"){isHideSC = true; m_bankManager->copyScene();}
+    if(name == "CREATE_ZONE"){isHideSC = true; m_bankManager->createZone();}
+    if(name == "COPY_ZONE"){isHideSC = true; m_bankManager->copyZone();}
+    if(name == "ZONE_PLUS"){isHideSC = true; m_bankManager->incrementZone();}
+    if(name == "ZONE_MINUS"){isHideSC = true; m_bankManager->decrementZone();}
+    if(name == "DELETE_ZONE"){isHideSC = true; m_bankManager->deleteZone();}
+    if(name == "ST_MINUS"){isHideSC = true; m_bankManager->decCZoneSynthType();}
+    if(name == "ST_PLUS"){isHideSC = true; m_bankManager->incCZoneSynthType();}
+    
     
     if(name == "sphere")m_bankManager->setCZoneShape(0);
     if(name == "box")m_bankManager->setCZoneShape(1);
