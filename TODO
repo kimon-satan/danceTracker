@@ -1,16 +1,6 @@
+1. add sequenceType selector for multi file synths
+
 1. refactoring of testApp
     - allScenes can becomes a bank
-
-2. bug checks
-    - make zone light when intercepted / independent of min replay
-    - check sensitivity (is there a min pixels ... why slow response? )
-    - have a look at checkInRange & checkPoints in  triggerZone
-
-3. improving features
-    - is segmentation needed at all? (add turn off/on button)
-    - YES 
-
-4. extra features 
-    - frame differencing for movement zone
 
 could put some of the iteration/ search functions into an inherited base class (probably not worth it a this stage)
