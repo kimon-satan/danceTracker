@@ -563,7 +563,7 @@ void bankManager::decrementZone(){
 
 void bankManager::createZone(){
     currentScene->deselectAll();
-    currentZone = currentScene->addTriggerZone(currentZone);
+    currentZone = currentScene->addTriggerZone(currentZone); //TODO bad access when creating after deletion
 }
 
 void bankManager::copyZone(){
@@ -575,7 +575,7 @@ void bankManager::copyZone(){
 void bankManager::deleteZone(){
     if(!currentZone)return;
     ofPtr<triggerZone> tz = currentZone;
-    currentZone = currentScene->getNextTriggerZone(currentZone);
+    currentZone = currentScene->getNextTriggerZone(currentZone); //TODO bug when no zones left .. or just deleting copied zones
     currentScene->removeTriggerZone(tz);
 }
 

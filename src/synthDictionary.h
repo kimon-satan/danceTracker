@@ -16,6 +16,7 @@ enum synthType{
     ST_SIMPLE,
     ST_GRAN_1,
     ST_GRAN_2,
+    ST_MULTISAMPLE,
     ST_COUNT
     
 };

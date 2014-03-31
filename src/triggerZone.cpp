@@ -402,7 +402,7 @@ void triggerZone::setSoundFile(string s){
     
     ofFile f("sound/" + s);
     
-    mOsc->loadZoneSound(u_id, f.getAbsolutePath());
+    mOsc->loadZoneSound(u_id, f.getAbsolutePath()); //TODO implement multifiles in supercollider
     
     
     //reloadSound();
@@ -474,7 +474,18 @@ bool triggerZone::getIsPlayToEnd(){return isPlayToEnd;}
 
 bool triggerZone::getIsAudioLoaded(){
    
-    bool b = ofFile::doesFileExist("sound/" + mSoundFileName);
+    bool b = false;
+    
+    string lc = mSoundFileName.substr(mSoundFileName.length() - 1);
+    if(lc == "/"){
+       b = ofDirectory::doesDirectoryExist("sound/" + mSoundFileName);
+       if(b)b = !ofDirectory::isDirectoryEmpty("sound/" + mSoundFileName.substr(0, mSoundFileName.length() - 1));
+        
+    }else if(mSoundFileName.substr(mSoundFileName.length() - 4, 1) == "."){
+       b = ofFile::doesFileExist("sound/" + mSoundFileName);
+    }
+    
+   
     return b;
 
 }
