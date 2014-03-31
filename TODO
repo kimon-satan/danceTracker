@@ -1,4 +1,9 @@
-1. refactoring of testAppi
+BUG - bank switching doesn't work
+    - potential crash when switching to bank setup - recreate
+
+1A - Add zone reset button + call reset on all zones when changing scenes
+
+1. refactoring of testApp
     - move and tidy GUI variables into map vector
     - allScenes can becomes a bank
 
