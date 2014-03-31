@@ -454,7 +454,7 @@ void bankManager::createBank(){
 void bankManager::deleteBank(){
     if(allBanks.size() > 1){
         ofPtr<bank> db = currentBank;
-        currentBank = selectPrevBank(currentBank);
+        currentBank = selectPrevBank(currentBank, true);
         allBanks.erase(find(allBanks.begin(), allBanks.end(), db));
     }
 }
@@ -706,21 +706,32 @@ ofPtr<scene> bankManager::selectPrevScene(ofPtr<scene> sn, bool isWrap){
     
 }
 
-ofPtr<bank> bankManager::selectNextBank(ofPtr<bank> bk){
+ofPtr<bank> bankManager::selectNextBank(ofPtr<bank> bk, bool isWrap){
     
     if(allBanks.size() == 1)return bk;
     vector< ofPtr<bank> >::iterator it = find(allBanks.begin(), allBanks.end(), bk);
     it++;
-    if(it == allBanks.end())it--;
+    if(!isWrap){
+        if(it == allBanks.end())it--;
+    }else{
+        if(it == allBanks.end())it = allBanks.begin();
+    }
+    
     return(*it);
     
 }
 
-ofPtr<bank> bankManager::selectPrevBank(ofPtr<bank> bk){
+ofPtr<bank> bankManager::selectPrevBank(ofPtr<bank> bk, bool isWrap){
     
     if(allBanks.size() == 1)return bk;
     vector< ofPtr<bank> >::iterator it = find(allBanks.begin(), allBanks.end(), bk);
-    if(it != allBanks.begin())it--;
+    if(!isWrap){
+        if(it != allBanks.begin())it--;
+    }else{
+        if(it == allBanks.begin())it = allBanks.end();
+        it--;
+    }
+    
     return(*it);
     
 }

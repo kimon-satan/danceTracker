@@ -134,8 +134,8 @@ class bankManager{
     //selection tools
     ofPtr<scene> selectNextScene(ofPtr<scene> sn, bool isWrap = false);
     ofPtr<scene> selectPrevScene(ofPtr<scene> sn, bool isWrap = false);
-    ofPtr<bank> selectNextBank(ofPtr<bank> bk);
-    ofPtr<bank> selectPrevBank(ofPtr<bank> bk);
+    ofPtr<bank> selectNextBank(ofPtr<bank> bk, bool isWrap = false);
+    ofPtr<bank> selectPrevBank(ofPtr<bank> bk, bool isWrap = false);
     
     
     ofPtr<oscManager>  pOsc;
