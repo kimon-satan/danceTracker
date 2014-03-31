@@ -16,7 +16,6 @@ enum synthType{
     ST_SIMPLE,
     ST_GRAN_1,
     ST_GRAN_2,
-    ST_MULTISAMPLE,
     ST_COUNT
     
 };
@@ -37,6 +36,16 @@ enum mapType{
     MT_USER_RADIAL,
     MT_USER_CENTER,
     MT_COUNT
+    
+};
+
+enum selectorType{
+    
+    SELT_RANDOM,
+    SELT_WRAP,
+    SELT_SERIAL,
+    SELT_PINGPONG,
+    SELT_COUNT
     
 };
 
@@ -76,6 +85,7 @@ class synthDictionary{
 
     static vector<synthParam> getSynthParams(int sType);
     static string getSynthString(int sType);
+    static string getSelectorString(int sType);
     static string getMapString(int mType);
 
 

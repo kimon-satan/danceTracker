@@ -51,16 +51,7 @@ vector<synthParam>synthDictionary::getSynthParams(int sType){
         
     }
     
-    if(sType == ST_MULTISAMPLE){
-        
-        paramList.push_back(synthParam("pan", -1, 1, 0, MT_GLOBAL_Z));
-        paramList.push_back(synthParam("amp", 0,1, 0.5, MT_FIXED));
-        paramList.push_back(synthParam("rate", -2,2,1, MT_FIXED));
-        paramList.push_back(synthParam("fadeIn", 0.01,2.0, 0.01,MT_FIXED));
-        paramList.push_back(synthParam("fadeOut", 0.01,2.0, 0.01,MT_FIXED));
-        
-    }
-    
+       
     return paramList;
 
 }
@@ -72,10 +63,22 @@ string synthDictionary::getSynthString(int sType){
         case ST_SIMPLE:return "simple";
         case ST_GRAN_1:return "gran1";
         case ST_GRAN_2:return "gran2";
-        case ST_MULTISAMPLE:return "multiSample";
         default: return "";
     }
 
+}
+
+string synthDictionary::getSelectorString(int sType){
+    
+    switch(sType){
+            
+        case SELT_RANDOM:return "random";
+        case SELT_SERIAL:return "serial";
+        case SELT_PINGPONG:return "pingPong";
+        case SELT_WRAP:return "wrap";
+        default: return "";
+    }
+    
 }
 
 

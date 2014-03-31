@@ -125,7 +125,7 @@ public:
     ofxUISlider * radSlid, * tPosX, * tPosY, * tPosZ;
     ofxUISlider * xDimSlid, * yDimSlid, * zDimSlid;
     ofxUIToggle * eblTog, *loopTog, *playToEndTog, *dispSynthTog, *occInvTog, *movEnaTog, *movInvTog;
-    ofxUILabel * synthTypeDisp;
+    ofxUILabel * synthTypeDisp, * selTypeDisp;
     
     
     //canvas 3

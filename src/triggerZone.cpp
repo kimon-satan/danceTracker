@@ -38,6 +38,7 @@ triggerZone::triggerZone(ofPtr<oscManager> o) : mOsc(o){
     minReplaySecs = 0.0;
     
     synth = ST_SIMPLE;
+    selector = SELT_RANDOM;
     
     synthParams = synthDictionary::getSynthParams(synth);
     u_id = dt_utils::getRandom(10);
@@ -51,7 +52,8 @@ void triggerZone::updateAllAudio(){
     
     mOsc->updateZoneSettings(u_id, "loop", isLoop);
     mOsc->updateZoneSettings(u_id, "playToEnd", isPlayToEnd);
-    mOsc->updateZoneSettings(u_id, "synthType", (int)synth);
+    mOsc->updateZoneSettings(u_id, "synthType", synthDictionary::getSynthString((int)synth));
+    mOsc->updateZoneSettings(u_id, "selectorType", synthDictionary::getSelectorString((int)selector));
     updateSynthParams();
 
 }
@@ -513,6 +515,15 @@ void triggerZone::setSynthType(int i){
     synthParams = synthDictionary::getSynthParams(synth);
     updateAllAudio();
 
+}
+
+int triggerZone::getSelectorType(){
+    return (int)selector;
+}
+
+void triggerZone::setSelectorType(int i){
+    selector = selectorType(i);
+    updateAllAudio();
 }
 
 synthParam triggerZone::getSynthParam(int i){return synthParams[i];}

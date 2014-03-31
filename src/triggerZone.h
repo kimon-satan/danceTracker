@@ -89,6 +89,9 @@ public:
     
     int getSynthType();
     void setSynthType(int i);
+    
+    int getSelectorType();
+    void setSelectorType(int i);
 
     synthParam getSynthParam(int i);
     void setSynthParam(int i, synthParam p);
@@ -119,6 +122,7 @@ private:
     ofVec3f corners[2];
     
     synthType synth;
+    selectorType selector;
     vector<synthParam> synthParams;
     
     float sensitivity, minReplaySecs;

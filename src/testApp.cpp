@@ -349,9 +349,19 @@ void testApp::setupZonePanels(){
     
     zoneCanvases[0]->addWidgetRight(new ofxUISpacer(1,20));
     
+    occInvTog = new ofxUIToggle("OCC_INVERT", false, 20,20,0,0, OFX_UI_FONT_SMALL);
+    movEnaTog = new ofxUIToggle("MOV_ENABLED", false, 20,20,0,0, OFX_UI_FONT_SMALL);
+    movInvTog = new ofxUIToggle("MOV_INVERT", false, 20,20,0,0, OFX_UI_FONT_SMALL);
+    
+    zoneCanvases[0]->addWidgetRight(occInvTog);
+    zoneCanvases[0]->addWidgetRight(movEnaTog);
+    zoneCanvases[0]->addWidgetRight(movInvTog);
+    
+    zoneCanvases[0]->addSpacer();
+    
     eblTog = new ofxUIToggle("ENABLED", true, 20, 20, 0, 0, OFX_UI_FONT_SMALL);
     eblTog->setColorFill(ofxUIColor(255,0,0));
-    zoneCanvases[0]->addWidgetRight(eblTog);
+    zoneCanvases[0]->addWidgetDown(eblTog);
     
     zoneCanvases[0]->addWidgetRight(new ofxUISpacer(1,20));
     
@@ -359,27 +369,31 @@ void testApp::setupZonePanels(){
     sc2TextInput[2] = new ofxUITextInput("SOUNDFILE", "none", 200);
     zoneCanvases[0]->addWidgetRight(sc2TextInput[2]);
     
-    zoneCanvases[0]->addSpacer();
+
     
     loopTog = new ofxUIToggle("LOOP", true, 20,20,0,0, OFX_UI_FONT_SMALL);
     playToEndTog = new ofxUIToggle("PLAY_TO_END", false, 20,20,0,0, OFX_UI_FONT_SMALL);
-    occInvTog = new ofxUIToggle("OCC_INVERT", false, 20,20,0,0, OFX_UI_FONT_SMALL);
-    movEnaTog = new ofxUIToggle("MOV_ENABLED", false, 20,20,0,0, OFX_UI_FONT_SMALL);
-    movInvTog = new ofxUIToggle("MOV_INVERT", false, 20,20,0,0, OFX_UI_FONT_SMALL);
-    
-    zoneCanvases[0]->addWidgetDown(loopTog);
+
+    zoneCanvases[0]->addWidgetRight(loopTog);
     zoneCanvases[0]->addWidgetRight(playToEndTog);
-    zoneCanvases[0]->addWidgetRight(occInvTog);
-    zoneCanvases[0]->addWidgetRight(movEnaTog);
-    zoneCanvases[0]->addWidgetRight(movInvTog);
-    
-    // a bit crap
-    //sensSlider = new ofxUISlider("SENSITIVITY", 0.75, 1.0, 1.0, slw, 10);
-    //zoneCanvases[0]->addWidgetRight(sensSlider);
-    
+
     repSlider = new ofxUISlider("MIN_REPLAY", 0, 5.0, 0.05, slw, 10);
-    
+        
     zoneCanvases[0]->addWidgetDown(repSlider);
+    
+    //---------------------------------------------------------
+    zoneCanvases[0]->addWidgetRight(new ofxUISpacer(1,20));
+    
+    selTypeDisp = new ofxUILabel(0,0,200, "SELECTOR_TYPE: ", OFX_UI_FONT_SMALL);
+    zoneCanvases[0]->addWidgetRight(selTypeDisp);
+    
+    ofxUILabelButton * sel_p = (ofxUILabelButton *)zoneCanvases[0]->addWidgetRight(new ofxUILabelButton("SEL_MINUS", true, 25));
+    ofxUILabelButton * sel_m = (ofxUILabelButton *)zoneCanvases[0]->addWidgetRight(new ofxUILabelButton("SEL_PLUS", true, 25));
+    
+    sel_p->setLabelText("-");
+    sel_m->setLabelText("+");
+    
+    //-------------------------------------------------------------------
     
     zoneCanvases[0]->addSpacer();
     
@@ -398,9 +412,14 @@ void testApp::setupZonePanels(){
     
     zoneCanvases[0]->addWidgetRight(dispSynthTog);
     
+    
+
+    
     ofAddListener(zoneCanvases[0]->newGUIEvent,this,&testApp::s2Events);
     
     for(int i = 0; i < 3; i++)sc2TextInput[i]->setTriggerType(OFX_UI_TEXTINPUT_ON_FOCUS);
+    
+
     
     
     //zone c1----------------------------------------------------
@@ -820,11 +839,9 @@ void testApp::s2Events(ofxUIEventArgs &e){
     if(name == "FADE_IN")m_bankManager->setCSceneFadeIn(slider->getScaledValue());
     if(name == "FADE_OUT")m_bankManager->setCSceneFadeOut(slider->getScaledValue());
     
-    
-    //all actions in which the synthCanvas is hidden
 
     if(isMouseDown){
-    //problem of double trigger
+        //preventing double trigger
         if(name == "SCENE_PLUS"){isHideSC = true; m_bankManager->incrementScene();}
         if(name == "SCENE_MINUS"){isHideSC = true; m_bankManager->decrementScene();}
         if(name == "CREATE_SCENE"){isHideSC = true; m_bankManager->createScene();}
@@ -837,6 +854,8 @@ void testApp::s2Events(ofxUIEventArgs &e){
         if(name == "DELETE_ZONE"){isHideSC = true; m_bankManager->deleteZone();}
         if(name == "ST_MINUS"){isHideSC = true; m_bankManager->decCZoneSynthType();}
         if(name == "ST_PLUS"){isHideSC = true; m_bankManager->incCZoneSynthType();}
+        if(name == "SEL_MINUS"){m_bankManager->decCZoneSelectorType();}
+        if(name == "SEL_PLUS"){m_bankManager->incCZoneSelectorType();}
     }
     
     if(name == "sphere")m_bankManager->setCZoneShape(0);
@@ -1060,6 +1079,7 @@ void testApp::updateTZGuiElements(ofPtr<triggerZone> zn){
     //sensSlider->setValue(zn->getSensitivity());
     repSlider->setValue(zn->getMinReplaySecs());
     synthTypeDisp->setLabel("SYNTH_TYPE: " + synthDictionary::getSynthString(zn->getSynthType()));
+    selTypeDisp->setLabel("SELECTOR_TYPE: " + synthDictionary::getSelectorString(zn->getSelectorType()));
     zn->setIsSelected(true);
     
     

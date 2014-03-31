@@ -96,6 +96,9 @@ class bankManager{
     
     void incCZoneSynthType();
     void decCZoneSynthType();
+    void incCZoneSelectorType();
+    void decCZoneSelectorType();
+    
     
     void setCZoneShape(int i);
     void setCZoneRadius(float f);

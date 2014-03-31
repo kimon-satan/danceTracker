@@ -124,6 +124,7 @@ void bankManager::saveZone(ofxXmlSettings & XML, ofPtr<triggerZone> z){
     //XML.addValue("SENSITIVITY", z->getSensitivity());
     XML.addValue("MIN_REPLAY", z->getMinReplaySecs());
     XML.addValue("SYNTH_TYPE", z->getSynthType());
+    XML.addValue("SELECTOR_TYPE", z->getSelectorType());
     
     saveSynth(XML, z);
     
@@ -292,6 +293,7 @@ void bankManager::loadZone(ofxXmlSettings & XML, ofPtr<triggerZone> z){
     //z->setSensitivity(XML.getValue("SENSITIVITY", 1.0));
     z->setMinReplaySecs(XML.getValue("MIN_REPLAY", 0.0));
     z->setSynthType(XML.getValue("SYNTH_TYPE", 0));
+    z->setSelectorType(XML.getValue("SELECTOR_TYPE", z->getSelectorType()));
     
     loadSynth(XML, z);
 
@@ -845,5 +847,16 @@ void bankManager::decCZoneSynthType(){
     currentZone->setSynthType(i);
 
 }
+
+void bankManager::incCZoneSelectorType(){
+    int i = min(SELT_COUNT - 1, currentZone->getSelectorType() + 1);
+    currentZone->setSelectorType(i);
+}
+
+void bankManager::decCZoneSelectorType(){
+    int i = max(0, currentZone->getSelectorType() - 1);
+    currentZone->setSelectorType(i);
+}
+
 
 

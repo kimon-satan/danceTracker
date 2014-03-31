@@ -1,6 +1,5 @@
-1. add sequenceType selector for multi file synths
-
-1. refactoring of testApp
+1. refactoring of testAppi
+    - move and tidy GUI variables into map vector
     - allScenes can becomes a bank
 
-could put some of the iteration/ search functions into an inherited base class (probably not worth it a this stage)
+could put some of the iteration/ search functions into templated class (probably not worth it a this stage)
