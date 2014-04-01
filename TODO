@@ -1,10 +1,12 @@
-BUG - bank switching doesn't work
-    - potential crash when switching to bank setup - recreate
+BUGS
+     - potential crash when switching to bank setup - (can't recreate ... watch)
 
-1A - Add zone reset button + call reset on all zones when changing scenes
+
 
 1. refactoring of testApp
     - move and tidy GUI variables into map vector
     - allScenes can becomes a bank
+
+2. Bank inmplementation uses old style indexing ... might be safer with a scene wrapper class which can have an individual pointer ?
 
 could put some of the iteration/ search functions into templated class (probably not worth it a this stage)

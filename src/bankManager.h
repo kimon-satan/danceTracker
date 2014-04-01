@@ -43,6 +43,7 @@ class bankManager{
     void unTriggerAll();
     void resetForPerformance();
     void resetScenes();
+    void resetCurrentZone();
     
     //selection tools
     

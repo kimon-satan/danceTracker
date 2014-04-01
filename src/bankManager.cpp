@@ -482,8 +482,8 @@ void bankManager::incrementScene(){
     
     currentScene->unTriggerAll();
     currentScene->deselectAll();
-    
     currentScene = selectNextScene(currentScene);
+    currentScene->unTriggerAll();
     currentZone = currentScene->getFirstTriggerZone();
     
 }
@@ -492,8 +492,8 @@ void bankManager::decrementScene(){
     
     currentScene->unTriggerAll();
     currentScene->deselectAll();
-    
     currentScene = selectPrevScene(currentScene);
+    currentScene->unTriggerAll();
     currentZone = currentScene->getFirstTriggerZone();
 }
 
@@ -608,6 +608,12 @@ void bankManager::resetForPerformance(){
     
     pOsc->newScene(currentScene->getFadeIn(), currentScene->getFadeOut());
 
+}
+
+void bankManager::resetCurrentZone(){
+    
+    if(currentZone)pOsc->resetZone(currentZone->getUid());
+    
 }
 
 
@@ -849,6 +855,7 @@ void bankManager::decCZoneSynthType(){
 }
 
 void bankManager::incCZoneSelectorType(){
+    if(!currentZone)return;
     int i = min(SELT_COUNT - 1, currentZone->getSelectorType() + 1);
     currentZone->setSelectorType(i);
 }

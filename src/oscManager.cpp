@@ -173,6 +173,16 @@ void oscManager::updateZoneSettings(string index, string item, float value){
     
 }
 
+void oscManager::resetZone(string index){
+    
+    ofxOscMessage m;
+    m.setAddress("/resetZone");
+    m.addStringArg(index);
+    
+    sender.sendMessage(m);
+    
+}
+
 void oscManager::updateSynth(string index){
 
     ofxOscMessage m;

@@ -34,6 +34,8 @@ class oscManager{
     void updateZoneSettings(string index, string item, float value);
     void updateZoneSettings(string index, string item, int value);
     
+    void resetZone(string index);
+    
     void updateSynth(string index);
     void newScene(float fIn, float fOut);
     

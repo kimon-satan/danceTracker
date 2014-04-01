@@ -387,11 +387,16 @@ void testApp::setupZonePanels(){
     selTypeDisp = new ofxUILabel(0,0,200, "SELECTOR_TYPE: ", OFX_UI_FONT_SMALL);
     zoneCanvases[0]->addWidgetRight(selTypeDisp);
     
+    
+    
     ofxUILabelButton * sel_p = (ofxUILabelButton *)zoneCanvases[0]->addWidgetRight(new ofxUILabelButton("SEL_MINUS", true, 25));
     ofxUILabelButton * sel_m = (ofxUILabelButton *)zoneCanvases[0]->addWidgetRight(new ofxUILabelButton("SEL_PLUS", true, 25));
     
     sel_p->setLabelText("-");
     sel_m->setLabelText("+");
+    
+    ofxUILabelButton * z_reset = (ofxUILabelButton *)zoneCanvases[0]->addWidgetRight(new ofxUILabelButton("ZONE_RESET", true, 100));
+    z_reset->setLabelText("RESET");
     
     //-------------------------------------------------------------------
     
@@ -856,6 +861,7 @@ void testApp::s2Events(ofxUIEventArgs &e){
         if(name == "ST_PLUS"){isHideSC = true; m_bankManager->incCZoneSynthType();}
         if(name == "SEL_MINUS"){m_bankManager->decCZoneSelectorType();}
         if(name == "SEL_PLUS"){m_bankManager->incCZoneSelectorType();}
+        if(name == "ZONE_RESET"){m_bankManager->resetCurrentZone();}
     }
     
     if(name == "sphere")m_bankManager->setCZoneShape(0);

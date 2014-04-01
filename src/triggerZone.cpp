@@ -523,6 +523,7 @@ int triggerZone::getSelectorType(){
 
 void triggerZone::setSelectorType(int i){
     selector = selectorType(i);
+    mOsc->resetZone(u_id);
     updateAllAudio();
 }
 

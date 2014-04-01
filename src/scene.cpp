@@ -69,6 +69,7 @@ void scene::unTriggerAll(){
     for(it = triggerZones.begin(); it != triggerZones.end(); it++){
         
         (*it)->deselect();
+        mOsc->resetZone((*it)->getUid());
     }
     
 }
