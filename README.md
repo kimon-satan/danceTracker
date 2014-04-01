@@ -1,4 +1,4 @@
-danceTracker v1.1
+danceTracker v1.2
 =================
 
 This project was developed for creating an interactive environment for Marguerite Galizia's "Where Am I."
@@ -17,4 +17,11 @@ ofxUI
 ofxXmlSettings
 ofxOSC
 ofxOpenCV
+
+
+version changes
+
+ - Movement detection as triggers for zones
+ - Multiple samples per zone with various switiching methods
+ - Rather a lot of refactoring ! 
 
