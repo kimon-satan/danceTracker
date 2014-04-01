@@ -1178,8 +1178,8 @@ void testApp::perfChange(string name){
     
     if(name == "BANK_MINUS")m_bankManager->perfBankDecrement();
     if(name == "BANK_PLUS")m_bankManager->perfBankIncrement();
-    if(name == "B_ITEM_MINUS")m_bankManager->perfBankDecrement();
-    if(name == "B_ITEM_PLUS")m_bankManager->perfBankIncrement();
+    if(name == "B_ITEM_MINUS")m_bankManager->perfSceneDecrement();
+    if(name == "B_ITEM_PLUS")m_bankManager->perfSceneIncrement();
     
     updateBankElements(m_bankManager->getCurrentBank(), m_bankManager->getCurrentScene());
     
