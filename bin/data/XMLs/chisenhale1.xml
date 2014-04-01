@@ -8,6 +8,8 @@
         <FAR_THRESH>15.000000000</FAR_THRESH>
         <MIN_BLOB>0.007051283</MIN_BLOB>
         <MAX_BLOB>0.500000000</MAX_BLOB>
+        <MOV_THRESH>20</MOV_THRESH>
+        <MOV_BUFF>5</MOV_BUFF>
     </MAIN_SETTINGS>
     <SCENE_SETTINGS>
         <SCENE>
@@ -35,9 +37,12 @@
                 <IS_LOOP>0</IS_LOOP>
                 <IS_PLAY_TO_END>1</IS_PLAY_TO_END>
                 <INVERTED>0</INVERTED>
+                <MOV_ENABLED>0</MOV_ENABLED>
+                <MOV_INVERTED>0</MOV_INVERTED>
                 <ENABLED>1</ENABLED>
                 <MIN_REPLAY>1.989528894</MIN_REPLAY>
                 <SYNTH_TYPE>0</SYNTH_TYPE>
+                <SELECTOR_TYPE>0</SELECTOR_TYPE>
                 <pan>
                     <ABS_VAL>0.000000000</ABS_VAL>
                     <MIN_VAL>-1.000000000</MIN_VAL>
@@ -83,9 +88,12 @@
                 <IS_LOOP>0</IS_LOOP>
                 <IS_PLAY_TO_END>1</IS_PLAY_TO_END>
                 <INVERTED>0</INVERTED>
+                <MOV_ENABLED>0</MOV_ENABLED>
+                <MOV_INVERTED>0</MOV_INVERTED>
                 <ENABLED>1</ENABLED>
                 <MIN_REPLAY>1.989528894</MIN_REPLAY>
                 <SYNTH_TYPE>0</SYNTH_TYPE>
+                <SELECTOR_TYPE>0</SELECTOR_TYPE>
                 <pan>
                     <ABS_VAL>0.000000000</ABS_VAL>
                     <MIN_VAL>-1.000000000</MIN_VAL>
@@ -131,9 +139,12 @@
                 <IS_LOOP>0</IS_LOOP>
                 <IS_PLAY_TO_END>1</IS_PLAY_TO_END>
                 <INVERTED>0</INVERTED>
+                <MOV_ENABLED>0</MOV_ENABLED>
+                <MOV_INVERTED>0</MOV_INVERTED>
                 <ENABLED>1</ENABLED>
                 <MIN_REPLAY>1.989528894</MIN_REPLAY>
                 <SYNTH_TYPE>0</SYNTH_TYPE>
+                <SELECTOR_TYPE>0</SELECTOR_TYPE>
                 <pan>
                     <ABS_VAL>0.000000000</ABS_VAL>
                     <MIN_VAL>-1.000000000</MIN_VAL>
@@ -179,9 +190,12 @@
                 <IS_LOOP>0</IS_LOOP>
                 <IS_PLAY_TO_END>1</IS_PLAY_TO_END>
                 <INVERTED>0</INVERTED>
+                <MOV_ENABLED>0</MOV_ENABLED>
+                <MOV_INVERTED>0</MOV_INVERTED>
                 <ENABLED>1</ENABLED>
                 <MIN_REPLAY>1.989528894</MIN_REPLAY>
                 <SYNTH_TYPE>0</SYNTH_TYPE>
+                <SELECTOR_TYPE>0</SELECTOR_TYPE>
                 <pan>
                     <ABS_VAL>0.000000000</ABS_VAL>
                     <MIN_VAL>-1.000000000</MIN_VAL>
@@ -227,9 +241,12 @@
                 <IS_LOOP>0</IS_LOOP>
                 <IS_PLAY_TO_END>1</IS_PLAY_TO_END>
                 <INVERTED>0</INVERTED>
+                <MOV_ENABLED>0</MOV_ENABLED>
+                <MOV_INVERTED>0</MOV_INVERTED>
                 <ENABLED>1</ENABLED>
                 <MIN_REPLAY>1.989528894</MIN_REPLAY>
                 <SYNTH_TYPE>0</SYNTH_TYPE>
+                <SELECTOR_TYPE>0</SELECTOR_TYPE>
                 <pan>
                     <ABS_VAL>0.000000000</ABS_VAL>
                     <MIN_VAL>-1.000000000</MIN_VAL>
@@ -281,9 +298,12 @@
                 <IS_LOOP>0</IS_LOOP>
                 <IS_PLAY_TO_END>1</IS_PLAY_TO_END>
                 <INVERTED>0</INVERTED>
+                <MOV_ENABLED>0</MOV_ENABLED>
+                <MOV_INVERTED>0</MOV_INVERTED>
                 <ENABLED>1</ENABLED>
                 <MIN_REPLAY>1.989528894</MIN_REPLAY>
                 <SYNTH_TYPE>0</SYNTH_TYPE>
+                <SELECTOR_TYPE>0</SELECTOR_TYPE>
                 <pan>
                     <ABS_VAL>0.000000000</ABS_VAL>
                     <MIN_VAL>-1.000000000</MIN_VAL>
@@ -329,9 +349,12 @@
                 <IS_LOOP>0</IS_LOOP>
                 <IS_PLAY_TO_END>1</IS_PLAY_TO_END>
                 <INVERTED>0</INVERTED>
+                <MOV_ENABLED>0</MOV_ENABLED>
+                <MOV_INVERTED>0</MOV_INVERTED>
                 <ENABLED>1</ENABLED>
                 <MIN_REPLAY>1.989528894</MIN_REPLAY>
                 <SYNTH_TYPE>0</SYNTH_TYPE>
+                <SELECTOR_TYPE>0</SELECTOR_TYPE>
                 <pan>
                     <ABS_VAL>0.000000000</ABS_VAL>
                     <MIN_VAL>-1.000000000</MIN_VAL>
@@ -377,9 +400,12 @@
                 <IS_LOOP>0</IS_LOOP>
                 <IS_PLAY_TO_END>1</IS_PLAY_TO_END>
                 <INVERTED>0</INVERTED>
+                <MOV_ENABLED>0</MOV_ENABLED>
+                <MOV_INVERTED>0</MOV_INVERTED>
                 <ENABLED>1</ENABLED>
                 <MIN_REPLAY>1.989528894</MIN_REPLAY>
                 <SYNTH_TYPE>0</SYNTH_TYPE>
+                <SELECTOR_TYPE>0</SELECTOR_TYPE>
                 <pan>
                     <ABS_VAL>0.000000000</ABS_VAL>
                     <MIN_VAL>-1.000000000</MIN_VAL>
@@ -425,9 +451,12 @@
                 <IS_LOOP>0</IS_LOOP>
                 <IS_PLAY_TO_END>1</IS_PLAY_TO_END>
                 <INVERTED>0</INVERTED>
+                <MOV_ENABLED>0</MOV_ENABLED>
+                <MOV_INVERTED>0</MOV_INVERTED>
                 <ENABLED>1</ENABLED>
                 <MIN_REPLAY>1.256544471</MIN_REPLAY>
                 <SYNTH_TYPE>0</SYNTH_TYPE>
+                <SELECTOR_TYPE>0</SELECTOR_TYPE>
                 <pan>
                     <ABS_VAL>0.000000000</ABS_VAL>
                     <MIN_VAL>-1.000000000</MIN_VAL>
@@ -473,9 +502,12 @@
                 <IS_LOOP>0</IS_LOOP>
                 <IS_PLAY_TO_END>1</IS_PLAY_TO_END>
                 <INVERTED>0</INVERTED>
+                <MOV_ENABLED>0</MOV_ENABLED>
+                <MOV_INVERTED>0</MOV_INVERTED>
                 <ENABLED>1</ENABLED>
                 <MIN_REPLAY>1.989528894</MIN_REPLAY>
                 <SYNTH_TYPE>0</SYNTH_TYPE>
+                <SELECTOR_TYPE>0</SELECTOR_TYPE>
                 <pan>
                     <ABS_VAL>0.000000000</ABS_VAL>
                     <MIN_VAL>-1.000000000</MIN_VAL>
@@ -521,9 +553,12 @@
                 <IS_LOOP>0</IS_LOOP>
                 <IS_PLAY_TO_END>1</IS_PLAY_TO_END>
                 <INVERTED>0</INVERTED>
+                <MOV_ENABLED>0</MOV_ENABLED>
+                <MOV_INVERTED>0</MOV_INVERTED>
                 <ENABLED>1</ENABLED>
                 <MIN_REPLAY>1.989528894</MIN_REPLAY>
                 <SYNTH_TYPE>0</SYNTH_TYPE>
+                <SELECTOR_TYPE>0</SELECTOR_TYPE>
                 <pan>
                     <ABS_VAL>0.000000000</ABS_VAL>
                     <MIN_VAL>-1.000000000</MIN_VAL>
@@ -569,9 +604,12 @@
                 <IS_LOOP>0</IS_LOOP>
                 <IS_PLAY_TO_END>1</IS_PLAY_TO_END>
                 <INVERTED>0</INVERTED>
+                <MOV_ENABLED>0</MOV_ENABLED>
+                <MOV_INVERTED>0</MOV_INVERTED>
                 <ENABLED>1</ENABLED>
                 <MIN_REPLAY>1.989528894</MIN_REPLAY>
                 <SYNTH_TYPE>0</SYNTH_TYPE>
+                <SELECTOR_TYPE>0</SELECTOR_TYPE>
                 <pan>
                     <ABS_VAL>0.000000000</ABS_VAL>
                     <MIN_VAL>-1.000000000</MIN_VAL>
@@ -623,9 +661,12 @@
                 <IS_LOOP>0</IS_LOOP>
                 <IS_PLAY_TO_END>1</IS_PLAY_TO_END>
                 <INVERTED>0</INVERTED>
+                <MOV_ENABLED>0</MOV_ENABLED>
+                <MOV_INVERTED>0</MOV_INVERTED>
                 <ENABLED>1</ENABLED>
                 <MIN_REPLAY>1.989528894</MIN_REPLAY>
                 <SYNTH_TYPE>0</SYNTH_TYPE>
+                <SELECTOR_TYPE>0</SELECTOR_TYPE>
                 <pan>
                     <ABS_VAL>0.000000000</ABS_VAL>
                     <MIN_VAL>-1.000000000</MIN_VAL>
@@ -671,9 +712,12 @@
                 <IS_LOOP>0</IS_LOOP>
                 <IS_PLAY_TO_END>1</IS_PLAY_TO_END>
                 <INVERTED>0</INVERTED>
+                <MOV_ENABLED>0</MOV_ENABLED>
+                <MOV_INVERTED>0</MOV_INVERTED>
                 <ENABLED>1</ENABLED>
                 <MIN_REPLAY>1.989528894</MIN_REPLAY>
                 <SYNTH_TYPE>0</SYNTH_TYPE>
+                <SELECTOR_TYPE>0</SELECTOR_TYPE>
                 <pan>
                     <ABS_VAL>0.000000000</ABS_VAL>
                     <MIN_VAL>-1.000000000</MIN_VAL>
@@ -719,9 +763,12 @@
                 <IS_LOOP>0</IS_LOOP>
                 <IS_PLAY_TO_END>1</IS_PLAY_TO_END>
                 <INVERTED>0</INVERTED>
+                <MOV_ENABLED>0</MOV_ENABLED>
+                <MOV_INVERTED>0</MOV_INVERTED>
                 <ENABLED>1</ENABLED>
                 <MIN_REPLAY>1.989528894</MIN_REPLAY>
                 <SYNTH_TYPE>0</SYNTH_TYPE>
+                <SELECTOR_TYPE>0</SELECTOR_TYPE>
                 <pan>
                     <ABS_VAL>0.000000000</ABS_VAL>
                     <MIN_VAL>-1.000000000</MIN_VAL>
@@ -767,9 +814,12 @@
                 <IS_LOOP>0</IS_LOOP>
                 <IS_PLAY_TO_END>1</IS_PLAY_TO_END>
                 <INVERTED>0</INVERTED>
+                <MOV_ENABLED>0</MOV_ENABLED>
+                <MOV_INVERTED>0</MOV_INVERTED>
                 <ENABLED>1</ENABLED>
                 <MIN_REPLAY>1.256544471</MIN_REPLAY>
                 <SYNTH_TYPE>0</SYNTH_TYPE>
+                <SELECTOR_TYPE>0</SELECTOR_TYPE>
                 <pan>
                     <ABS_VAL>0.000000000</ABS_VAL>
                     <MIN_VAL>-1.000000000</MIN_VAL>
@@ -815,9 +865,12 @@
                 <IS_LOOP>0</IS_LOOP>
                 <IS_PLAY_TO_END>1</IS_PLAY_TO_END>
                 <INVERTED>0</INVERTED>
+                <MOV_ENABLED>0</MOV_ENABLED>
+                <MOV_INVERTED>0</MOV_INVERTED>
                 <ENABLED>1</ENABLED>
                 <MIN_REPLAY>1.989528894</MIN_REPLAY>
                 <SYNTH_TYPE>0</SYNTH_TYPE>
+                <SELECTOR_TYPE>0</SELECTOR_TYPE>
                 <pan>
                     <ABS_VAL>0.000000000</ABS_VAL>
                     <MIN_VAL>-1.000000000</MIN_VAL>
@@ -863,9 +916,12 @@
                 <IS_LOOP>0</IS_LOOP>
                 <IS_PLAY_TO_END>1</IS_PLAY_TO_END>
                 <INVERTED>0</INVERTED>
+                <MOV_ENABLED>0</MOV_ENABLED>
+                <MOV_INVERTED>0</MOV_INVERTED>
                 <ENABLED>1</ENABLED>
                 <MIN_REPLAY>1.989528894</MIN_REPLAY>
                 <SYNTH_TYPE>0</SYNTH_TYPE>
+                <SELECTOR_TYPE>0</SELECTOR_TYPE>
                 <pan>
                     <ABS_VAL>0.000000000</ABS_VAL>
                     <MIN_VAL>-1.000000000</MIN_VAL>
@@ -911,9 +967,12 @@
                 <IS_LOOP>0</IS_LOOP>
                 <IS_PLAY_TO_END>1</IS_PLAY_TO_END>
                 <INVERTED>0</INVERTED>
+                <MOV_ENABLED>0</MOV_ENABLED>
+                <MOV_INVERTED>0</MOV_INVERTED>
                 <ENABLED>1</ENABLED>
                 <MIN_REPLAY>1.989528894</MIN_REPLAY>
                 <SYNTH_TYPE>0</SYNTH_TYPE>
+                <SELECTOR_TYPE>0</SELECTOR_TYPE>
                 <pan>
                     <ABS_VAL>0.000000000</ABS_VAL>
                     <MIN_VAL>-1.000000000</MIN_VAL>
@@ -965,9 +1024,12 @@
                 <IS_LOOP>0</IS_LOOP>
                 <IS_PLAY_TO_END>1</IS_PLAY_TO_END>
                 <INVERTED>0</INVERTED>
+                <MOV_ENABLED>0</MOV_ENABLED>
+                <MOV_INVERTED>0</MOV_INVERTED>
                 <ENABLED>1</ENABLED>
                 <MIN_REPLAY>1.099476457</MIN_REPLAY>
                 <SYNTH_TYPE>0</SYNTH_TYPE>
+                <SELECTOR_TYPE>0</SELECTOR_TYPE>
                 <pan>
                     <ABS_VAL>0.000000000</ABS_VAL>
                     <MIN_VAL>-1.000000000</MIN_VAL>
@@ -1013,9 +1075,12 @@
                 <IS_LOOP>0</IS_LOOP>
                 <IS_PLAY_TO_END>1</IS_PLAY_TO_END>
                 <INVERTED>0</INVERTED>
+                <MOV_ENABLED>0</MOV_ENABLED>
+                <MOV_INVERTED>0</MOV_INVERTED>
                 <ENABLED>1</ENABLED>
                 <MIN_REPLAY>2.041884899</MIN_REPLAY>
                 <SYNTH_TYPE>0</SYNTH_TYPE>
+                <SELECTOR_TYPE>0</SELECTOR_TYPE>
                 <pan>
                     <ABS_VAL>0.000000000</ABS_VAL>
                     <MIN_VAL>-1.000000000</MIN_VAL>
@@ -1061,9 +1126,12 @@
                 <IS_LOOP>0</IS_LOOP>
                 <IS_PLAY_TO_END>1</IS_PLAY_TO_END>
                 <INVERTED>0</INVERTED>
+                <MOV_ENABLED>0</MOV_ENABLED>
+                <MOV_INVERTED>0</MOV_INVERTED>
                 <ENABLED>1</ENABLED>
                 <MIN_REPLAY>0.471204191</MIN_REPLAY>
                 <SYNTH_TYPE>0</SYNTH_TYPE>
+                <SELECTOR_TYPE>0</SELECTOR_TYPE>
                 <pan>
                     <ABS_VAL>0.000000000</ABS_VAL>
                     <MIN_VAL>-1.000000000</MIN_VAL>
@@ -1109,9 +1177,12 @@
                 <IS_LOOP>0</IS_LOOP>
                 <IS_PLAY_TO_END>1</IS_PLAY_TO_END>
                 <INVERTED>0</INVERTED>
+                <MOV_ENABLED>0</MOV_ENABLED>
+                <MOV_INVERTED>0</MOV_INVERTED>
                 <ENABLED>1</ENABLED>
                 <MIN_REPLAY>0.811518371</MIN_REPLAY>
                 <SYNTH_TYPE>0</SYNTH_TYPE>
+                <SELECTOR_TYPE>0</SELECTOR_TYPE>
                 <pan>
                     <ABS_VAL>0.000000000</ABS_VAL>
                     <MIN_VAL>-1.000000000</MIN_VAL>
@@ -1157,9 +1228,12 @@
                 <IS_LOOP>0</IS_LOOP>
                 <IS_PLAY_TO_END>1</IS_PLAY_TO_END>
                 <INVERTED>0</INVERTED>
+                <MOV_ENABLED>0</MOV_ENABLED>
+                <MOV_INVERTED>0</MOV_INVERTED>
                 <ENABLED>1</ENABLED>
                 <MIN_REPLAY>0.287958115</MIN_REPLAY>
                 <SYNTH_TYPE>0</SYNTH_TYPE>
+                <SELECTOR_TYPE>0</SELECTOR_TYPE>
                 <pan>
                     <ABS_VAL>0.000000000</ABS_VAL>
                     <MIN_VAL>-1.000000000</MIN_VAL>
@@ -1205,9 +1279,12 @@
                 <IS_LOOP>0</IS_LOOP>
                 <IS_PLAY_TO_END>1</IS_PLAY_TO_END>
                 <INVERTED>0</INVERTED>
+                <MOV_ENABLED>0</MOV_ENABLED>
+                <MOV_INVERTED>0</MOV_INVERTED>
                 <ENABLED>1</ENABLED>
                 <MIN_REPLAY>0.811518371</MIN_REPLAY>
                 <SYNTH_TYPE>0</SYNTH_TYPE>
+                <SELECTOR_TYPE>0</SELECTOR_TYPE>
                 <pan>
                     <ABS_VAL>0.000000000</ABS_VAL>
                     <MIN_VAL>-1.000000000</MIN_VAL>
@@ -1253,9 +1330,12 @@
                 <IS_LOOP>0</IS_LOOP>
                 <IS_PLAY_TO_END>1</IS_PLAY_TO_END>
                 <INVERTED>0</INVERTED>
+                <MOV_ENABLED>0</MOV_ENABLED>
+                <MOV_INVERTED>0</MOV_INVERTED>
                 <ENABLED>1</ENABLED>
                 <MIN_REPLAY>0.916230381</MIN_REPLAY>
                 <SYNTH_TYPE>0</SYNTH_TYPE>
+                <SELECTOR_TYPE>0</SELECTOR_TYPE>
                 <pan>
                     <ABS_VAL>0.000000000</ABS_VAL>
                     <MIN_VAL>-1.000000000</MIN_VAL>
@@ -1307,9 +1387,12 @@
                 <IS_LOOP>0</IS_LOOP>
                 <IS_PLAY_TO_END>1</IS_PLAY_TO_END>
                 <INVERTED>0</INVERTED>
+                <MOV_ENABLED>0</MOV_ENABLED>
+                <MOV_INVERTED>0</MOV_INVERTED>
                 <ENABLED>1</ENABLED>
                 <MIN_REPLAY>1.099476457</MIN_REPLAY>
                 <SYNTH_TYPE>0</SYNTH_TYPE>
+                <SELECTOR_TYPE>0</SELECTOR_TYPE>
                 <pan>
                     <ABS_VAL>0.000000000</ABS_VAL>
                     <MIN_VAL>-1.000000000</MIN_VAL>
@@ -1355,9 +1438,12 @@
                 <IS_LOOP>0</IS_LOOP>
                 <IS_PLAY_TO_END>1</IS_PLAY_TO_END>
                 <INVERTED>0</INVERTED>
+                <MOV_ENABLED>0</MOV_ENABLED>
+                <MOV_INVERTED>0</MOV_INVERTED>
                 <ENABLED>1</ENABLED>
                 <MIN_REPLAY>2.041884899</MIN_REPLAY>
                 <SYNTH_TYPE>0</SYNTH_TYPE>
+                <SELECTOR_TYPE>0</SELECTOR_TYPE>
                 <pan>
                     <ABS_VAL>0.000000000</ABS_VAL>
                     <MIN_VAL>-1.000000000</MIN_VAL>
@@ -1403,9 +1489,12 @@
                 <IS_LOOP>0</IS_LOOP>
                 <IS_PLAY_TO_END>1</IS_PLAY_TO_END>
                 <INVERTED>0</INVERTED>
+                <MOV_ENABLED>0</MOV_ENABLED>
+                <MOV_INVERTED>0</MOV_INVERTED>
                 <ENABLED>1</ENABLED>
                 <MIN_REPLAY>0.575916231</MIN_REPLAY>
                 <SYNTH_TYPE>0</SYNTH_TYPE>
+                <SELECTOR_TYPE>0</SELECTOR_TYPE>
                 <pan>
                     <ABS_VAL>0.000000000</ABS_VAL>
                     <MIN_VAL>-1.000000000</MIN_VAL>
@@ -1451,9 +1540,12 @@
                 <IS_LOOP>0</IS_LOOP>
                 <IS_PLAY_TO_END>1</IS_PLAY_TO_END>
                 <INVERTED>0</INVERTED>
+                <MOV_ENABLED>0</MOV_ENABLED>
+                <MOV_INVERTED>0</MOV_INVERTED>
                 <ENABLED>1</ENABLED>
                 <MIN_REPLAY>0.811518371</MIN_REPLAY>
                 <SYNTH_TYPE>0</SYNTH_TYPE>
+                <SELECTOR_TYPE>0</SELECTOR_TYPE>
                 <pan>
                     <ABS_VAL>0.000000000</ABS_VAL>
                     <MIN_VAL>-1.000000000</MIN_VAL>
@@ -1499,9 +1591,12 @@
                 <IS_LOOP>0</IS_LOOP>
                 <IS_PLAY_TO_END>1</IS_PLAY_TO_END>
                 <INVERTED>0</INVERTED>
+                <MOV_ENABLED>0</MOV_ENABLED>
+                <MOV_INVERTED>0</MOV_INVERTED>
                 <ENABLED>1</ENABLED>
                 <MIN_REPLAY>0.811518371</MIN_REPLAY>
                 <SYNTH_TYPE>0</SYNTH_TYPE>
+                <SELECTOR_TYPE>0</SELECTOR_TYPE>
                 <pan>
                     <ABS_VAL>0.000000000</ABS_VAL>
                     <MIN_VAL>-1.000000000</MIN_VAL>
@@ -1547,9 +1642,12 @@
                 <IS_LOOP>0</IS_LOOP>
                 <IS_PLAY_TO_END>1</IS_PLAY_TO_END>
                 <INVERTED>0</INVERTED>
+                <MOV_ENABLED>0</MOV_ENABLED>
+                <MOV_INVERTED>0</MOV_INVERTED>
                 <ENABLED>1</ENABLED>
                 <MIN_REPLAY>0.811518371</MIN_REPLAY>
                 <SYNTH_TYPE>0</SYNTH_TYPE>
+                <SELECTOR_TYPE>0</SELECTOR_TYPE>
                 <pan>
                     <ABS_VAL>0.000000000</ABS_VAL>
                     <MIN_VAL>-1.000000000</MIN_VAL>
@@ -1595,9 +1693,12 @@
                 <IS_LOOP>0</IS_LOOP>
                 <IS_PLAY_TO_END>1</IS_PLAY_TO_END>
                 <INVERTED>0</INVERTED>
+                <MOV_ENABLED>0</MOV_ENABLED>
+                <MOV_INVERTED>0</MOV_INVERTED>
                 <ENABLED>1</ENABLED>
                 <MIN_REPLAY>0.916230381</MIN_REPLAY>
                 <SYNTH_TYPE>0</SYNTH_TYPE>
+                <SELECTOR_TYPE>0</SELECTOR_TYPE>
                 <pan>
                     <ABS_VAL>0.000000000</ABS_VAL>
                     <MIN_VAL>-1.000000000</MIN_VAL>
@@ -1649,9 +1750,12 @@
                 <IS_LOOP>0</IS_LOOP>
                 <IS_PLAY_TO_END>1</IS_PLAY_TO_END>
                 <INVERTED>1</INVERTED>
+                <MOV_ENABLED>0</MOV_ENABLED>
+                <MOV_INVERTED>0</MOV_INVERTED>
                 <ENABLED>1</ENABLED>
                 <MIN_REPLAY>5.000000000</MIN_REPLAY>
                 <SYNTH_TYPE>0</SYNTH_TYPE>
+                <SELECTOR_TYPE>0</SELECTOR_TYPE>
                 <pan>
                     <ABS_VAL>0.500000000</ABS_VAL>
                     <MIN_VAL>0.000000000</MIN_VAL>
@@ -1697,9 +1801,12 @@
                 <IS_LOOP>0</IS_LOOP>
                 <IS_PLAY_TO_END>1</IS_PLAY_TO_END>
                 <INVERTED>0</INVERTED>
+                <MOV_ENABLED>0</MOV_ENABLED>
+                <MOV_INVERTED>0</MOV_INVERTED>
                 <ENABLED>1</ENABLED>
                 <MIN_REPLAY>5.000000000</MIN_REPLAY>
                 <SYNTH_TYPE>0</SYNTH_TYPE>
+                <SELECTOR_TYPE>0</SELECTOR_TYPE>
                 <pan>
                     <ABS_VAL>0.000000000</ABS_VAL>
                     <MIN_VAL>-1.000000000</MIN_VAL>
@@ -1745,9 +1852,12 @@
                 <IS_LOOP>0</IS_LOOP>
                 <IS_PLAY_TO_END>1</IS_PLAY_TO_END>
                 <INVERTED>0</INVERTED>
+                <MOV_ENABLED>0</MOV_ENABLED>
+                <MOV_INVERTED>0</MOV_INVERTED>
                 <ENABLED>1</ENABLED>
                 <MIN_REPLAY>5.000000000</MIN_REPLAY>
                 <SYNTH_TYPE>0</SYNTH_TYPE>
+                <SELECTOR_TYPE>0</SELECTOR_TYPE>
                 <pan>
                     <ABS_VAL>0.000000000</ABS_VAL>
                     <MIN_VAL>-1.000000000</MIN_VAL>
@@ -1793,9 +1903,12 @@
                 <IS_LOOP>0</IS_LOOP>
                 <IS_PLAY_TO_END>1</IS_PLAY_TO_END>
                 <INVERTED>0</INVERTED>
+                <MOV_ENABLED>0</MOV_ENABLED>
+                <MOV_INVERTED>0</MOV_INVERTED>
                 <ENABLED>1</ENABLED>
                 <MIN_REPLAY>5.000000000</MIN_REPLAY>
                 <SYNTH_TYPE>0</SYNTH_TYPE>
+                <SELECTOR_TYPE>0</SELECTOR_TYPE>
                 <pan>
                     <ABS_VAL>0.500000000</ABS_VAL>
                     <MIN_VAL>0.000000000</MIN_VAL>
@@ -1847,9 +1960,12 @@
                 <IS_LOOP>0</IS_LOOP>
                 <IS_PLAY_TO_END>1</IS_PLAY_TO_END>
                 <INVERTED>0</INVERTED>
+                <MOV_ENABLED>0</MOV_ENABLED>
+                <MOV_INVERTED>0</MOV_INVERTED>
                 <ENABLED>1</ENABLED>
                 <MIN_REPLAY>5.000000000</MIN_REPLAY>
                 <SYNTH_TYPE>0</SYNTH_TYPE>
+                <SELECTOR_TYPE>0</SELECTOR_TYPE>
                 <pan>
                     <ABS_VAL>0.500000000</ABS_VAL>
                     <MIN_VAL>0.000000000</MIN_VAL>
@@ -1895,9 +2011,12 @@
                 <IS_LOOP>0</IS_LOOP>
                 <IS_PLAY_TO_END>1</IS_PLAY_TO_END>
                 <INVERTED>0</INVERTED>
+                <MOV_ENABLED>0</MOV_ENABLED>
+                <MOV_INVERTED>0</MOV_INVERTED>
                 <ENABLED>1</ENABLED>
                 <MIN_REPLAY>5.000000000</MIN_REPLAY>
                 <SYNTH_TYPE>0</SYNTH_TYPE>
+                <SELECTOR_TYPE>0</SELECTOR_TYPE>
                 <pan>
                     <ABS_VAL>0.500000000</ABS_VAL>
                     <MIN_VAL>0.000000000</MIN_VAL>
@@ -1943,9 +2062,12 @@
                 <IS_LOOP>0</IS_LOOP>
                 <IS_PLAY_TO_END>1</IS_PLAY_TO_END>
                 <INVERTED>0</INVERTED>
+                <MOV_ENABLED>0</MOV_ENABLED>
+                <MOV_INVERTED>0</MOV_INVERTED>
                 <ENABLED>0</ENABLED>
                 <MIN_REPLAY>2.591623068</MIN_REPLAY>
                 <SYNTH_TYPE>0</SYNTH_TYPE>
+                <SELECTOR_TYPE>0</SELECTOR_TYPE>
                 <pan>
                     <ABS_VAL>0.500000000</ABS_VAL>
                     <MIN_VAL>0.000000000</MIN_VAL>
@@ -1991,9 +2113,12 @@
                 <IS_LOOP>0</IS_LOOP>
                 <IS_PLAY_TO_END>1</IS_PLAY_TO_END>
                 <INVERTED>0</INVERTED>
+                <MOV_ENABLED>0</MOV_ENABLED>
+                <MOV_INVERTED>0</MOV_INVERTED>
                 <ENABLED>1</ENABLED>
                 <MIN_REPLAY>2.591623068</MIN_REPLAY>
                 <SYNTH_TYPE>0</SYNTH_TYPE>
+                <SELECTOR_TYPE>0</SELECTOR_TYPE>
                 <pan>
                     <ABS_VAL>0.500000000</ABS_VAL>
                     <MIN_VAL>0.000000000</MIN_VAL>
@@ -2039,9 +2164,12 @@
                 <IS_LOOP>0</IS_LOOP>
                 <IS_PLAY_TO_END>1</IS_PLAY_TO_END>
                 <INVERTED>0</INVERTED>
+                <MOV_ENABLED>0</MOV_ENABLED>
+                <MOV_INVERTED>0</MOV_INVERTED>
                 <ENABLED>1</ENABLED>
                 <MIN_REPLAY>2.591623068</MIN_REPLAY>
                 <SYNTH_TYPE>0</SYNTH_TYPE>
+                <SELECTOR_TYPE>0</SELECTOR_TYPE>
                 <pan>
                     <ABS_VAL>0.500000000</ABS_VAL>
                     <MIN_VAL>0.000000000</MIN_VAL>
@@ -2087,9 +2215,12 @@
                 <IS_LOOP>0</IS_LOOP>
                 <IS_PLAY_TO_END>1</IS_PLAY_TO_END>
                 <INVERTED>0</INVERTED>
+                <MOV_ENABLED>0</MOV_ENABLED>
+                <MOV_INVERTED>0</MOV_INVERTED>
                 <ENABLED>0</ENABLED>
                 <MIN_REPLAY>2.591623068</MIN_REPLAY>
                 <SYNTH_TYPE>0</SYNTH_TYPE>
+                <SELECTOR_TYPE>0</SELECTOR_TYPE>
                 <pan>
                     <ABS_VAL>0.500000000</ABS_VAL>
                     <MIN_VAL>0.000000000</MIN_VAL>
@@ -2135,9 +2266,12 @@
                 <IS_LOOP>0</IS_LOOP>
                 <IS_PLAY_TO_END>1</IS_PLAY_TO_END>
                 <INVERTED>0</INVERTED>
+                <MOV_ENABLED>0</MOV_ENABLED>
+                <MOV_INVERTED>0</MOV_INVERTED>
                 <ENABLED>0</ENABLED>
                 <MIN_REPLAY>5.000000000</MIN_REPLAY>
                 <SYNTH_TYPE>0</SYNTH_TYPE>
+                <SELECTOR_TYPE>0</SELECTOR_TYPE>
                 <pan>
                     <ABS_VAL>0.500000000</ABS_VAL>
                     <MIN_VAL>0.000000000</MIN_VAL>
@@ -2183,9 +2317,12 @@
                 <IS_LOOP>0</IS_LOOP>
                 <IS_PLAY_TO_END>1</IS_PLAY_TO_END>
                 <INVERTED>0</INVERTED>
+                <MOV_ENABLED>0</MOV_ENABLED>
+                <MOV_INVERTED>0</MOV_INVERTED>
                 <ENABLED>0</ENABLED>
                 <MIN_REPLAY>2.591623068</MIN_REPLAY>
                 <SYNTH_TYPE>0</SYNTH_TYPE>
+                <SELECTOR_TYPE>0</SELECTOR_TYPE>
                 <pan>
                     <ABS_VAL>0.500000000</ABS_VAL>
                     <MIN_VAL>0.000000000</MIN_VAL>
@@ -2231,9 +2368,12 @@
                 <IS_LOOP>0</IS_LOOP>
                 <IS_PLAY_TO_END>1</IS_PLAY_TO_END>
                 <INVERTED>0</INVERTED>
+                <MOV_ENABLED>0</MOV_ENABLED>
+                <MOV_INVERTED>0</MOV_INVERTED>
                 <ENABLED>1</ENABLED>
                 <MIN_REPLAY>2.591623068</MIN_REPLAY>
                 <SYNTH_TYPE>0</SYNTH_TYPE>
+                <SELECTOR_TYPE>0</SELECTOR_TYPE>
                 <pan>
                     <ABS_VAL>0.500000000</ABS_VAL>
                     <MIN_VAL>0.000000000</MIN_VAL>
@@ -2285,9 +2425,12 @@
                 <IS_LOOP>0</IS_LOOP>
                 <IS_PLAY_TO_END>1</IS_PLAY_TO_END>
                 <INVERTED>0</INVERTED>
+                <MOV_ENABLED>0</MOV_ENABLED>
+                <MOV_INVERTED>0</MOV_INVERTED>
                 <ENABLED>1</ENABLED>
                 <MIN_REPLAY>2.120418787</MIN_REPLAY>
                 <SYNTH_TYPE>0</SYNTH_TYPE>
+                <SELECTOR_TYPE>0</SELECTOR_TYPE>
                 <pan>
                     <ABS_VAL>0.500000000</ABS_VAL>
                     <MIN_VAL>0.000000000</MIN_VAL>
@@ -2333,9 +2476,12 @@
                 <IS_LOOP>0</IS_LOOP>
                 <IS_PLAY_TO_END>1</IS_PLAY_TO_END>
                 <INVERTED>0</INVERTED>
+                <MOV_ENABLED>0</MOV_ENABLED>
+                <MOV_INVERTED>0</MOV_INVERTED>
                 <ENABLED>1</ENABLED>
                 <MIN_REPLAY>2.172774792</MIN_REPLAY>
                 <SYNTH_TYPE>0</SYNTH_TYPE>
+                <SELECTOR_TYPE>0</SELECTOR_TYPE>
                 <pan>
                     <ABS_VAL>0.000000000</ABS_VAL>
                     <MIN_VAL>-1.000000000</MIN_VAL>
@@ -2387,9 +2533,12 @@
                 <IS_LOOP>0</IS_LOOP>
                 <IS_PLAY_TO_END>1</IS_PLAY_TO_END>
                 <INVERTED>0</INVERTED>
+                <MOV_ENABLED>0</MOV_ENABLED>
+                <MOV_INVERTED>0</MOV_INVERTED>
                 <ENABLED>1</ENABLED>
                 <MIN_REPLAY>3.979057789</MIN_REPLAY>
                 <SYNTH_TYPE>0</SYNTH_TYPE>
+                <SELECTOR_TYPE>0</SELECTOR_TYPE>
                 <pan>
                     <ABS_VAL>0.500000000</ABS_VAL>
                     <MIN_VAL>0.000000000</MIN_VAL>
@@ -2441,9 +2590,12 @@
                 <IS_LOOP>0</IS_LOOP>
                 <IS_PLAY_TO_END>1</IS_PLAY_TO_END>
                 <INVERTED>0</INVERTED>
+                <MOV_ENABLED>0</MOV_ENABLED>
+                <MOV_INVERTED>0</MOV_INVERTED>
                 <ENABLED>1</ENABLED>
                 <MIN_REPLAY>0.497382224</MIN_REPLAY>
                 <SYNTH_TYPE>0</SYNTH_TYPE>
+                <SELECTOR_TYPE>0</SELECTOR_TYPE>
                 <pan>
                     <ABS_VAL>0.500000000</ABS_VAL>
                     <MIN_VAL>0.000000000</MIN_VAL>
@@ -2495,9 +2647,12 @@
                 <IS_LOOP>0</IS_LOOP>
                 <IS_PLAY_TO_END>1</IS_PLAY_TO_END>
                 <INVERTED>0</INVERTED>
+                <MOV_ENABLED>0</MOV_ENABLED>
+                <MOV_INVERTED>0</MOV_INVERTED>
                 <ENABLED>1</ENABLED>
                 <MIN_REPLAY>0.497382224</MIN_REPLAY>
                 <SYNTH_TYPE>0</SYNTH_TYPE>
+                <SELECTOR_TYPE>0</SELECTOR_TYPE>
                 <pan>
                     <ABS_VAL>0.500000000</ABS_VAL>
                     <MIN_VAL>0.000000000</MIN_VAL>
@@ -2549,9 +2704,12 @@
                 <IS_LOOP>0</IS_LOOP>
                 <IS_PLAY_TO_END>1</IS_PLAY_TO_END>
                 <INVERTED>0</INVERTED>
+                <MOV_ENABLED>0</MOV_ENABLED>
+                <MOV_INVERTED>0</MOV_INVERTED>
                 <ENABLED>1</ENABLED>
                 <MIN_REPLAY>4.607329845</MIN_REPLAY>
                 <SYNTH_TYPE>0</SYNTH_TYPE>
+                <SELECTOR_TYPE>0</SELECTOR_TYPE>
                 <pan>
                     <ABS_VAL>0.000000000</ABS_VAL>
                     <MIN_VAL>-1.000000000</MIN_VAL>
@@ -2603,9 +2761,12 @@
                 <IS_LOOP>0</IS_LOOP>
                 <IS_PLAY_TO_END>1</IS_PLAY_TO_END>
                 <INVERTED>0</INVERTED>
+                <MOV_ENABLED>0</MOV_ENABLED>
+                <MOV_INVERTED>0</MOV_INVERTED>
                 <ENABLED>1</ENABLED>
                 <MIN_REPLAY>1.282722473</MIN_REPLAY>
                 <SYNTH_TYPE>0</SYNTH_TYPE>
+                <SELECTOR_TYPE>0</SELECTOR_TYPE>
                 <pan>
                     <ABS_VAL>0.000000000</ABS_VAL>
                     <MIN_VAL>-1.000000000</MIN_VAL>
@@ -2657,9 +2818,12 @@
                 <IS_LOOP>0</IS_LOOP>
                 <IS_PLAY_TO_END>1</IS_PLAY_TO_END>
                 <INVERTED>0</INVERTED>
+                <MOV_ENABLED>0</MOV_ENABLED>
+                <MOV_INVERTED>0</MOV_INVERTED>
                 <ENABLED>1</ENABLED>
                 <MIN_REPLAY>0.445026189</MIN_REPLAY>
                 <SYNTH_TYPE>0</SYNTH_TYPE>
+                <SELECTOR_TYPE>0</SELECTOR_TYPE>
                 <pan>
                     <ABS_VAL>0.000000000</ABS_VAL>
                     <MIN_VAL>-1.000000000</MIN_VAL>
@@ -2711,9 +2875,12 @@
                 <IS_LOOP>0</IS_LOOP>
                 <IS_PLAY_TO_END>1</IS_PLAY_TO_END>
                 <INVERTED>0</INVERTED>
+                <MOV_ENABLED>0</MOV_ENABLED>
+                <MOV_INVERTED>0</MOV_INVERTED>
                 <ENABLED>1</ENABLED>
                 <MIN_REPLAY>2.382199049</MIN_REPLAY>
                 <SYNTH_TYPE>0</SYNTH_TYPE>
+                <SELECTOR_TYPE>0</SELECTOR_TYPE>
                 <pan>
                     <ABS_VAL>0.000000000</ABS_VAL>
                     <MIN_VAL>-1.000000000</MIN_VAL>
@@ -2759,9 +2926,12 @@
                 <IS_LOOP>0</IS_LOOP>
                 <IS_PLAY_TO_END>1</IS_PLAY_TO_END>
                 <INVERTED>0</INVERTED>
+                <MOV_ENABLED>0</MOV_ENABLED>
+                <MOV_INVERTED>0</MOV_INVERTED>
                 <ENABLED>1</ENABLED>
                 <MIN_REPLAY>2.303664923</MIN_REPLAY>
                 <SYNTH_TYPE>0</SYNTH_TYPE>
+                <SELECTOR_TYPE>0</SELECTOR_TYPE>
                 <pan>
                     <ABS_VAL>0.000000000</ABS_VAL>
                     <MIN_VAL>-1.000000000</MIN_VAL>
@@ -2807,9 +2977,12 @@
                 <IS_LOOP>0</IS_LOOP>
                 <IS_PLAY_TO_END>1</IS_PLAY_TO_END>
                 <INVERTED>0</INVERTED>
+                <MOV_ENABLED>0</MOV_ENABLED>
+                <MOV_INVERTED>0</MOV_INVERTED>
                 <ENABLED>1</ENABLED>
                 <MIN_REPLAY>2.382199049</MIN_REPLAY>
                 <SYNTH_TYPE>0</SYNTH_TYPE>
+                <SELECTOR_TYPE>0</SELECTOR_TYPE>
                 <pan>
                     <ABS_VAL>0.000000000</ABS_VAL>
                     <MIN_VAL>-1.000000000</MIN_VAL>
@@ -2861,9 +3034,12 @@
                 <IS_LOOP>0</IS_LOOP>
                 <IS_PLAY_TO_END>1</IS_PLAY_TO_END>
                 <INVERTED>0</INVERTED>
+                <MOV_ENABLED>0</MOV_ENABLED>
+                <MOV_INVERTED>0</MOV_INVERTED>
                 <ENABLED>1</ENABLED>
                 <MIN_REPLAY>4.764398098</MIN_REPLAY>
                 <SYNTH_TYPE>0</SYNTH_TYPE>
+                <SELECTOR_TYPE>0</SELECTOR_TYPE>
                 <pan>
                     <ABS_VAL>0.000000000</ABS_VAL>
                     <MIN_VAL>-1.000000000</MIN_VAL>
@@ -2915,9 +3091,12 @@
                 <IS_LOOP>0</IS_LOOP>
                 <IS_PLAY_TO_END>1</IS_PLAY_TO_END>
                 <INVERTED>0</INVERTED>
+                <MOV_ENABLED>0</MOV_ENABLED>
+                <MOV_INVERTED>0</MOV_INVERTED>
                 <ENABLED>1</ENABLED>
                 <MIN_REPLAY>1.099476457</MIN_REPLAY>
                 <SYNTH_TYPE>0</SYNTH_TYPE>
+                <SELECTOR_TYPE>0</SELECTOR_TYPE>
                 <pan>
                     <ABS_VAL>0.000000000</ABS_VAL>
                     <MIN_VAL>-1.000000000</MIN_VAL>
@@ -2969,9 +3148,12 @@
                 <IS_LOOP>0</IS_LOOP>
                 <IS_PLAY_TO_END>1</IS_PLAY_TO_END>
                 <INVERTED>0</INVERTED>
+                <MOV_ENABLED>0</MOV_ENABLED>
+                <MOV_INVERTED>0</MOV_INVERTED>
                 <ENABLED>1</ENABLED>
                 <MIN_REPLAY>0.785340309</MIN_REPLAY>
                 <SYNTH_TYPE>0</SYNTH_TYPE>
+                <SELECTOR_TYPE>0</SELECTOR_TYPE>
                 <pan>
                     <ABS_VAL>0.000000000</ABS_VAL>
                     <MIN_VAL>-1.000000000</MIN_VAL>
@@ -3023,9 +3205,12 @@
                 <IS_LOOP>0</IS_LOOP>
                 <IS_PLAY_TO_END>1</IS_PLAY_TO_END>
                 <INVERTED>0</INVERTED>
+                <MOV_ENABLED>0</MOV_ENABLED>
+                <MOV_INVERTED>0</MOV_INVERTED>
                 <ENABLED>1</ENABLED>
                 <MIN_REPLAY>2.329842806</MIN_REPLAY>
                 <SYNTH_TYPE>0</SYNTH_TYPE>
+                <SELECTOR_TYPE>0</SELECTOR_TYPE>
                 <pan>
                     <ABS_VAL>0.000000000</ABS_VAL>
                     <MIN_VAL>-1.000000000</MIN_VAL>
@@ -3071,9 +3256,12 @@
                 <IS_LOOP>0</IS_LOOP>
                 <IS_PLAY_TO_END>1</IS_PLAY_TO_END>
                 <INVERTED>0</INVERTED>
+                <MOV_ENABLED>0</MOV_ENABLED>
+                <MOV_INVERTED>0</MOV_INVERTED>
                 <ENABLED>1</ENABLED>
                 <MIN_REPLAY>2.434555054</MIN_REPLAY>
                 <SYNTH_TYPE>0</SYNTH_TYPE>
+                <SELECTOR_TYPE>0</SELECTOR_TYPE>
                 <pan>
                     <ABS_VAL>0.000000000</ABS_VAL>
                     <MIN_VAL>-1.000000000</MIN_VAL>
@@ -3119,9 +3307,12 @@
                 <IS_LOOP>0</IS_LOOP>
                 <IS_PLAY_TO_END>1</IS_PLAY_TO_END>
                 <INVERTED>0</INVERTED>
+                <MOV_ENABLED>0</MOV_ENABLED>
+                <MOV_INVERTED>0</MOV_INVERTED>
                 <ENABLED>1</ENABLED>
                 <MIN_REPLAY>2.486911058</MIN_REPLAY>
                 <SYNTH_TYPE>0</SYNTH_TYPE>
+                <SELECTOR_TYPE>0</SELECTOR_TYPE>
                 <pan>
                     <ABS_VAL>0.000000000</ABS_VAL>
                     <MIN_VAL>-1.000000000</MIN_VAL>
@@ -3173,9 +3364,12 @@
                 <IS_LOOP>0</IS_LOOP>
                 <IS_PLAY_TO_END>1</IS_PLAY_TO_END>
                 <INVERTED>0</INVERTED>
+                <MOV_ENABLED>0</MOV_ENABLED>
+                <MOV_INVERTED>0</MOV_INVERTED>
                 <ENABLED>1</ENABLED>
                 <MIN_REPLAY>4.293193817</MIN_REPLAY>
                 <SYNTH_TYPE>0</SYNTH_TYPE>
+                <SELECTOR_TYPE>0</SELECTOR_TYPE>
                 <pan>
                     <ABS_VAL>0.000000000</ABS_VAL>
                     <MIN_VAL>-1.000000000</MIN_VAL>
@@ -3227,9 +3421,12 @@
                 <IS_LOOP>0</IS_LOOP>
                 <IS_PLAY_TO_END>1</IS_PLAY_TO_END>
                 <INVERTED>0</INVERTED>
+                <MOV_ENABLED>0</MOV_ENABLED>
+                <MOV_INVERTED>0</MOV_INVERTED>
                 <ENABLED>1</ENABLED>
                 <MIN_REPLAY>4.476439476</MIN_REPLAY>
                 <SYNTH_TYPE>0</SYNTH_TYPE>
+                <SELECTOR_TYPE>0</SELECTOR_TYPE>
                 <pan>
                     <ABS_VAL>0.000000000</ABS_VAL>
                     <MIN_VAL>-1.000000000</MIN_VAL>
@@ -3281,9 +3478,12 @@
                 <IS_LOOP>0</IS_LOOP>
                 <IS_PLAY_TO_END>1</IS_PLAY_TO_END>
                 <INVERTED>0</INVERTED>
+                <MOV_ENABLED>0</MOV_ENABLED>
+                <MOV_INVERTED>0</MOV_INVERTED>
                 <ENABLED>1</ENABLED>
                 <MIN_REPLAY>3.926701546</MIN_REPLAY>
                 <SYNTH_TYPE>0</SYNTH_TYPE>
+                <SELECTOR_TYPE>0</SELECTOR_TYPE>
                 <pan>
                     <ABS_VAL>0.000000000</ABS_VAL>
                     <MIN_VAL>-1.000000000</MIN_VAL>
@@ -3335,9 +3535,12 @@
                 <IS_LOOP>0</IS_LOOP>
                 <IS_PLAY_TO_END>1</IS_PLAY_TO_END>
                 <INVERTED>1</INVERTED>
+                <MOV_ENABLED>0</MOV_ENABLED>
+                <MOV_INVERTED>0</MOV_INVERTED>
                 <ENABLED>1</ENABLED>
                 <MIN_REPLAY>0.000000000</MIN_REPLAY>
                 <SYNTH_TYPE>0</SYNTH_TYPE>
+                <SELECTOR_TYPE>0</SELECTOR_TYPE>
                 <pan>
                     <ABS_VAL>0.000000000</ABS_VAL>
                     <MIN_VAL>-1.000000000</MIN_VAL>
@@ -3389,9 +3592,12 @@
                 <IS_LOOP>0</IS_LOOP>
                 <IS_PLAY_TO_END>1</IS_PLAY_TO_END>
                 <INVERTED>0</INVERTED>
+                <MOV_ENABLED>0</MOV_ENABLED>
+                <MOV_INVERTED>0</MOV_INVERTED>
                 <ENABLED>1</ENABLED>
                 <MIN_REPLAY>2.277486801</MIN_REPLAY>
                 <SYNTH_TYPE>0</SYNTH_TYPE>
+                <SELECTOR_TYPE>0</SELECTOR_TYPE>
                 <pan>
                     <ABS_VAL>0.000000000</ABS_VAL>
                     <MIN_VAL>-1.000000000</MIN_VAL>
@@ -3437,9 +3643,12 @@
                 <IS_LOOP>0</IS_LOOP>
                 <IS_PLAY_TO_END>1</IS_PLAY_TO_END>
                 <INVERTED>0</INVERTED>
+                <MOV_ENABLED>0</MOV_ENABLED>
+                <MOV_INVERTED>0</MOV_INVERTED>
                 <ENABLED>1</ENABLED>
                 <MIN_REPLAY>2.460732937</MIN_REPLAY>
                 <SYNTH_TYPE>0</SYNTH_TYPE>
+                <SELECTOR_TYPE>0</SELECTOR_TYPE>
                 <pan>
                     <ABS_VAL>0.000000000</ABS_VAL>
                     <MIN_VAL>-1.000000000</MIN_VAL>
@@ -3485,9 +3694,12 @@
                 <IS_LOOP>0</IS_LOOP>
                 <IS_PLAY_TO_END>1</IS_PLAY_TO_END>
                 <INVERTED>0</INVERTED>
+                <MOV_ENABLED>0</MOV_ENABLED>
+                <MOV_INVERTED>0</MOV_INVERTED>
                 <ENABLED>1</ENABLED>
                 <MIN_REPLAY>3.272251129</MIN_REPLAY>
                 <SYNTH_TYPE>0</SYNTH_TYPE>
+                <SELECTOR_TYPE>0</SELECTOR_TYPE>
                 <pan>
                     <ABS_VAL>0.000000000</ABS_VAL>
                     <MIN_VAL>-1.000000000</MIN_VAL>
@@ -3533,9 +3745,12 @@
                 <IS_LOOP>0</IS_LOOP>
                 <IS_PLAY_TO_END>1</IS_PLAY_TO_END>
                 <INVERTED>0</INVERTED>
+                <MOV_ENABLED>0</MOV_ENABLED>
+                <MOV_INVERTED>0</MOV_INVERTED>
                 <ENABLED>1</ENABLED>
                 <MIN_REPLAY>3.350785255</MIN_REPLAY>
                 <SYNTH_TYPE>0</SYNTH_TYPE>
+                <SELECTOR_TYPE>0</SELECTOR_TYPE>
                 <pan>
                     <ABS_VAL>0.000000000</ABS_VAL>
                     <MIN_VAL>-1.000000000</MIN_VAL>
@@ -3581,9 +3796,12 @@
                 <IS_LOOP>0</IS_LOOP>
                 <IS_PLAY_TO_END>1</IS_PLAY_TO_END>
                 <INVERTED>0</INVERTED>
+                <MOV_ENABLED>0</MOV_ENABLED>
+                <MOV_INVERTED>0</MOV_INVERTED>
                 <ENABLED>1</ENABLED>
                 <MIN_REPLAY>4.109947681</MIN_REPLAY>
                 <SYNTH_TYPE>0</SYNTH_TYPE>
+                <SELECTOR_TYPE>0</SELECTOR_TYPE>
                 <pan>
                     <ABS_VAL>0.000000000</ABS_VAL>
                     <MIN_VAL>-1.000000000</MIN_VAL>
@@ -3635,9 +3853,12 @@
                 <IS_LOOP>0</IS_LOOP>
                 <IS_PLAY_TO_END>1</IS_PLAY_TO_END>
                 <INVERTED>1</INVERTED>
+                <MOV_ENABLED>0</MOV_ENABLED>
+                <MOV_INVERTED>0</MOV_INVERTED>
                 <ENABLED>1</ENABLED>
                 <MIN_REPLAY>1.675392628</MIN_REPLAY>
                 <SYNTH_TYPE>0</SYNTH_TYPE>
+                <SELECTOR_TYPE>0</SELECTOR_TYPE>
                 <pan>
                     <ABS_VAL>0.000000000</ABS_VAL>
                     <MIN_VAL>-1.000000000</MIN_VAL>
@@ -3683,9 +3904,12 @@
                 <IS_LOOP>0</IS_LOOP>
                 <IS_PLAY_TO_END>1</IS_PLAY_TO_END>
                 <INVERTED>1</INVERTED>
+                <MOV_ENABLED>0</MOV_ENABLED>
+                <MOV_INVERTED>0</MOV_INVERTED>
                 <ENABLED>1</ENABLED>
                 <MIN_REPLAY>1.806282759</MIN_REPLAY>
                 <SYNTH_TYPE>0</SYNTH_TYPE>
+                <SELECTOR_TYPE>0</SELECTOR_TYPE>
                 <pan>
                     <ABS_VAL>0.000000000</ABS_VAL>
                     <MIN_VAL>-1.000000000</MIN_VAL>
@@ -3731,9 +3955,12 @@
                 <IS_LOOP>0</IS_LOOP>
                 <IS_PLAY_TO_END>1</IS_PLAY_TO_END>
                 <INVERTED>1</INVERTED>
+                <MOV_ENABLED>0</MOV_ENABLED>
+                <MOV_INVERTED>0</MOV_INVERTED>
                 <ENABLED>1</ENABLED>
                 <MIN_REPLAY>2.225131035</MIN_REPLAY>
                 <SYNTH_TYPE>0</SYNTH_TYPE>
+                <SELECTOR_TYPE>0</SELECTOR_TYPE>
                 <pan>
                     <ABS_VAL>0.000000000</ABS_VAL>
                     <MIN_VAL>-1.000000000</MIN_VAL>
@@ -3779,9 +4006,12 @@
                 <IS_LOOP>0</IS_LOOP>
                 <IS_PLAY_TO_END>1</IS_PLAY_TO_END>
                 <INVERTED>1</INVERTED>
+                <MOV_ENABLED>0</MOV_ENABLED>
+                <MOV_INVERTED>0</MOV_INVERTED>
                 <ENABLED>1</ENABLED>
                 <MIN_REPLAY>2.015706778</MIN_REPLAY>
                 <SYNTH_TYPE>0</SYNTH_TYPE>
+                <SELECTOR_TYPE>0</SELECTOR_TYPE>
                 <pan>
                     <ABS_VAL>0.000000000</ABS_VAL>
                     <MIN_VAL>-1.000000000</MIN_VAL>
@@ -3827,9 +4057,12 @@
                 <IS_LOOP>0</IS_LOOP>
                 <IS_PLAY_TO_END>1</IS_PLAY_TO_END>
                 <INVERTED>1</INVERTED>
+                <MOV_ENABLED>0</MOV_ENABLED>
+                <MOV_INVERTED>0</MOV_INVERTED>
                 <ENABLED>1</ENABLED>
                 <MIN_REPLAY>1.989528894</MIN_REPLAY>
                 <SYNTH_TYPE>0</SYNTH_TYPE>
+                <SELECTOR_TYPE>0</SELECTOR_TYPE>
                 <pan>
                     <ABS_VAL>0.000000000</ABS_VAL>
                     <MIN_VAL>-1.000000000</MIN_VAL>
@@ -3875,9 +4108,12 @@
                 <IS_LOOP>0</IS_LOOP>
                 <IS_PLAY_TO_END>1</IS_PLAY_TO_END>
                 <INVERTED>1</INVERTED>
+                <MOV_ENABLED>0</MOV_ENABLED>
+                <MOV_INVERTED>0</MOV_INVERTED>
                 <ENABLED>1</ENABLED>
                 <MIN_REPLAY>1.649214625</MIN_REPLAY>
                 <SYNTH_TYPE>0</SYNTH_TYPE>
+                <SELECTOR_TYPE>0</SELECTOR_TYPE>
                 <pan>
                     <ABS_VAL>0.000000000</ABS_VAL>
                     <MIN_VAL>-1.000000000</MIN_VAL>
@@ -3929,9 +4165,12 @@
                 <IS_LOOP>0</IS_LOOP>
                 <IS_PLAY_TO_END>1</IS_PLAY_TO_END>
                 <INVERTED>1</INVERTED>
+                <MOV_ENABLED>0</MOV_ENABLED>
+                <MOV_INVERTED>0</MOV_INVERTED>
                 <ENABLED>1</ENABLED>
                 <MIN_REPLAY>5.000000000</MIN_REPLAY>
                 <SYNTH_TYPE>0</SYNTH_TYPE>
+                <SELECTOR_TYPE>0</SELECTOR_TYPE>
                 <pan>
                     <ABS_VAL>0.000000000</ABS_VAL>
                     <MIN_VAL>-1.000000000</MIN_VAL>
@@ -3983,9 +4222,12 @@
                 <IS_LOOP>0</IS_LOOP>
                 <IS_PLAY_TO_END>1</IS_PLAY_TO_END>
                 <INVERTED>0</INVERTED>
+                <MOV_ENABLED>0</MOV_ENABLED>
+                <MOV_INVERTED>0</MOV_INVERTED>
                 <ENABLED>1</ENABLED>
                 <MIN_REPLAY>1.675392628</MIN_REPLAY>
                 <SYNTH_TYPE>0</SYNTH_TYPE>
+                <SELECTOR_TYPE>0</SELECTOR_TYPE>
                 <pan>
                     <ABS_VAL>0.000000000</ABS_VAL>
                     <MIN_VAL>-1.000000000</MIN_VAL>
@@ -4031,9 +4273,12 @@
                 <IS_LOOP>0</IS_LOOP>
                 <IS_PLAY_TO_END>1</IS_PLAY_TO_END>
                 <INVERTED>0</INVERTED>
+                <MOV_ENABLED>0</MOV_ENABLED>
+                <MOV_INVERTED>0</MOV_INVERTED>
                 <ENABLED>1</ENABLED>
                 <MIN_REPLAY>2.015706778</MIN_REPLAY>
                 <SYNTH_TYPE>0</SYNTH_TYPE>
+                <SELECTOR_TYPE>0</SELECTOR_TYPE>
                 <pan>
                     <ABS_VAL>0.000000000</ABS_VAL>
                     <MIN_VAL>-1.000000000</MIN_VAL>
@@ -4079,9 +4324,12 @@
                 <IS_LOOP>0</IS_LOOP>
                 <IS_PLAY_TO_END>1</IS_PLAY_TO_END>
                 <INVERTED>0</INVERTED>
+                <MOV_ENABLED>0</MOV_ENABLED>
+                <MOV_INVERTED>0</MOV_INVERTED>
                 <ENABLED>1</ENABLED>
                 <MIN_REPLAY>1.675392628</MIN_REPLAY>
                 <SYNTH_TYPE>0</SYNTH_TYPE>
+                <SELECTOR_TYPE>0</SELECTOR_TYPE>
                 <pan>
                     <ABS_VAL>0.000000000</ABS_VAL>
                     <MIN_VAL>-1.000000000</MIN_VAL>
@@ -4127,9 +4375,12 @@
                 <IS_LOOP>0</IS_LOOP>
                 <IS_PLAY_TO_END>1</IS_PLAY_TO_END>
                 <INVERTED>1</INVERTED>
+                <MOV_ENABLED>0</MOV_ENABLED>
+                <MOV_INVERTED>0</MOV_INVERTED>
                 <ENABLED>1</ENABLED>
                 <MIN_REPLAY>1.649214625</MIN_REPLAY>
                 <SYNTH_TYPE>0</SYNTH_TYPE>
+                <SELECTOR_TYPE>0</SELECTOR_TYPE>
                 <pan>
                     <ABS_VAL>0.000000000</ABS_VAL>
                     <MIN_VAL>-1.000000000</MIN_VAL>
@@ -4175,9 +4426,12 @@
                 <IS_LOOP>0</IS_LOOP>
                 <IS_PLAY_TO_END>1</IS_PLAY_TO_END>
                 <INVERTED>0</INVERTED>
+                <MOV_ENABLED>0</MOV_ENABLED>
+                <MOV_INVERTED>0</MOV_INVERTED>
                 <ENABLED>1</ENABLED>
                 <MIN_REPLAY>1.806282759</MIN_REPLAY>
                 <SYNTH_TYPE>0</SYNTH_TYPE>
+                <SELECTOR_TYPE>0</SELECTOR_TYPE>
                 <pan>
                     <ABS_VAL>0.000000000</ABS_VAL>
                     <MIN_VAL>-1.000000000</MIN_VAL>
@@ -4223,9 +4477,12 @@
                 <IS_LOOP>0</IS_LOOP>
                 <IS_PLAY_TO_END>1</IS_PLAY_TO_END>
                 <INVERTED>0</INVERTED>
+                <MOV_ENABLED>0</MOV_ENABLED>
+                <MOV_INVERTED>0</MOV_INVERTED>
                 <ENABLED>1</ENABLED>
                 <MIN_REPLAY>1.753926754</MIN_REPLAY>
                 <SYNTH_TYPE>0</SYNTH_TYPE>
+                <SELECTOR_TYPE>0</SELECTOR_TYPE>
                 <pan>
                     <ABS_VAL>0.000000000</ABS_VAL>
                     <MIN_VAL>-1.000000000</MIN_VAL>
@@ -4271,9 +4528,12 @@
                 <IS_LOOP>0</IS_LOOP>
                 <IS_PLAY_TO_END>1</IS_PLAY_TO_END>
                 <INVERTED>0</INVERTED>
+                <MOV_ENABLED>0</MOV_ENABLED>
+                <MOV_INVERTED>0</MOV_INVERTED>
                 <ENABLED>1</ENABLED>
                 <MIN_REPLAY>2.225131035</MIN_REPLAY>
                 <SYNTH_TYPE>0</SYNTH_TYPE>
+                <SELECTOR_TYPE>0</SELECTOR_TYPE>
                 <pan>
                     <ABS_VAL>0.000000000</ABS_VAL>
                     <MIN_VAL>-1.000000000</MIN_VAL>
@@ -4319,9 +4579,12 @@
                 <IS_LOOP>0</IS_LOOP>
                 <IS_PLAY_TO_END>1</IS_PLAY_TO_END>
                 <INVERTED>0</INVERTED>
+                <MOV_ENABLED>0</MOV_ENABLED>
+                <MOV_INVERTED>0</MOV_INVERTED>
                 <ENABLED>1</ENABLED>
                 <MIN_REPLAY>2.277486801</MIN_REPLAY>
                 <SYNTH_TYPE>0</SYNTH_TYPE>
+                <SELECTOR_TYPE>0</SELECTOR_TYPE>
                 <pan>
                     <ABS_VAL>0.000000000</ABS_VAL>
                     <MIN_VAL>-1.000000000</MIN_VAL>
@@ -4367,9 +4630,12 @@
                 <IS_LOOP>0</IS_LOOP>
                 <IS_PLAY_TO_END>1</IS_PLAY_TO_END>
                 <INVERTED>0</INVERTED>
+                <MOV_ENABLED>0</MOV_ENABLED>
+                <MOV_INVERTED>0</MOV_INVERTED>
                 <ENABLED>1</ENABLED>
                 <MIN_REPLAY>2.015706778</MIN_REPLAY>
                 <SYNTH_TYPE>0</SYNTH_TYPE>
+                <SELECTOR_TYPE>0</SELECTOR_TYPE>
                 <pan>
                     <ABS_VAL>0.000000000</ABS_VAL>
                     <MIN_VAL>-1.000000000</MIN_VAL>
@@ -4415,9 +4681,12 @@
                 <IS_LOOP>0</IS_LOOP>
                 <IS_PLAY_TO_END>1</IS_PLAY_TO_END>
                 <INVERTED>0</INVERTED>
+                <MOV_ENABLED>0</MOV_ENABLED>
+                <MOV_INVERTED>0</MOV_INVERTED>
                 <ENABLED>1</ENABLED>
                 <MIN_REPLAY>1.989528894</MIN_REPLAY>
                 <SYNTH_TYPE>0</SYNTH_TYPE>
+                <SELECTOR_TYPE>0</SELECTOR_TYPE>
                 <pan>
                     <ABS_VAL>0.000000000</ABS_VAL>
                     <MIN_VAL>-1.000000000</MIN_VAL>
@@ -4469,9 +4738,12 @@
                 <IS_LOOP>0</IS_LOOP>
                 <IS_PLAY_TO_END>1</IS_PLAY_TO_END>
                 <INVERTED>1</INVERTED>
+                <MOV_ENABLED>0</MOV_ENABLED>
+                <MOV_INVERTED>0</MOV_INVERTED>
                 <ENABLED>1</ENABLED>
                 <MIN_REPLAY>0.000000000</MIN_REPLAY>
                 <SYNTH_TYPE>0</SYNTH_TYPE>
+                <SELECTOR_TYPE>0</SELECTOR_TYPE>
                 <pan>
                     <ABS_VAL>0.000000000</ABS_VAL>
                     <MIN_VAL>-1.000000000</MIN_VAL>
@@ -4523,9 +4795,12 @@
                 <IS_LOOP>0</IS_LOOP>
                 <IS_PLAY_TO_END>1</IS_PLAY_TO_END>
                 <INVERTED>1</INVERTED>
+                <MOV_ENABLED>0</MOV_ENABLED>
+                <MOV_INVERTED>0</MOV_INVERTED>
                 <ENABLED>1</ENABLED>
                 <MIN_REPLAY>0.000000000</MIN_REPLAY>
                 <SYNTH_TYPE>0</SYNTH_TYPE>
+                <SELECTOR_TYPE>0</SELECTOR_TYPE>
                 <pan>
                     <ABS_VAL>0.000000000</ABS_VAL>
                     <MIN_VAL>-1.000000000</MIN_VAL>
@@ -4577,9 +4852,12 @@
                 <IS_LOOP>0</IS_LOOP>
                 <IS_PLAY_TO_END>1</IS_PLAY_TO_END>
                 <INVERTED>0</INVERTED>
+                <MOV_ENABLED>0</MOV_ENABLED>
+                <MOV_INVERTED>0</MOV_INVERTED>
                 <ENABLED>1</ENABLED>
                 <MIN_REPLAY>2.460732937</MIN_REPLAY>
                 <SYNTH_TYPE>0</SYNTH_TYPE>
+                <SELECTOR_TYPE>0</SELECTOR_TYPE>
                 <pan>
                     <ABS_VAL>0.500000000</ABS_VAL>
                     <MIN_VAL>0.000000000</MIN_VAL>
@@ -4625,9 +4903,12 @@
                 <IS_LOOP>0</IS_LOOP>
                 <IS_PLAY_TO_END>1</IS_PLAY_TO_END>
                 <INVERTED>0</INVERTED>
+                <MOV_ENABLED>0</MOV_ENABLED>
+                <MOV_INVERTED>0</MOV_INVERTED>
                 <ENABLED>1</ENABLED>
                 <MIN_REPLAY>2.670156956</MIN_REPLAY>
                 <SYNTH_TYPE>0</SYNTH_TYPE>
+                <SELECTOR_TYPE>0</SELECTOR_TYPE>
                 <pan>
                     <ABS_VAL>0.500000000</ABS_VAL>
                     <MIN_VAL>0.000000000</MIN_VAL>
@@ -4673,9 +4954,12 @@
                 <IS_LOOP>0</IS_LOOP>
                 <IS_PLAY_TO_END>1</IS_PLAY_TO_END>
                 <INVERTED>0</INVERTED>
+                <MOV_ENABLED>0</MOV_ENABLED>
+                <MOV_INVERTED>0</MOV_INVERTED>
                 <ENABLED>1</ENABLED>
                 <MIN_REPLAY>3.036649227</MIN_REPLAY>
                 <SYNTH_TYPE>0</SYNTH_TYPE>
+                <SELECTOR_TYPE>0</SELECTOR_TYPE>
                 <pan>
                     <ABS_VAL>0.500000000</ABS_VAL>
                     <MIN_VAL>0.000000000</MIN_VAL>
@@ -4721,9 +5005,12 @@
                 <IS_LOOP>0</IS_LOOP>
                 <IS_PLAY_TO_END>1</IS_PLAY_TO_END>
                 <INVERTED>1</INVERTED>
+                <MOV_ENABLED>0</MOV_ENABLED>
+                <MOV_INVERTED>0</MOV_INVERTED>
                 <ENABLED>1</ENABLED>
                 <MIN_REPLAY>2.801047325</MIN_REPLAY>
                 <SYNTH_TYPE>0</SYNTH_TYPE>
+                <SELECTOR_TYPE>0</SELECTOR_TYPE>
                 <pan>
                     <ABS_VAL>0.000000000</ABS_VAL>
                     <MIN_VAL>-1.000000000</MIN_VAL>
@@ -4769,9 +5056,12 @@
                 <IS_LOOP>0</IS_LOOP>
                 <IS_PLAY_TO_END>1</IS_PLAY_TO_END>
                 <INVERTED>0</INVERTED>
+                <MOV_ENABLED>0</MOV_ENABLED>
+                <MOV_INVERTED>0</MOV_INVERTED>
                 <ENABLED>1</ENABLED>
                 <MIN_REPLAY>3.743455410</MIN_REPLAY>
                 <SYNTH_TYPE>0</SYNTH_TYPE>
+                <SELECTOR_TYPE>0</SELECTOR_TYPE>
                 <pan>
                     <ABS_VAL>0.000000000</ABS_VAL>
                     <MIN_VAL>-1.000000000</MIN_VAL>
@@ -4823,9 +5113,12 @@
                 <IS_LOOP>0</IS_LOOP>
                 <IS_PLAY_TO_END>1</IS_PLAY_TO_END>
                 <INVERTED>0</INVERTED>
+                <MOV_ENABLED>0</MOV_ENABLED>
+                <MOV_INVERTED>0</MOV_INVERTED>
                 <ENABLED>1</ENABLED>
                 <MIN_REPLAY>3.089005470</MIN_REPLAY>
                 <SYNTH_TYPE>0</SYNTH_TYPE>
+                <SELECTOR_TYPE>0</SELECTOR_TYPE>
                 <pan>
                     <ABS_VAL>0.500000000</ABS_VAL>
                     <MIN_VAL>0.000000000</MIN_VAL>
@@ -4871,9 +5164,12 @@
                 <IS_LOOP>0</IS_LOOP>
                 <IS_PLAY_TO_END>1</IS_PLAY_TO_END>
                 <INVERTED>0</INVERTED>
+                <MOV_ENABLED>0</MOV_ENABLED>
+                <MOV_INVERTED>0</MOV_INVERTED>
                 <ENABLED>1</ENABLED>
                 <MIN_REPLAY>3.010471106</MIN_REPLAY>
                 <SYNTH_TYPE>0</SYNTH_TYPE>
+                <SELECTOR_TYPE>0</SELECTOR_TYPE>
                 <pan>
                     <ABS_VAL>0.500000000</ABS_VAL>
                     <MIN_VAL>0.000000000</MIN_VAL>
@@ -4919,9 +5215,12 @@
                 <IS_LOOP>0</IS_LOOP>
                 <IS_PLAY_TO_END>1</IS_PLAY_TO_END>
                 <INVERTED>0</INVERTED>
+                <MOV_ENABLED>0</MOV_ENABLED>
+                <MOV_INVERTED>0</MOV_INVERTED>
                 <ENABLED>1</ENABLED>
                 <MIN_REPLAY>4.293193817</MIN_REPLAY>
                 <SYNTH_TYPE>0</SYNTH_TYPE>
+                <SELECTOR_TYPE>0</SELECTOR_TYPE>
                 <pan>
                     <ABS_VAL>0.500000000</ABS_VAL>
                     <MIN_VAL>0.000000000</MIN_VAL>
@@ -4973,9 +5272,12 @@
                 <IS_LOOP>0</IS_LOOP>
                 <IS_PLAY_TO_END>1</IS_PLAY_TO_END>
                 <INVERTED>1</INVERTED>
+                <MOV_ENABLED>0</MOV_ENABLED>
+                <MOV_INVERTED>0</MOV_INVERTED>
                 <ENABLED>1</ENABLED>
                 <MIN_REPLAY>4.842931747</MIN_REPLAY>
                 <SYNTH_TYPE>0</SYNTH_TYPE>
+                <SELECTOR_TYPE>0</SELECTOR_TYPE>
                 <pan>
                     <ABS_VAL>0.500000000</ABS_VAL>
                     <MIN_VAL>0.000000000</MIN_VAL>
@@ -5027,9 +5329,12 @@
                 <IS_LOOP>0</IS_LOOP>
                 <IS_PLAY_TO_END>1</IS_PLAY_TO_END>
                 <INVERTED>1</INVERTED>
+                <MOV_ENABLED>0</MOV_ENABLED>
+                <MOV_INVERTED>0</MOV_INVERTED>
                 <ENABLED>1</ENABLED>
                 <MIN_REPLAY>5.000000000</MIN_REPLAY>
                 <SYNTH_TYPE>0</SYNTH_TYPE>
+                <SELECTOR_TYPE>0</SELECTOR_TYPE>
                 <pan>
                     <ABS_VAL>0.500000000</ABS_VAL>
                     <MIN_VAL>0.000000000</MIN_VAL>
@@ -5075,9 +5380,12 @@
                 <IS_LOOP>0</IS_LOOP>
                 <IS_PLAY_TO_END>1</IS_PLAY_TO_END>
                 <INVERTED>0</INVERTED>
+                <MOV_ENABLED>0</MOV_ENABLED>
+                <MOV_INVERTED>0</MOV_INVERTED>
                 <ENABLED>1</ENABLED>
                 <MIN_REPLAY>5.000000000</MIN_REPLAY>
                 <SYNTH_TYPE>0</SYNTH_TYPE>
+                <SELECTOR_TYPE>0</SELECTOR_TYPE>
                 <pan>
                     <ABS_VAL>0.500000000</ABS_VAL>
                     <MIN_VAL>0.000000000</MIN_VAL>
@@ -5123,9 +5431,12 @@
                 <IS_LOOP>0</IS_LOOP>
                 <IS_PLAY_TO_END>1</IS_PLAY_TO_END>
                 <INVERTED>0</INVERTED>
+                <MOV_ENABLED>0</MOV_ENABLED>
+                <MOV_INVERTED>0</MOV_INVERTED>
                 <ENABLED>1</ENABLED>
                 <MIN_REPLAY>5.000000000</MIN_REPLAY>
                 <SYNTH_TYPE>0</SYNTH_TYPE>
+                <SELECTOR_TYPE>0</SELECTOR_TYPE>
                 <pan>
                     <ABS_VAL>0.000000000</ABS_VAL>
                     <MIN_VAL>-1.000000000</MIN_VAL>
@@ -5171,9 +5482,12 @@
                 <IS_LOOP>0</IS_LOOP>
                 <IS_PLAY_TO_END>1</IS_PLAY_TO_END>
                 <INVERTED>0</INVERTED>
+                <MOV_ENABLED>0</MOV_ENABLED>
+                <MOV_INVERTED>0</MOV_INVERTED>
                 <ENABLED>1</ENABLED>
                 <MIN_REPLAY>4.947643757</MIN_REPLAY>
                 <SYNTH_TYPE>0</SYNTH_TYPE>
+                <SELECTOR_TYPE>0</SELECTOR_TYPE>
                 <pan>
                     <ABS_VAL>0.500000000</ABS_VAL>
                     <MIN_VAL>0.000000000</MIN_VAL>
@@ -5219,9 +5533,12 @@
                 <IS_LOOP>0</IS_LOOP>
                 <IS_PLAY_TO_END>1</IS_PLAY_TO_END>
                 <INVERTED>0</INVERTED>
+                <MOV_ENABLED>0</MOV_ENABLED>
+                <MOV_INVERTED>0</MOV_INVERTED>
                 <ENABLED>1</ENABLED>
                 <MIN_REPLAY>5.000000000</MIN_REPLAY>
                 <SYNTH_TYPE>0</SYNTH_TYPE>
+                <SELECTOR_TYPE>0</SELECTOR_TYPE>
                 <pan>
                     <ABS_VAL>0.500000000</ABS_VAL>
                     <MIN_VAL>0.000000000</MIN_VAL>
@@ -5267,9 +5584,12 @@
                 <IS_LOOP>0</IS_LOOP>
                 <IS_PLAY_TO_END>1</IS_PLAY_TO_END>
                 <INVERTED>0</INVERTED>
+                <MOV_ENABLED>0</MOV_ENABLED>
+                <MOV_INVERTED>0</MOV_INVERTED>
                 <ENABLED>1</ENABLED>
                 <MIN_REPLAY>5.000000000</MIN_REPLAY>
                 <SYNTH_TYPE>0</SYNTH_TYPE>
+                <SELECTOR_TYPE>0</SELECTOR_TYPE>
                 <pan>
                     <ABS_VAL>0.500000000</ABS_VAL>
                     <MIN_VAL>0.000000000</MIN_VAL>
@@ -5321,9 +5641,12 @@
                 <IS_LOOP>0</IS_LOOP>
                 <IS_PLAY_TO_END>1</IS_PLAY_TO_END>
                 <INVERTED>1</INVERTED>
+                <MOV_ENABLED>0</MOV_ENABLED>
+                <MOV_INVERTED>0</MOV_INVERTED>
                 <ENABLED>1</ENABLED>
                 <MIN_REPLAY>0.000000000</MIN_REPLAY>
                 <SYNTH_TYPE>0</SYNTH_TYPE>
+                <SELECTOR_TYPE>0</SELECTOR_TYPE>
                 <pan>
                     <ABS_VAL>0.000000000</ABS_VAL>
                     <MIN_VAL>-1.000000000</MIN_VAL>
@@ -5375,9 +5698,12 @@
                 <IS_LOOP>0</IS_LOOP>
                 <IS_PLAY_TO_END>1</IS_PLAY_TO_END>
                 <INVERTED>1</INVERTED>
+                <MOV_ENABLED>0</MOV_ENABLED>
+                <MOV_INVERTED>0</MOV_INVERTED>
                 <ENABLED>1</ENABLED>
                 <MIN_REPLAY>5.000000000</MIN_REPLAY>
                 <SYNTH_TYPE>0</SYNTH_TYPE>
+                <SELECTOR_TYPE>0</SELECTOR_TYPE>
                 <pan>
                     <ABS_VAL>0.500000000</ABS_VAL>
                     <MIN_VAL>0.000000000</MIN_VAL>
@@ -5423,9 +5749,12 @@
                 <IS_LOOP>0</IS_LOOP>
                 <IS_PLAY_TO_END>1</IS_PLAY_TO_END>
                 <INVERTED>0</INVERTED>
+                <MOV_ENABLED>0</MOV_ENABLED>
+                <MOV_INVERTED>0</MOV_INVERTED>
                 <ENABLED>1</ENABLED>
                 <MIN_REPLAY>5.000000000</MIN_REPLAY>
                 <SYNTH_TYPE>0</SYNTH_TYPE>
+                <SELECTOR_TYPE>0</SELECTOR_TYPE>
                 <pan>
                     <ABS_VAL>0.500000000</ABS_VAL>
                     <MIN_VAL>0.000000000</MIN_VAL>
@@ -5471,9 +5800,12 @@
                 <IS_LOOP>1</IS_LOOP>
                 <IS_PLAY_TO_END>0</IS_PLAY_TO_END>
                 <INVERTED>0</INVERTED>
+                <MOV_ENABLED>0</MOV_ENABLED>
+                <MOV_INVERTED>0</MOV_INVERTED>
                 <ENABLED>1</ENABLED>
                 <MIN_REPLAY>0.000000000</MIN_REPLAY>
                 <SYNTH_TYPE>0</SYNTH_TYPE>
+                <SELECTOR_TYPE>0</SELECTOR_TYPE>
                 <pan>
                     <ABS_VAL>0.000000000</ABS_VAL>
                     <MIN_VAL>-1.000000000</MIN_VAL>
@@ -5519,9 +5851,12 @@
                 <IS_LOOP>0</IS_LOOP>
                 <IS_PLAY_TO_END>1</IS_PLAY_TO_END>
                 <INVERTED>0</INVERTED>
+                <MOV_ENABLED>0</MOV_ENABLED>
+                <MOV_INVERTED>0</MOV_INVERTED>
                 <ENABLED>1</ENABLED>
                 <MIN_REPLAY>4.947643757</MIN_REPLAY>
                 <SYNTH_TYPE>0</SYNTH_TYPE>
+                <SELECTOR_TYPE>0</SELECTOR_TYPE>
                 <pan>
                     <ABS_VAL>0.500000000</ABS_VAL>
                     <MIN_VAL>0.000000000</MIN_VAL>
@@ -5567,9 +5902,12 @@
                 <IS_LOOP>0</IS_LOOP>
                 <IS_PLAY_TO_END>1</IS_PLAY_TO_END>
                 <INVERTED>0</INVERTED>
+                <MOV_ENABLED>0</MOV_ENABLED>
+                <MOV_INVERTED>0</MOV_INVERTED>
                 <ENABLED>1</ENABLED>
                 <MIN_REPLAY>5.000000000</MIN_REPLAY>
                 <SYNTH_TYPE>0</SYNTH_TYPE>
+                <SELECTOR_TYPE>0</SELECTOR_TYPE>
                 <pan>
                     <ABS_VAL>0.500000000</ABS_VAL>
                     <MIN_VAL>0.000000000</MIN_VAL>
@@ -5615,9 +5953,12 @@
                 <IS_LOOP>0</IS_LOOP>
                 <IS_PLAY_TO_END>1</IS_PLAY_TO_END>
                 <INVERTED>0</INVERTED>
+                <MOV_ENABLED>0</MOV_ENABLED>
+                <MOV_INVERTED>0</MOV_INVERTED>
                 <ENABLED>1</ENABLED>
                 <MIN_REPLAY>5.000000000</MIN_REPLAY>
                 <SYNTH_TYPE>0</SYNTH_TYPE>
+                <SELECTOR_TYPE>0</SELECTOR_TYPE>
                 <pan>
                     <ABS_VAL>0.500000000</ABS_VAL>
                     <MIN_VAL>0.000000000</MIN_VAL>
@@ -5669,9 +6010,12 @@
                 <IS_LOOP>0</IS_LOOP>
                 <IS_PLAY_TO_END>1</IS_PLAY_TO_END>
                 <INVERTED>1</INVERTED>
+                <MOV_ENABLED>0</MOV_ENABLED>
+                <MOV_INVERTED>0</MOV_INVERTED>
                 <ENABLED>1</ENABLED>
                 <MIN_REPLAY>5.000000000</MIN_REPLAY>
                 <SYNTH_TYPE>0</SYNTH_TYPE>
+                <SELECTOR_TYPE>0</SELECTOR_TYPE>
                 <pan>
                     <ABS_VAL>0.500000000</ABS_VAL>
                     <MIN_VAL>0.000000000</MIN_VAL>
@@ -5717,9 +6061,12 @@
                 <IS_LOOP>0</IS_LOOP>
                 <IS_PLAY_TO_END>1</IS_PLAY_TO_END>
                 <INVERTED>0</INVERTED>
+                <MOV_ENABLED>0</MOV_ENABLED>
+                <MOV_INVERTED>0</MOV_INVERTED>
                 <ENABLED>1</ENABLED>
                 <MIN_REPLAY>5.000000000</MIN_REPLAY>
                 <SYNTH_TYPE>0</SYNTH_TYPE>
+                <SELECTOR_TYPE>0</SELECTOR_TYPE>
                 <pan>
                     <ABS_VAL>0.500000000</ABS_VAL>
                     <MIN_VAL>0.000000000</MIN_VAL>
@@ -5765,9 +6112,12 @@
                 <IS_LOOP>1</IS_LOOP>
                 <IS_PLAY_TO_END>0</IS_PLAY_TO_END>
                 <INVERTED>0</INVERTED>
+                <MOV_ENABLED>0</MOV_ENABLED>
+                <MOV_INVERTED>0</MOV_INVERTED>
                 <ENABLED>1</ENABLED>
                 <MIN_REPLAY>0.000000000</MIN_REPLAY>
                 <SYNTH_TYPE>0</SYNTH_TYPE>
+                <SELECTOR_TYPE>0</SELECTOR_TYPE>
                 <pan>
                     <ABS_VAL>0.000000000</ABS_VAL>
                     <MIN_VAL>-1.000000000</MIN_VAL>
@@ -5813,9 +6163,12 @@
                 <IS_LOOP>0</IS_LOOP>
                 <IS_PLAY_TO_END>1</IS_PLAY_TO_END>
                 <INVERTED>0</INVERTED>
+                <MOV_ENABLED>0</MOV_ENABLED>
+                <MOV_INVERTED>0</MOV_INVERTED>
                 <ENABLED>1</ENABLED>
                 <MIN_REPLAY>4.947643757</MIN_REPLAY>
                 <SYNTH_TYPE>0</SYNTH_TYPE>
+                <SELECTOR_TYPE>0</SELECTOR_TYPE>
                 <pan>
                     <ABS_VAL>0.500000000</ABS_VAL>
                     <MIN_VAL>0.000000000</MIN_VAL>
@@ -5861,9 +6214,12 @@
                 <IS_LOOP>0</IS_LOOP>
                 <IS_PLAY_TO_END>1</IS_PLAY_TO_END>
                 <INVERTED>0</INVERTED>
+                <MOV_ENABLED>0</MOV_ENABLED>
+                <MOV_INVERTED>0</MOV_INVERTED>
                 <ENABLED>1</ENABLED>
                 <MIN_REPLAY>5.000000000</MIN_REPLAY>
                 <SYNTH_TYPE>0</SYNTH_TYPE>
+                <SELECTOR_TYPE>0</SELECTOR_TYPE>
                 <pan>
                     <ABS_VAL>0.500000000</ABS_VAL>
                     <MIN_VAL>0.000000000</MIN_VAL>
@@ -5909,9 +6265,12 @@
                 <IS_LOOP>0</IS_LOOP>
                 <IS_PLAY_TO_END>1</IS_PLAY_TO_END>
                 <INVERTED>0</INVERTED>
+                <MOV_ENABLED>0</MOV_ENABLED>
+                <MOV_INVERTED>0</MOV_INVERTED>
                 <ENABLED>1</ENABLED>
                 <MIN_REPLAY>5.000000000</MIN_REPLAY>
                 <SYNTH_TYPE>0</SYNTH_TYPE>
+                <SELECTOR_TYPE>0</SELECTOR_TYPE>
                 <pan>
                     <ABS_VAL>0.500000000</ABS_VAL>
                     <MIN_VAL>0.000000000</MIN_VAL>
@@ -5963,9 +6322,12 @@
                 <IS_LOOP>0</IS_LOOP>
                 <IS_PLAY_TO_END>1</IS_PLAY_TO_END>
                 <INVERTED>1</INVERTED>
+                <MOV_ENABLED>0</MOV_ENABLED>
+                <MOV_INVERTED>0</MOV_INVERTED>
                 <ENABLED>1</ENABLED>
                 <MIN_REPLAY>4.947643757</MIN_REPLAY>
                 <SYNTH_TYPE>0</SYNTH_TYPE>
+                <SELECTOR_TYPE>0</SELECTOR_TYPE>
                 <pan>
                     <ABS_VAL>0.500000000</ABS_VAL>
                     <MIN_VAL>0.000000000</MIN_VAL>
@@ -6017,9 +6379,12 @@
                 <IS_LOOP>0</IS_LOOP>
                 <IS_PLAY_TO_END>1</IS_PLAY_TO_END>
                 <INVERTED>0</INVERTED>
+                <MOV_ENABLED>0</MOV_ENABLED>
+                <MOV_INVERTED>0</MOV_INVERTED>
                 <ENABLED>1</ENABLED>
                 <MIN_REPLAY>0.000000000</MIN_REPLAY>
                 <SYNTH_TYPE>0</SYNTH_TYPE>
+                <SELECTOR_TYPE>0</SELECTOR_TYPE>
                 <pan>
                     <ABS_VAL>0.000000000</ABS_VAL>
                     <MIN_VAL>-1.000000000</MIN_VAL>
@@ -6065,9 +6430,12 @@
                 <IS_LOOP>0</IS_LOOP>
                 <IS_PLAY_TO_END>1</IS_PLAY_TO_END>
                 <INVERTED>0</INVERTED>
+                <MOV_ENABLED>0</MOV_ENABLED>
+                <MOV_INVERTED>0</MOV_INVERTED>
                 <ENABLED>1</ENABLED>
                 <MIN_REPLAY>0.000000000</MIN_REPLAY>
                 <SYNTH_TYPE>0</SYNTH_TYPE>
+                <SELECTOR_TYPE>0</SELECTOR_TYPE>
                 <pan>
                     <ABS_VAL>0.000000000</ABS_VAL>
                     <MIN_VAL>-1.000000000</MIN_VAL>
@@ -6113,9 +6481,12 @@
                 <IS_LOOP>0</IS_LOOP>
                 <IS_PLAY_TO_END>1</IS_PLAY_TO_END>
                 <INVERTED>0</INVERTED>
+                <MOV_ENABLED>0</MOV_ENABLED>
+                <MOV_INVERTED>0</MOV_INVERTED>
                 <ENABLED>1</ENABLED>
                 <MIN_REPLAY>4.869110107</MIN_REPLAY>
                 <SYNTH_TYPE>0</SYNTH_TYPE>
+                <SELECTOR_TYPE>0</SELECTOR_TYPE>
                 <pan>
                     <ABS_VAL>0.000000000</ABS_VAL>
                     <MIN_VAL>-1.000000000</MIN_VAL>
@@ -6161,9 +6532,12 @@
                 <IS_LOOP>0</IS_LOOP>
                 <IS_PLAY_TO_END>1</IS_PLAY_TO_END>
                 <INVERTED>0</INVERTED>
+                <MOV_ENABLED>0</MOV_ENABLED>
+                <MOV_INVERTED>0</MOV_INVERTED>
                 <ENABLED>1</ENABLED>
                 <MIN_REPLAY>0.000000000</MIN_REPLAY>
                 <SYNTH_TYPE>0</SYNTH_TYPE>
+                <SELECTOR_TYPE>0</SELECTOR_TYPE>
                 <pan>
                     <ABS_VAL>0.000000000</ABS_VAL>
                     <MIN_VAL>-1.000000000</MIN_VAL>
@@ -6209,9 +6583,12 @@
                 <IS_LOOP>0</IS_LOOP>
                 <IS_PLAY_TO_END>1</IS_PLAY_TO_END>
                 <INVERTED>0</INVERTED>
+                <MOV_ENABLED>0</MOV_ENABLED>
+                <MOV_INVERTED>0</MOV_INVERTED>
                 <ENABLED>1</ENABLED>
                 <MIN_REPLAY>0.000000000</MIN_REPLAY>
                 <SYNTH_TYPE>0</SYNTH_TYPE>
+                <SELECTOR_TYPE>0</SELECTOR_TYPE>
                 <pan>
                     <ABS_VAL>0.000000000</ABS_VAL>
                     <MIN_VAL>-1.000000000</MIN_VAL>
@@ -6257,9 +6634,12 @@
                 <IS_LOOP>0</IS_LOOP>
                 <IS_PLAY_TO_END>1</IS_PLAY_TO_END>
                 <INVERTED>1</INVERTED>
+                <MOV_ENABLED>0</MOV_ENABLED>
+                <MOV_INVERTED>0</MOV_INVERTED>
                 <ENABLED>1</ENABLED>
                 <MIN_REPLAY>4.947643757</MIN_REPLAY>
                 <SYNTH_TYPE>0</SYNTH_TYPE>
+                <SELECTOR_TYPE>0</SELECTOR_TYPE>
                 <pan>
                     <ABS_VAL>0.500000000</ABS_VAL>
                     <MIN_VAL>0.000000000</MIN_VAL>
@@ -6311,9 +6691,12 @@
                 <IS_LOOP>1</IS_LOOP>
                 <IS_PLAY_TO_END>0</IS_PLAY_TO_END>
                 <INVERTED>0</INVERTED>
+                <MOV_ENABLED>0</MOV_ENABLED>
+                <MOV_INVERTED>0</MOV_INVERTED>
                 <ENABLED>1</ENABLED>
                 <MIN_REPLAY>0.000000000</MIN_REPLAY>
                 <SYNTH_TYPE>1</SYNTH_TYPE>
+                <SELECTOR_TYPE>0</SELECTOR_TYPE>
                 <pan>
                     <ABS_VAL>0.500000000</ABS_VAL>
                     <MIN_VAL>0.000000000</MIN_VAL>
@@ -6377,9 +6760,12 @@
                 <IS_LOOP>0</IS_LOOP>
                 <IS_PLAY_TO_END>1</IS_PLAY_TO_END>
                 <INVERTED>0</INVERTED>
+                <MOV_ENABLED>0</MOV_ENABLED>
+                <MOV_INVERTED>0</MOV_INVERTED>
                 <ENABLED>1</ENABLED>
                 <MIN_REPLAY>0.000000000</MIN_REPLAY>
                 <SYNTH_TYPE>0</SYNTH_TYPE>
+                <SELECTOR_TYPE>0</SELECTOR_TYPE>
                 <pan>
                     <ABS_VAL>0.000000000</ABS_VAL>
                     <MIN_VAL>-1.000000000</MIN_VAL>
@@ -6425,9 +6811,12 @@
                 <IS_LOOP>0</IS_LOOP>
                 <IS_PLAY_TO_END>1</IS_PLAY_TO_END>
                 <INVERTED>0</INVERTED>
+                <MOV_ENABLED>0</MOV_ENABLED>
+                <MOV_INVERTED>0</MOV_INVERTED>
                 <ENABLED>1</ENABLED>
                 <MIN_REPLAY>0.000000000</MIN_REPLAY>
                 <SYNTH_TYPE>0</SYNTH_TYPE>
+                <SELECTOR_TYPE>0</SELECTOR_TYPE>
                 <pan>
                     <ABS_VAL>0.000000000</ABS_VAL>
                     <MIN_VAL>-1.000000000</MIN_VAL>
@@ -6473,9 +6862,12 @@
                 <IS_LOOP>0</IS_LOOP>
                 <IS_PLAY_TO_END>1</IS_PLAY_TO_END>
                 <INVERTED>0</INVERTED>
+                <MOV_ENABLED>0</MOV_ENABLED>
+                <MOV_INVERTED>0</MOV_INVERTED>
                 <ENABLED>1</ENABLED>
                 <MIN_REPLAY>0.000000000</MIN_REPLAY>
                 <SYNTH_TYPE>0</SYNTH_TYPE>
+                <SELECTOR_TYPE>0</SELECTOR_TYPE>
                 <pan>
                     <ABS_VAL>0.000000000</ABS_VAL>
                     <MIN_VAL>-1.000000000</MIN_VAL>
@@ -6521,9 +6913,12 @@
                 <IS_LOOP>0</IS_LOOP>
                 <IS_PLAY_TO_END>1</IS_PLAY_TO_END>
                 <INVERTED>0</INVERTED>
+                <MOV_ENABLED>0</MOV_ENABLED>
+                <MOV_INVERTED>0</MOV_INVERTED>
                 <ENABLED>1</ENABLED>
                 <MIN_REPLAY>0.000000000</MIN_REPLAY>
                 <SYNTH_TYPE>0</SYNTH_TYPE>
+                <SELECTOR_TYPE>0</SELECTOR_TYPE>
                 <pan>
                     <ABS_VAL>0.000000000</ABS_VAL>
                     <MIN_VAL>-1.000000000</MIN_VAL>
@@ -6575,9 +6970,12 @@
                 <IS_LOOP>1</IS_LOOP>
                 <IS_PLAY_TO_END>0</IS_PLAY_TO_END>
                 <INVERTED>0</INVERTED>
+                <MOV_ENABLED>0</MOV_ENABLED>
+                <MOV_INVERTED>0</MOV_INVERTED>
                 <ENABLED>1</ENABLED>
                 <MIN_REPLAY>0.000000000</MIN_REPLAY>
                 <SYNTH_TYPE>1</SYNTH_TYPE>
+                <SELECTOR_TYPE>0</SELECTOR_TYPE>
                 <pan>
                     <ABS_VAL>0.500000000</ABS_VAL>
                     <MIN_VAL>0.000000000</MIN_VAL>
@@ -6641,9 +7039,12 @@
                 <IS_LOOP>0</IS_LOOP>
                 <IS_PLAY_TO_END>1</IS_PLAY_TO_END>
                 <INVERTED>1</INVERTED>
+                <MOV_ENABLED>0</MOV_ENABLED>
+                <MOV_INVERTED>0</MOV_INVERTED>
                 <ENABLED>1</ENABLED>
                 <MIN_REPLAY>4.973822117</MIN_REPLAY>
                 <SYNTH_TYPE>0</SYNTH_TYPE>
+                <SELECTOR_TYPE>0</SELECTOR_TYPE>
                 <pan>
                     <ABS_VAL>0.000000000</ABS_VAL>
                     <MIN_VAL>-1.000000000</MIN_VAL>
@@ -6695,9 +7096,12 @@
                 <IS_LOOP>1</IS_LOOP>
                 <IS_PLAY_TO_END>0</IS_PLAY_TO_END>
                 <INVERTED>0</INVERTED>
+                <MOV_ENABLED>0</MOV_ENABLED>
+                <MOV_INVERTED>0</MOV_INVERTED>
                 <ENABLED>1</ENABLED>
                 <MIN_REPLAY>0.000000000</MIN_REPLAY>
                 <SYNTH_TYPE>1</SYNTH_TYPE>
+                <SELECTOR_TYPE>0</SELECTOR_TYPE>
                 <pan>
                     <ABS_VAL>0.500000000</ABS_VAL>
                     <MIN_VAL>0.000000000</MIN_VAL>
@@ -6767,9 +7171,12 @@
                 <IS_LOOP>0</IS_LOOP>
                 <IS_PLAY_TO_END>1</IS_PLAY_TO_END>
                 <INVERTED>0</INVERTED>
+                <MOV_ENABLED>0</MOV_ENABLED>
+                <MOV_INVERTED>0</MOV_INVERTED>
                 <ENABLED>1</ENABLED>
                 <MIN_REPLAY>0.759162307</MIN_REPLAY>
                 <SYNTH_TYPE>0</SYNTH_TYPE>
+                <SELECTOR_TYPE>0</SELECTOR_TYPE>
                 <pan>
                     <ABS_VAL>0.000000000</ABS_VAL>
                     <MIN_VAL>-1.000000000</MIN_VAL>
@@ -6815,9 +7222,12 @@
                 <IS_LOOP>0</IS_LOOP>
                 <IS_PLAY_TO_END>1</IS_PLAY_TO_END>
                 <INVERTED>0</INVERTED>
+                <MOV_ENABLED>0</MOV_ENABLED>
+                <MOV_INVERTED>0</MOV_INVERTED>
                 <ENABLED>1</ENABLED>
                 <MIN_REPLAY>2.146596909</MIN_REPLAY>
                 <SYNTH_TYPE>0</SYNTH_TYPE>
+                <SELECTOR_TYPE>0</SELECTOR_TYPE>
                 <pan>
                     <ABS_VAL>0.000000000</ABS_VAL>
                     <MIN_VAL>-1.000000000</MIN_VAL>
@@ -6863,9 +7273,12 @@
                 <IS_LOOP>0</IS_LOOP>
                 <IS_PLAY_TO_END>1</IS_PLAY_TO_END>
                 <INVERTED>0</INVERTED>
+                <MOV_ENABLED>0</MOV_ENABLED>
+                <MOV_INVERTED>0</MOV_INVERTED>
                 <ENABLED>1</ENABLED>
                 <MIN_REPLAY>1.832460761</MIN_REPLAY>
                 <SYNTH_TYPE>0</SYNTH_TYPE>
+                <SELECTOR_TYPE>0</SELECTOR_TYPE>
                 <pan>
                     <ABS_VAL>0.000000000</ABS_VAL>
                     <MIN_VAL>-1.000000000</MIN_VAL>
@@ -6911,9 +7324,12 @@
                 <IS_LOOP>0</IS_LOOP>
                 <IS_PLAY_TO_END>1</IS_PLAY_TO_END>
                 <INVERTED>0</INVERTED>
+                <MOV_ENABLED>0</MOV_ENABLED>
+                <MOV_INVERTED>0</MOV_INVERTED>
                 <ENABLED>1</ENABLED>
                 <MIN_REPLAY>0.785340309</MIN_REPLAY>
                 <SYNTH_TYPE>0</SYNTH_TYPE>
+                <SELECTOR_TYPE>0</SELECTOR_TYPE>
                 <pan>
                     <ABS_VAL>0.000000000</ABS_VAL>
                     <MIN_VAL>-1.000000000</MIN_VAL>
@@ -6959,9 +7375,12 @@
                 <IS_LOOP>0</IS_LOOP>
                 <IS_PLAY_TO_END>1</IS_PLAY_TO_END>
                 <INVERTED>0</INVERTED>
+                <MOV_ENABLED>0</MOV_ENABLED>
+                <MOV_INVERTED>0</MOV_INVERTED>
                 <ENABLED>0</ENABLED>
                 <MIN_REPLAY>2.591623068</MIN_REPLAY>
                 <SYNTH_TYPE>0</SYNTH_TYPE>
+                <SELECTOR_TYPE>0</SELECTOR_TYPE>
                 <pan>
                     <ABS_VAL>0.000000000</ABS_VAL>
                     <MIN_VAL>-1.000000000</MIN_VAL>
@@ -7013,9 +7432,12 @@
                 <IS_LOOP>0</IS_LOOP>
                 <IS_PLAY_TO_END>1</IS_PLAY_TO_END>
                 <INVERTED>0</INVERTED>
+                <MOV_ENABLED>0</MOV_ENABLED>
+                <MOV_INVERTED>0</MOV_INVERTED>
                 <ENABLED>1</ENABLED>
                 <MIN_REPLAY>4.921465874</MIN_REPLAY>
                 <SYNTH_TYPE>0</SYNTH_TYPE>
+                <SELECTOR_TYPE>0</SELECTOR_TYPE>
                 <pan>
                     <ABS_VAL>0.000000000</ABS_VAL>
                     <MIN_VAL>-1.000000000</MIN_VAL>
@@ -7061,9 +7483,12 @@
                 <IS_LOOP>0</IS_LOOP>
                 <IS_PLAY_TO_END>1</IS_PLAY_TO_END>
                 <INVERTED>0</INVERTED>
+                <MOV_ENABLED>0</MOV_ENABLED>
+                <MOV_INVERTED>0</MOV_INVERTED>
                 <ENABLED>1</ENABLED>
                 <MIN_REPLAY>3.167539120</MIN_REPLAY>
                 <SYNTH_TYPE>0</SYNTH_TYPE>
+                <SELECTOR_TYPE>0</SELECTOR_TYPE>
                 <pan>
                     <ABS_VAL>0.000000000</ABS_VAL>
                     <MIN_VAL>-1.000000000</MIN_VAL>
@@ -7115,9 +7540,12 @@
                 <IS_LOOP>0</IS_LOOP>
                 <IS_PLAY_TO_END>1</IS_PLAY_TO_END>
                 <INVERTED>0</INVERTED>
+                <MOV_ENABLED>0</MOV_ENABLED>
+                <MOV_INVERTED>0</MOV_INVERTED>
                 <ENABLED>1</ENABLED>
                 <MIN_REPLAY>0.759162307</MIN_REPLAY>
                 <SYNTH_TYPE>0</SYNTH_TYPE>
+                <SELECTOR_TYPE>0</SELECTOR_TYPE>
                 <pan>
                     <ABS_VAL>0.000000000</ABS_VAL>
                     <MIN_VAL>-1.000000000</MIN_VAL>
@@ -7163,9 +7591,12 @@
                 <IS_LOOP>0</IS_LOOP>
                 <IS_PLAY_TO_END>1</IS_PLAY_TO_END>
                 <INVERTED>0</INVERTED>
+                <MOV_ENABLED>0</MOV_ENABLED>
+                <MOV_INVERTED>0</MOV_INVERTED>
                 <ENABLED>1</ENABLED>
                 <MIN_REPLAY>1.832460761</MIN_REPLAY>
                 <SYNTH_TYPE>0</SYNTH_TYPE>
+                <SELECTOR_TYPE>0</SELECTOR_TYPE>
                 <pan>
                     <ABS_VAL>0.000000000</ABS_VAL>
                     <MIN_VAL>-1.000000000</MIN_VAL>
@@ -7211,9 +7642,12 @@
                 <IS_LOOP>0</IS_LOOP>
                 <IS_PLAY_TO_END>1</IS_PLAY_TO_END>
                 <INVERTED>0</INVERTED>
+                <MOV_ENABLED>0</MOV_ENABLED>
+                <MOV_INVERTED>0</MOV_INVERTED>
                 <ENABLED>1</ENABLED>
                 <MIN_REPLAY>0.785340309</MIN_REPLAY>
                 <SYNTH_TYPE>0</SYNTH_TYPE>
+                <SELECTOR_TYPE>0</SELECTOR_TYPE>
                 <pan>
                     <ABS_VAL>0.000000000</ABS_VAL>
                     <MIN_VAL>-1.000000000</MIN_VAL>
@@ -7259,9 +7693,12 @@
                 <IS_LOOP>1</IS_LOOP>
                 <IS_PLAY_TO_END>0</IS_PLAY_TO_END>
                 <INVERTED>0</INVERTED>
+                <MOV_ENABLED>0</MOV_ENABLED>
+                <MOV_INVERTED>0</MOV_INVERTED>
                 <ENABLED>1</ENABLED>
                 <MIN_REPLAY>0.523560166</MIN_REPLAY>
                 <SYNTH_TYPE>0</SYNTH_TYPE>
+                <SELECTOR_TYPE>0</SELECTOR_TYPE>
                 <pan>
                     <ABS_VAL>0.000000000</ABS_VAL>
                     <MIN_VAL>-1.000000000</MIN_VAL>
@@ -7313,9 +7750,12 @@
                 <IS_LOOP>0</IS_LOOP>
                 <IS_PLAY_TO_END>1</IS_PLAY_TO_END>
                 <INVERTED>0</INVERTED>
+                <MOV_ENABLED>0</MOV_ENABLED>
+                <MOV_INVERTED>0</MOV_INVERTED>
                 <ENABLED>1</ENABLED>
                 <MIN_REPLAY>0.759162307</MIN_REPLAY>
                 <SYNTH_TYPE>0</SYNTH_TYPE>
+                <SELECTOR_TYPE>0</SELECTOR_TYPE>
                 <pan>
                     <ABS_VAL>0.000000000</ABS_VAL>
                     <MIN_VAL>-1.000000000</MIN_VAL>
@@ -7361,9 +7801,12 @@
                 <IS_LOOP>0</IS_LOOP>
                 <IS_PLAY_TO_END>1</IS_PLAY_TO_END>
                 <INVERTED>0</INVERTED>
+                <MOV_ENABLED>0</MOV_ENABLED>
+                <MOV_INVERTED>0</MOV_INVERTED>
                 <ENABLED>1</ENABLED>
                 <MIN_REPLAY>1.832460761</MIN_REPLAY>
                 <SYNTH_TYPE>0</SYNTH_TYPE>
+                <SELECTOR_TYPE>0</SELECTOR_TYPE>
                 <pan>
                     <ABS_VAL>0.000000000</ABS_VAL>
                     <MIN_VAL>-1.000000000</MIN_VAL>
@@ -7409,9 +7852,12 @@
                 <IS_LOOP>0</IS_LOOP>
                 <IS_PLAY_TO_END>1</IS_PLAY_TO_END>
                 <INVERTED>0</INVERTED>
+                <MOV_ENABLED>0</MOV_ENABLED>
+                <MOV_INVERTED>0</MOV_INVERTED>
                 <ENABLED>1</ENABLED>
                 <MIN_REPLAY>0.785340309</MIN_REPLAY>
                 <SYNTH_TYPE>0</SYNTH_TYPE>
+                <SELECTOR_TYPE>0</SELECTOR_TYPE>
                 <pan>
                     <ABS_VAL>0.000000000</ABS_VAL>
                     <MIN_VAL>-1.000000000</MIN_VAL>
@@ -7457,9 +7903,12 @@
                 <IS_LOOP>1</IS_LOOP>
                 <IS_PLAY_TO_END>0</IS_PLAY_TO_END>
                 <INVERTED>0</INVERTED>
+                <MOV_ENABLED>0</MOV_ENABLED>
+                <MOV_INVERTED>0</MOV_INVERTED>
                 <ENABLED>0</ENABLED>
                 <MIN_REPLAY>0.811518371</MIN_REPLAY>
                 <SYNTH_TYPE>0</SYNTH_TYPE>
+                <SELECTOR_TYPE>0</SELECTOR_TYPE>
                 <pan>
                     <ABS_VAL>0.000000000</ABS_VAL>
                     <MIN_VAL>-1.000000000</MIN_VAL>
@@ -7511,9 +7960,12 @@
                 <IS_LOOP>0</IS_LOOP>
                 <IS_PLAY_TO_END>1</IS_PLAY_TO_END>
                 <INVERTED>0</INVERTED>
+                <MOV_ENABLED>0</MOV_ENABLED>
+                <MOV_INVERTED>0</MOV_INVERTED>
                 <ENABLED>1</ENABLED>
                 <MIN_REPLAY>0.392670155</MIN_REPLAY>
                 <SYNTH_TYPE>0</SYNTH_TYPE>
+                <SELECTOR_TYPE>0</SELECTOR_TYPE>
                 <pan>
                     <ABS_VAL>0.000000000</ABS_VAL>
                     <MIN_VAL>-1.000000000</MIN_VAL>
@@ -7559,9 +8011,12 @@
                 <IS_LOOP>0</IS_LOOP>
                 <IS_PLAY_TO_END>1</IS_PLAY_TO_END>
                 <INVERTED>0</INVERTED>
+                <MOV_ENABLED>0</MOV_ENABLED>
+                <MOV_INVERTED>0</MOV_INVERTED>
                 <ENABLED>1</ENABLED>
                 <MIN_REPLAY>1.832460761</MIN_REPLAY>
                 <SYNTH_TYPE>0</SYNTH_TYPE>
+                <SELECTOR_TYPE>0</SELECTOR_TYPE>
                 <pan>
                     <ABS_VAL>0.000000000</ABS_VAL>
                     <MIN_VAL>-1.000000000</MIN_VAL>
@@ -7607,9 +8062,12 @@
                 <IS_LOOP>0</IS_LOOP>
                 <IS_PLAY_TO_END>1</IS_PLAY_TO_END>
                 <INVERTED>0</INVERTED>
+                <MOV_ENABLED>0</MOV_ENABLED>
+                <MOV_INVERTED>0</MOV_INVERTED>
                 <ENABLED>1</ENABLED>
                 <MIN_REPLAY>0.785340309</MIN_REPLAY>
                 <SYNTH_TYPE>0</SYNTH_TYPE>
+                <SELECTOR_TYPE>0</SELECTOR_TYPE>
                 <pan>
                     <ABS_VAL>0.000000000</ABS_VAL>
                     <MIN_VAL>-1.000000000</MIN_VAL>
@@ -7655,9 +8113,12 @@
                 <IS_LOOP>1</IS_LOOP>
                 <IS_PLAY_TO_END>0</IS_PLAY_TO_END>
                 <INVERTED>0</INVERTED>
+                <MOV_ENABLED>0</MOV_ENABLED>
+                <MOV_INVERTED>0</MOV_INVERTED>
                 <ENABLED>1</ENABLED>
                 <MIN_REPLAY>0.811518371</MIN_REPLAY>
                 <SYNTH_TYPE>0</SYNTH_TYPE>
+                <SELECTOR_TYPE>0</SELECTOR_TYPE>
                 <pan>
                     <ABS_VAL>0.000000000</ABS_VAL>
                     <MIN_VAL>-1.000000000</MIN_VAL>
@@ -7709,9 +8170,12 @@
                 <IS_LOOP>0</IS_LOOP>
                 <IS_PLAY_TO_END>1</IS_PLAY_TO_END>
                 <INVERTED>1</INVERTED>
+                <MOV_ENABLED>0</MOV_ENABLED>
+                <MOV_INVERTED>0</MOV_INVERTED>
                 <ENABLED>1</ENABLED>
                 <MIN_REPLAY>4.947643757</MIN_REPLAY>
                 <SYNTH_TYPE>0</SYNTH_TYPE>
+                <SELECTOR_TYPE>0</SELECTOR_TYPE>
                 <pan>
                     <ABS_VAL>0.000000000</ABS_VAL>
                     <MIN_VAL>-1.000000000</MIN_VAL>
@@ -7763,9 +8227,12 @@
                 <IS_LOOP>0</IS_LOOP>
                 <IS_PLAY_TO_END>1</IS_PLAY_TO_END>
                 <INVERTED>1</INVERTED>
+                <MOV_ENABLED>0</MOV_ENABLED>
+                <MOV_INVERTED>0</MOV_INVERTED>
                 <ENABLED>1</ENABLED>
                 <MIN_REPLAY>2.591623068</MIN_REPLAY>
                 <SYNTH_TYPE>0</SYNTH_TYPE>
+                <SELECTOR_TYPE>0</SELECTOR_TYPE>
                 <pan>
                     <ABS_VAL>0.000000000</ABS_VAL>
                     <MIN_VAL>-1.000000000</MIN_VAL>
@@ -7817,9 +8284,12 @@
                 <IS_LOOP>0</IS_LOOP>
                 <IS_PLAY_TO_END>1</IS_PLAY_TO_END>
                 <INVERTED>0</INVERTED>
+                <MOV_ENABLED>0</MOV_ENABLED>
+                <MOV_INVERTED>0</MOV_INVERTED>
                 <ENABLED>1</ENABLED>
                 <MIN_REPLAY>1.282722473</MIN_REPLAY>
                 <SYNTH_TYPE>0</SYNTH_TYPE>
+                <SELECTOR_TYPE>0</SELECTOR_TYPE>
                 <pan>
                     <ABS_VAL>0.000000000</ABS_VAL>
                     <MIN_VAL>-1.000000000</MIN_VAL>
@@ -7871,9 +8341,12 @@
                 <IS_LOOP>0</IS_LOOP>
                 <IS_PLAY_TO_END>1</IS_PLAY_TO_END>
                 <INVERTED>1</INVERTED>
+                <MOV_ENABLED>0</MOV_ENABLED>
+                <MOV_INVERTED>0</MOV_INVERTED>
                 <ENABLED>1</ENABLED>
                 <MIN_REPLAY>0.000000000</MIN_REPLAY>
                 <SYNTH_TYPE>0</SYNTH_TYPE>
+                <SELECTOR_TYPE>0</SELECTOR_TYPE>
                 <pan>
                     <ABS_VAL>0.000000000</ABS_VAL>
                     <MIN_VAL>-1.000000000</MIN_VAL>
@@ -7925,9 +8398,12 @@
                 <IS_LOOP>1</IS_LOOP>
                 <IS_PLAY_TO_END>0</IS_PLAY_TO_END>
                 <INVERTED>0</INVERTED>
+                <MOV_ENABLED>0</MOV_ENABLED>
+                <MOV_INVERTED>0</MOV_INVERTED>
                 <ENABLED>1</ENABLED>
                 <MIN_REPLAY>0.000000000</MIN_REPLAY>
                 <SYNTH_TYPE>2</SYNTH_TYPE>
+                <SELECTOR_TYPE>0</SELECTOR_TYPE>
                 <amp>
                     <ABS_VAL>0.500000000</ABS_VAL>
                     <MIN_VAL>0.090000004</MIN_VAL>
@@ -7997,9 +8473,12 @@
                 <IS_LOOP>1</IS_LOOP>
                 <IS_PLAY_TO_END>0</IS_PLAY_TO_END>
                 <INVERTED>0</INVERTED>
+                <MOV_ENABLED>0</MOV_ENABLED>
+                <MOV_INVERTED>0</MOV_INVERTED>
                 <ENABLED>1</ENABLED>
                 <MIN_REPLAY>0.000000000</MIN_REPLAY>
                 <SYNTH_TYPE>2</SYNTH_TYPE>
+                <SELECTOR_TYPE>0</SELECTOR_TYPE>
                 <amp>
                     <ABS_VAL>0.500000000</ABS_VAL>
                     <MIN_VAL>0.090000004</MIN_VAL>
@@ -8063,9 +8542,12 @@
                 <IS_LOOP>0</IS_LOOP>
                 <IS_PLAY_TO_END>1</IS_PLAY_TO_END>
                 <INVERTED>0</INVERTED>
+                <MOV_ENABLED>0</MOV_ENABLED>
+                <MOV_INVERTED>0</MOV_INVERTED>
                 <ENABLED>1</ENABLED>
                 <MIN_REPLAY>2.670156956</MIN_REPLAY>
                 <SYNTH_TYPE>0</SYNTH_TYPE>
+                <SELECTOR_TYPE>0</SELECTOR_TYPE>
                 <pan>
                     <ABS_VAL>0.000000000</ABS_VAL>
                     <MIN_VAL>-1.000000000</MIN_VAL>
@@ -8111,9 +8593,12 @@
                 <IS_LOOP>0</IS_LOOP>
                 <IS_PLAY_TO_END>1</IS_PLAY_TO_END>
                 <INVERTED>0</INVERTED>
+                <MOV_ENABLED>0</MOV_ENABLED>
+                <MOV_INVERTED>0</MOV_INVERTED>
                 <ENABLED>1</ENABLED>
                 <MIN_REPLAY>1.963350773</MIN_REPLAY>
                 <SYNTH_TYPE>0</SYNTH_TYPE>
+                <SELECTOR_TYPE>0</SELECTOR_TYPE>
                 <pan>
                     <ABS_VAL>0.000000000</ABS_VAL>
                     <MIN_VAL>-1.000000000</MIN_VAL>
@@ -8159,9 +8644,12 @@
                 <IS_LOOP>0</IS_LOOP>
                 <IS_PLAY_TO_END>1</IS_PLAY_TO_END>
                 <INVERTED>0</INVERTED>
+                <MOV_ENABLED>0</MOV_ENABLED>
+                <MOV_INVERTED>0</MOV_INVERTED>
                 <ENABLED>1</ENABLED>
                 <MIN_REPLAY>1.596858621</MIN_REPLAY>
                 <SYNTH_TYPE>0</SYNTH_TYPE>
+                <SELECTOR_TYPE>0</SELECTOR_TYPE>
                 <pan>
                     <ABS_VAL>0.000000000</ABS_VAL>
                     <MIN_VAL>-1.000000000</MIN_VAL>
@@ -8207,9 +8695,12 @@
                 <IS_LOOP>0</IS_LOOP>
                 <IS_PLAY_TO_END>1</IS_PLAY_TO_END>
                 <INVERTED>0</INVERTED>
+                <MOV_ENABLED>0</MOV_ENABLED>
+                <MOV_INVERTED>0</MOV_INVERTED>
                 <ENABLED>1</ENABLED>
                 <MIN_REPLAY>1.910994768</MIN_REPLAY>
                 <SYNTH_TYPE>0</SYNTH_TYPE>
+                <SELECTOR_TYPE>0</SELECTOR_TYPE>
                 <pan>
                     <ABS_VAL>0.000000000</ABS_VAL>
                     <MIN_VAL>-1.000000000</MIN_VAL>
@@ -8261,9 +8752,12 @@
                 <IS_LOOP>1</IS_LOOP>
                 <IS_PLAY_TO_END>0</IS_PLAY_TO_END>
                 <INVERTED>0</INVERTED>
+                <MOV_ENABLED>0</MOV_ENABLED>
+                <MOV_INVERTED>0</MOV_INVERTED>
                 <ENABLED>1</ENABLED>
                 <MIN_REPLAY>0.000000000</MIN_REPLAY>
                 <SYNTH_TYPE>1</SYNTH_TYPE>
+                <SELECTOR_TYPE>0</SELECTOR_TYPE>
                 <pan>
                     <ABS_VAL>0.000000000</ABS_VAL>
                     <MIN_VAL>-1.000000000</MIN_VAL>
@@ -8333,9 +8827,12 @@
                 <IS_LOOP>0</IS_LOOP>
                 <IS_PLAY_TO_END>1</IS_PLAY_TO_END>
                 <INVERTED>1</INVERTED>
+                <MOV_ENABLED>0</MOV_ENABLED>
+                <MOV_INVERTED>0</MOV_INVERTED>
                 <ENABLED>1</ENABLED>
                 <MIN_REPLAY>4.973822117</MIN_REPLAY>
                 <SYNTH_TYPE>0</SYNTH_TYPE>
+                <SELECTOR_TYPE>0</SELECTOR_TYPE>
                 <pan>
                     <ABS_VAL>0.000000000</ABS_VAL>
                     <MIN_VAL>-1.000000000</MIN_VAL>

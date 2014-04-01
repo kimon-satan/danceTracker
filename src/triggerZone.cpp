@@ -25,7 +25,7 @@ triggerZone::triggerZone(ofPtr<oscManager> o) : mOsc(o){
     isSelected = false;
     isSound = false;
     
-    silentCount = 0;
+    silentCount = 600;
     
     isLoop = true;
     isPlayToEnd = false;
@@ -376,20 +376,11 @@ void triggerZone::evaluate(){
 }
 
 
-void triggerZone::reloadSound(){ //when loading settings from file
-
-    //no longer used
-    /*string s = "sound/" + mSoundFileName;
-    mSound.stop();
-    mSound.unloadSound();
-    mSound.loadSound(s);
-    mSound.setLoop(isLoop);*/
+void triggerZone::reloadSound(){ //used for copying zones
     
     ofFile f("sound/" + mSoundFileName);
     
-    if(ofFile::doesFileExist("sound/" + mSoundFileName)){
-        mOsc->loadZoneSound(u_id, f.getAbsolutePath());
-    }
+    mOsc->loadZoneSound(u_id, f.getAbsolutePath());
     
     updateAllAudio();
     
@@ -404,20 +395,18 @@ void triggerZone::setSoundFile(string s){
     
     ofFile f("sound/" + s);
     
-    mOsc->loadZoneSound(u_id, f.getAbsolutePath()); //TODO implement multifiles in supercollider
+    mOsc->loadZoneSound(u_id, f.getAbsolutePath());
     
-    
-    //reloadSound();
     
 }
 
 string triggerZone::getSoundFileName(){return mSoundFileName;}
 
 
-void triggerZone::setIsEnabled(bool b){
+void triggerZone::setIsEnabled(bool b, bool isLoading){
 
     isEnabled = b;
-    evaluate();
+    if(!isLoading)evaluate();
 
 }
 
@@ -492,12 +481,23 @@ bool triggerZone::getIsAudioLoaded(){
 
 }
 
+void triggerZone::forceStop(){
+    
+    if(isSound){
+        
+        //turn off the sound
+        silentCount = 600;
+        mOsc->stopZone(u_id);
+        isSound = false;
+        
+    }
+}
+
 void triggerZone::deselect(){
     
     isOccupied = false;
     isMoving = false;
-    silentCount = 0;
-    evaluate();
+    forceStop();
     
 }
 
@@ -508,6 +508,7 @@ void triggerZone::setMinReplaySecs(float s){minReplaySecs = s;}
 float triggerZone::getMinReplaySecs(){ return minReplaySecs;}
 
 int triggerZone::getSynthType(){return (int)synth;}
+
 void triggerZone::setSynthType(int i){
     
     synth = synthType(i);
@@ -522,9 +523,12 @@ int triggerZone::getSelectorType(){
 }
 
 void triggerZone::setSelectorType(int i){
+    
     selector = selectorType(i);
+    mOsc->updateZoneSettings(u_id, "selectorType", synthDictionary::getSelectorString((int)selector));
     mOsc->resetZone(u_id);
-    updateAllAudio();
+    
+    
 }
 
 synthParam triggerZone::getSynthParam(int i){return synthParams[i];}

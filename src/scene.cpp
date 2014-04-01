@@ -143,7 +143,7 @@ ofPtr<triggerZone> scene::copyTriggerZone(ofPtr<triggerZone> tz){
     
     t->setName(tn);
     mOsc->addZone(t->getUid(), t->getName());
-    t->reloadSound();
+    t->reloadSound(); //needs looking at
   
     triggerZones.insert(getInsertIt(tz), t);
   

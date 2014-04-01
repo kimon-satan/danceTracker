@@ -49,10 +49,7 @@ kinectManager::kinectManager(){
     
     minBlob = 0.005;
     maxBlob = 0.5;
-    
-    mDancer = ofPtr<dancer>(new dancer());
-    mDancer->height = 1.80;
-
+    dancerHeight = 1.80;
     isFakeUser = false;
     numFakePoints = 2000;
     fakePos.set(0,0,5);
@@ -75,7 +72,7 @@ void kinectManager::saveSettings(ofxXmlSettings & XML){
         XML.addValue("KN_TILT", kinect.getTargetCameraTiltAngle());
         XML.addValue("FLOOR_Y", floorY);
         XML.addValue("SEG_FRESH", segThresh);
-        XML.addValue("USER_HEIGHT", mDancer->height);
+        XML.addValue("USER_HEIGHT", dancerHeight);
         XML.addValue("NEAR_THRESH", nearThresh);
         XML.addValue("FAR_THRESH", farThresh);
         XML.addValue("MIN_BLOB", minBlob);
@@ -101,7 +98,7 @@ void kinectManager::loadSettings(ofxXmlSettings & XML){
         minBlob = XML.getValue("MIN_BLOB", 0.005);
         maxBlob = XML.getValue("MAX_BLOB", 10.0);
         floorY = XML.getValue("FLOOR_Y", 1.0);
-        mDancer->height = XML.getValue("USER_HEIGHT", 1.8);
+        dancerHeight = XML.getValue("USER_HEIGHT", 1.8);
         movThresh = XML.getValue("MOV_THRESH", movThresh);
         movBuff = XML.getValue("MOV_BUFF", movBuff);
         
@@ -152,19 +149,26 @@ void kinectManager::update(){
             segment();
             
             if(isUser){
+                if(!mDancer){
+                    
+                    mDancer = ofPtr<dancer>(new dancer());
+                    mDancer->height = dancerHeight;
+                    
+                }
                 analyseUser();
             }else{
-                mDancer->movAmt = 0;
-                mDancer->movCount = 0;
-                mDancer->stillCount = 0;
-                mDancer->pixels.clear();
-                mDancer->isMoving = false;
+                mDancer.reset();
                 kDepths.clear();
             }
            
         }
         
     }else if(isFakeUser){
+        
+        if(!mDancer){
+            mDancer = ofPtr<dancer>(new dancer());
+            mDancer->height = dancerHeight;
+        }
         
         mDancer->pixels.clear();
         
@@ -470,8 +474,11 @@ void kinectManager::setMaxBlob(float f){maxBlob = f;}
 float kinectManager::getFloorY(){return floorY;}
 void kinectManager::setFloorY(float f){floorY = f;}
 
-float kinectManager::getDancerHeight(){ return mDancer->height;}
-void kinectManager::setDancerHeight(float f){mDancer->height = f;}
+float kinectManager::getDancerHeight(){ return dancerHeight;}
+void kinectManager::setDancerHeight(float f){
+    dancerHeight = f;
+    if(mDancer)mDancer->height = dancerHeight;
+}
 
 float kinectManager::getQAngle(){return qangle;}
 ofVec3f kinectManager::getQAxis(){return qaxis;}

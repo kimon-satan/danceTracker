@@ -45,7 +45,7 @@ public:
     
     void deselect();
     
-    void setIsEnabled(bool b);
+    void setIsEnabled(bool b, bool isLoading  = false);
     bool getIsEnabled();
     
     void setSoundFile(string s);
@@ -112,6 +112,7 @@ public:
 private:
     
     void evaluate();
+    void forceStop();
     void updateSynthParams();
     
     tzShape shape;

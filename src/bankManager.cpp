@@ -197,6 +197,8 @@ void bankManager::saveBanks(ofxXmlSettings & XML){
 
 void bankManager::loadSettings(ofxXmlSettings & XML){
     
+    currentScene->unTriggerAll();
+    
     currentZone.reset();
     currentScene.reset();
     
@@ -289,7 +291,7 @@ void bankManager::loadZone(ofxXmlSettings & XML, ofPtr<triggerZone> z){
     z->setIsMovEnabled(XML.getValue("MOV_ENABLED", false));
     z->setIsMovInvert(XML.getValue("MOV_INVERTED", false));
     z->setIsLoop(XML.getValue("IS_LOOP", true));
-    z->setIsEnabled(XML.getValue("ENABLED", false));
+    z->setIsEnabled(XML.getValue("ENABLED", false), true);
     //z->setSensitivity(XML.getValue("SENSITIVITY", 1.0));
     z->setMinReplaySecs(XML.getValue("MIN_REPLAY", 0.0));
     z->setSynthType(XML.getValue("SYNTH_TYPE", 0));
