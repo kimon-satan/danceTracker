@@ -139,7 +139,13 @@ ofPtr<triggerZone> scene::copyTriggerZone(ofPtr<triggerZone> tz){
     checkUniqueId(t);
     
     string tn = t->getName();
-    if(tn.substr(tn.length() - 5, 5) != "_copy")tn += "_copy";
+    if(tn.length() > 5){
+        //otherwise it will crash
+       if(tn.substr(tn.length() - 5, 5) != "_copy")tn += "_copy"; 
+    }else{
+        //it can't already have copy appended
+        tn += "_copy"; 
+    }
     
     t->setName(tn);
     mOsc->addZone(t->getUid(), t->getName());

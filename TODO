@@ -1,4 +1,7 @@
 BUGS
+
+    -inverse movement zone triggering on entry
+    - not saving inversion toggles 
      - potential crash when switching to bank setup - (can't recreate ... watch)
 
 

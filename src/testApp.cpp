@@ -1076,6 +1076,8 @@ void testApp::updateTZGuiElements(ofPtr<triggerZone> zn){
     loopTog->setValue(zn->getIsLoop());
     playToEndTog->setValue(zn->getIsPlayToEnd());
     occInvTog->setValue(zn->getIsOccInvert());
+    movEnaTog->setValue(zn->getIsMovEnabled());
+    movInvTog->setValue(zn->getIsMovInvert());
     
     xDimSlid->setValue(zn->getBoxDims().x);
     yDimSlid->setValue(zn->getBoxDims().y);
