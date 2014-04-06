@@ -1,9 +1,10 @@
 BUGS
 
-    -inverse movement zone triggering on entry
-    - not saving inversion toggles 
-     - potential crash when switching to bank setup - (can't recreate ... watch)
-
+    -inverse movement zone triggering on entry 
+    (not solvable - result of initial state of user)
+   
+    - GUI bugs - problems with text boxes on reclick ...
+               - issues with create zone toggle on click to side
 
 
 1. refactoring of testApp
