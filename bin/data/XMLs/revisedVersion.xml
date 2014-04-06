@@ -331,13 +331,13 @@
                 <DIM_Z>0.901883543</DIM_Z>
                 <RADIUS>0.250000000</RADIUS>
                 <SOUNDFILE>hamletYorrick/iAmDan.wav</SOUNDFILE>
-                <IS_LOOP>1</IS_LOOP>
-                <IS_PLAY_TO_END>0</IS_PLAY_TO_END>
+                <IS_LOOP>0</IS_LOOP>
+                <IS_PLAY_TO_END>1</IS_PLAY_TO_END>
                 <INVERTED>0</INVERTED>
                 <MOV_ENABLED>0</MOV_ENABLED>
                 <MOV_INVERTED>0</MOV_INVERTED>
                 <ENABLED>1</ENABLED>
-                <MIN_REPLAY>0.000000000</MIN_REPLAY>
+                <MIN_REPLAY>1.020942450</MIN_REPLAY>
                 <SYNTH_TYPE>0</SYNTH_TYPE>
                 <SELECTOR_TYPE>0</SELECTOR_TYPE>
                 <pan>
@@ -388,13 +388,13 @@
                 <DIM_Z>0.901883543</DIM_Z>
                 <RADIUS>0.250000000</RADIUS>
                 <SOUNDFILE>hamletYorrick/soHereWeAllAre.wav</SOUNDFILE>
-                <IS_LOOP>1</IS_LOOP>
-                <IS_PLAY_TO_END>0</IS_PLAY_TO_END>
+                <IS_LOOP>0</IS_LOOP>
+                <IS_PLAY_TO_END>1</IS_PLAY_TO_END>
                 <INVERTED>0</INVERTED>
                 <MOV_ENABLED>0</MOV_ENABLED>
                 <MOV_INVERTED>0</MOV_INVERTED>
                 <ENABLED>1</ENABLED>
-                <MIN_REPLAY>0.000000000</MIN_REPLAY>
+                <MIN_REPLAY>1.073298454</MIN_REPLAY>
                 <SYNTH_TYPE>0</SYNTH_TYPE>
                 <SELECTOR_TYPE>0</SELECTOR_TYPE>
                 <pan>
@@ -445,13 +445,13 @@
                 <DIM_Z>0.901883543</DIM_Z>
                 <RADIUS>0.250000000</RADIUS>
                 <SOUNDFILE>hamletYorrick/youAreMyBrain.wav</SOUNDFILE>
-                <IS_LOOP>1</IS_LOOP>
-                <IS_PLAY_TO_END>0</IS_PLAY_TO_END>
+                <IS_LOOP>0</IS_LOOP>
+                <IS_PLAY_TO_END>1</IS_PLAY_TO_END>
                 <INVERTED>0</INVERTED>
                 <MOV_ENABLED>0</MOV_ENABLED>
                 <MOV_INVERTED>0</MOV_INVERTED>
                 <ENABLED>1</ENABLED>
-                <MIN_REPLAY>0.000000000</MIN_REPLAY>
+                <MIN_REPLAY>1.073298454</MIN_REPLAY>
                 <SYNTH_TYPE>0</SYNTH_TYPE>
                 <SELECTOR_TYPE>0</SELECTOR_TYPE>
                 <pan>
@@ -502,13 +502,13 @@
                 <DIM_Z>0.901883543</DIM_Z>
                 <RADIUS>0.250000000</RADIUS>
                 <SOUNDFILE>hamletYorrick/myBody.wav</SOUNDFILE>
-                <IS_LOOP>1</IS_LOOP>
-                <IS_PLAY_TO_END>0</IS_PLAY_TO_END>
+                <IS_LOOP>0</IS_LOOP>
+                <IS_PLAY_TO_END>1</IS_PLAY_TO_END>
                 <INVERTED>0</INVERTED>
                 <MOV_ENABLED>0</MOV_ENABLED>
                 <MOV_INVERTED>0</MOV_INVERTED>
                 <ENABLED>1</ENABLED>
-                <MIN_REPLAY>0.000000000</MIN_REPLAY>
+                <MIN_REPLAY>1.047120333</MIN_REPLAY>
                 <SYNTH_TYPE>0</SYNTH_TYPE>
                 <SELECTOR_TYPE>0</SELECTOR_TYPE>
                 <pan>
@@ -559,13 +559,13 @@
                 <DIM_Z>0.901883543</DIM_Z>
                 <RADIUS>0.250000000</RADIUS>
                 <SOUNDFILE>hamletYorrick/hamlet.wav</SOUNDFILE>
-                <IS_LOOP>1</IS_LOOP>
-                <IS_PLAY_TO_END>0</IS_PLAY_TO_END>
+                <IS_LOOP>0</IS_LOOP>
+                <IS_PLAY_TO_END>1</IS_PLAY_TO_END>
                 <INVERTED>0</INVERTED>
                 <MOV_ENABLED>0</MOV_ENABLED>
                 <MOV_INVERTED>0</MOV_INVERTED>
                 <ENABLED>1</ENABLED>
-                <MIN_REPLAY>0.000000000</MIN_REPLAY>
+                <MIN_REPLAY>1.020942450</MIN_REPLAY>
                 <SYNTH_TYPE>0</SYNTH_TYPE>
                 <SELECTOR_TYPE>0</SELECTOR_TYPE>
                 <pan>
@@ -606,7 +606,7 @@
                 </startPos>
             </ZONE>
             <ZONE>
-                <NAME>iAmDan_copy</NAME>
+                <NAME>Yorrick</NAME>
                 <POS_X>0.026177883</POS_X>
                 <POS_Y>0.000000000</POS_Y>
                 <POS_Z>5.287958145</POS_Z>
@@ -615,14 +615,14 @@
                 <DIM_Y>1.419006824</DIM_Y>
                 <DIM_Z>0.901883543</DIM_Z>
                 <RADIUS>0.250000000</RADIUS>
-                <SOUNDFILE>none</SOUNDFILE>
-                <IS_LOOP>1</IS_LOOP>
-                <IS_PLAY_TO_END>0</IS_PLAY_TO_END>
+                <SOUNDFILE>hamletYorrick/yorrick.wav</SOUNDFILE>
+                <IS_LOOP>0</IS_LOOP>
+                <IS_PLAY_TO_END>1</IS_PLAY_TO_END>
                 <INVERTED>0</INVERTED>
                 <MOV_ENABLED>0</MOV_ENABLED>
                 <MOV_INVERTED>0</MOV_INVERTED>
-                <ENABLED>0</ENABLED>
-                <MIN_REPLAY>0.000000000</MIN_REPLAY>
+                <ENABLED>1</ENABLED>
+                <MIN_REPLAY>1.073298454</MIN_REPLAY>
                 <SYNTH_TYPE>0</SYNTH_TYPE>
                 <SELECTOR_TYPE>0</SELECTOR_TYPE>
                 <pan>
@@ -663,7 +663,7 @@
                 </startPos>
             </ZONE>
             <ZONE>
-                <NAME>iAmDan_copy</NAME>
+                <NAME>myBodyIsHamlet</NAME>
                 <POS_X>1.282722473</POS_X>
                 <POS_Y>0.000000000</POS_Y>
                 <POS_Z>5.340313911</POS_Z>
@@ -672,14 +672,14 @@
                 <DIM_Y>1.419006824</DIM_Y>
                 <DIM_Z>0.901883543</DIM_Z>
                 <RADIUS>0.250000000</RADIUS>
-                <SOUNDFILE>none</SOUNDFILE>
-                <IS_LOOP>1</IS_LOOP>
-                <IS_PLAY_TO_END>0</IS_PLAY_TO_END>
+                <SOUNDFILE>hamletYorrick/myBodyIDove.wav</SOUNDFILE>
+                <IS_LOOP>0</IS_LOOP>
+                <IS_PLAY_TO_END>1</IS_PLAY_TO_END>
                 <INVERTED>0</INVERTED>
                 <MOV_ENABLED>0</MOV_ENABLED>
                 <MOV_INVERTED>0</MOV_INVERTED>
-                <ENABLED>0</ENABLED>
-                <MIN_REPLAY>0.000000000</MIN_REPLAY>
+                <ENABLED>1</ENABLED>
+                <MIN_REPLAY>1.047120333</MIN_REPLAY>
                 <SYNTH_TYPE>0</SYNTH_TYPE>
                 <SELECTOR_TYPE>0</SELECTOR_TYPE>
                 <pan>
@@ -720,7 +720,7 @@
                 </startPos>
             </ZONE>
             <ZONE>
-                <NAME>iAmDan_copy</NAME>
+                <NAME>yorrickISaidAloud</NAME>
                 <POS_X>1.335078239</POS_X>
                 <POS_Y>0.115183353</POS_Y>
                 <POS_Z>2.460732937</POS_Z>
@@ -729,14 +729,14 @@
                 <DIM_Y>1.419006824</DIM_Y>
                 <DIM_Z>0.901883543</DIM_Z>
                 <RADIUS>0.250000000</RADIUS>
-                <SOUNDFILE>none</SOUNDFILE>
-                <IS_LOOP>1</IS_LOOP>
-                <IS_PLAY_TO_END>0</IS_PLAY_TO_END>
+                <SOUNDFILE>hamletYorrick/yorrickISaidAloud.wav</SOUNDFILE>
+                <IS_LOOP>0</IS_LOOP>
+                <IS_PLAY_TO_END>1</IS_PLAY_TO_END>
                 <INVERTED>0</INVERTED>
                 <MOV_ENABLED>0</MOV_ENABLED>
                 <MOV_INVERTED>0</MOV_INVERTED>
-                <ENABLED>0</ENABLED>
-                <MIN_REPLAY>0.000000000</MIN_REPLAY>
+                <ENABLED>1</ENABLED>
+                <MIN_REPLAY>1.020942450</MIN_REPLAY>
                 <SYNTH_TYPE>0</SYNTH_TYPE>
                 <SELECTOR_TYPE>0</SELECTOR_TYPE>
                 <pan>
@@ -777,7 +777,7 @@
                 </startPos>
             </ZONE>
             <ZONE>
-                <NAME>iAmDan_copy</NAME>
+                <NAME>myBrain</NAME>
                 <POS_X>-1.178010464</POS_X>
                 <POS_Y>0.115183353</POS_Y>
                 <POS_Z>2.460732937</POS_Z>
@@ -786,14 +786,14 @@
                 <DIM_Y>1.419006824</DIM_Y>
                 <DIM_Z>0.901883543</DIM_Z>
                 <RADIUS>0.250000000</RADIUS>
-                <SOUNDFILE>none</SOUNDFILE>
-                <IS_LOOP>1</IS_LOOP>
-                <IS_PLAY_TO_END>0</IS_PLAY_TO_END>
+                <SOUNDFILE>hamletYorrick/myBrain.wav</SOUNDFILE>
+                <IS_LOOP>0</IS_LOOP>
+                <IS_PLAY_TO_END>1</IS_PLAY_TO_END>
                 <INVERTED>0</INVERTED>
                 <MOV_ENABLED>0</MOV_ENABLED>
                 <MOV_INVERTED>0</MOV_INVERTED>
-                <ENABLED>0</ENABLED>
-                <MIN_REPLAY>0.000000000</MIN_REPLAY>
+                <ENABLED>1</ENABLED>
+                <MIN_REPLAY>1.047120333</MIN_REPLAY>
                 <SYNTH_TYPE>0</SYNTH_TYPE>
                 <SELECTOR_TYPE>0</SELECTOR_TYPE>
                 <pan>
