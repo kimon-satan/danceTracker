@@ -22,6 +22,7 @@ vector<synthParam>synthDictionary::getSynthParams(int sType){
         paramList.push_back(synthParam("rate", -2,2,1, MT_FIXED));
         paramList.push_back(synthParam("fadeIn", 0.01,2.0, 0.01,MT_FIXED));
         paramList.push_back(synthParam("fadeOut", 0.01,2.0, 0.01,MT_FIXED));
+        paramList.push_back(synthParam("startPos", 0,1.0, 0,MT_FIXED));
         
     }
     
@@ -99,6 +100,7 @@ string synthDictionary::getMapString(int mType){
             case MT_USER_Y: return "user_y";
             case MT_USER_RADIAL: return "user_radial";
             case MT_USER_CENTER: return "user_center";
+            case MT_INIT_RANDOM: return "init_random";
             default: return "";
     }
     

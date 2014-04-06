@@ -222,7 +222,7 @@ bool triggerZone::checkInRange(ofPtr<dancer> d){
 
 }
 
-void triggerZone::updateSynthParams(){
+void triggerZone::updateSynthParams(bool isInit){
 
     ofVec3f iLocal(iCom - center);
     
@@ -313,7 +313,14 @@ void triggerZone::updateSynthParams(){
         mul = max((float)0.0, min((float)1.0, mul));
     
         
-        if(synthParams[i].map == MT_FIXED){
+        if(synthParams[i].map == MT_INIT_RANDOM ){
+            
+            if(isInit){
+                float val = ofMap(ofRandom(0, 1), 0,1,synthParams[i].min_val, synthParams[i].max_val);
+                mOsc->updateZoneSettings(u_id, synthParams[i].name, val);
+            }
+            
+        }else if(synthParams[i].map == MT_FIXED){
             
             mOsc->updateZoneSettings(u_id, synthParams[i].name, synthParams[i].abs_val);
             
@@ -360,6 +367,7 @@ void triggerZone::evaluate(){
     if(!isSound && b){
         
         //turn on the sound
+        updateSynthParams(true);
         mOsc->playZone(u_id);
         isSound = true;
 

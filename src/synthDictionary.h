@@ -35,6 +35,7 @@ enum mapType{
     MT_USER_Y,
     MT_USER_RADIAL,
     MT_USER_CENTER,
+    MT_INIT_RANDOM,
     MT_COUNT
     
 };

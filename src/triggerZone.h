@@ -113,7 +113,7 @@ private:
     
     void evaluate();
     void forceStop();
-    void updateSynthParams();
+    void updateSynthParams(bool isInit = false);
     
     tzShape shape;
     ofVec3f center;
