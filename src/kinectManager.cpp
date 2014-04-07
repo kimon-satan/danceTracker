@@ -411,7 +411,7 @@ void kinectManager::analyseUser(){
     
     //average movement of a depth pixel
     //gives good indication of moving or still
-    mov /= mDancer->pixels.size();
+    if(mDancer->pixels.size() > 0)mov /= mDancer->pixels.size();
     mDancer->movAmt += mov;
     mDancer->movAmt /= 2; //a running averge
     
