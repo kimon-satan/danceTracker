@@ -196,7 +196,7 @@ bool triggerZone::checkInRange(ofPtr<dancer> d){
     }else{
     
         ofVec3f dims(boxDims);
-        dims += d->height/2;
+        dims += d->height;
         
         if(d->com.x <= center.x + dims.x/2 && d->com.x >= center.x - dims.x/2){
             

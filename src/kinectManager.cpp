@@ -400,7 +400,10 @@ void kinectManager::analyseUser(){
         
 	}
     
+    if(mDancer->pixels.size() == 0)return;
+        
     mDancer->com = total/mDancer->pixels.size();
+
     
     vector<ofVec3f>::iterator it = remove_if(mDancer->pixels.begin(), mDancer->pixels.end(),findOutliers(mDancer->com, mDancer->height));
     
@@ -411,7 +414,9 @@ void kinectManager::analyseUser(){
     
     //average movement of a depth pixel
     //gives good indication of moving or still
-    if(mDancer->pixels.size() > 0)mov /= mDancer->pixels.size();
+    if(mDancer->pixels.size() == 0)return;
+    
+    mov /= mDancer->pixels.size();
     mDancer->movAmt += mov;
     mDancer->movAmt /= 2; //a running averge
     

@@ -147,7 +147,7 @@ void testApp::setupGeneralSettings(){
     
     settingsCanvases[1]->addSpacer();
     sc1Sliders[6] = settingsCanvases[1]->addSlider("FLOOR_Y", -10, -0.5, m_kinectManager.getFloorY(), slLength, slHeight);
-    sc1Sliders[7] = settingsCanvases[1]->addSlider("USER_HEIGHT", 1, 4, m_kinectManager.getDancerHeight(), slLength, slHeight);
+    sc1Sliders[7] = settingsCanvases[1]->addSlider("USER_HEIGHT", 1, 2, m_kinectManager.getDancerHeight(), slLength, slHeight);
     sc1Sliders[8] = settingsCanvases[1]->addSlider("MOV_THRESH", 0, 200, m_kinectManager.getMovThresh(), slLength, slHeight);
     sc1Sliders[9] = settingsCanvases[1]->addSlider("MOV_BUFF", 0, 60, m_kinectManager.getMovBuff(), slLength, slHeight);
     
@@ -1243,7 +1243,7 @@ void testApp::draw(){
             m_kinectManager.drawScenePointCloud();
         }
         
-        if(isViewCom){
+        if(isViewCom && m_kinectManager.getDancer()){
             ofNoFill();
             ofSetColor(0, 255, 255);
             ofVec3f com = m_kinectManager.getDancer()->com;
