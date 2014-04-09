@@ -3101,9 +3101,14 @@
         </SCENE>
     </SCENE_SETTINGS>
     <BANK_SETTINGS>
-	<BANK>
+        <BANK>
             <NAME>bank_vGu0RPqO5P</NAME>
-            <NUM_ITEMS>0</NUM_ITEMS>
+            <NUM_ITEMS>5</NUM_ITEMS>
+            <ITEM>tlRxyBkwQy</ITEM>
+            <ITEM>kI89OsLMyl</ITEM>
+            <ITEM>zKcK0mnN3V</ITEM>
+            <ITEM>yDmWfzKCwh</ITEM>
+            <ITEM>fl891m56zd</ITEM>
         </BANK>
     </BANK_SETTINGS>
 </DANCE_TRACKER>

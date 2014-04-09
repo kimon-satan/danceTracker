@@ -54,6 +54,7 @@ class bankManager{
     
     void bankAddScene();
     void bankRemoveScene();
+    void removeAllSceneReferences(ofPtr<scene> s);
     void bankIncrementScene();
     void bankDecrementScene();
     

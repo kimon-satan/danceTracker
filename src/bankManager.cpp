@@ -353,7 +353,7 @@ void bankManager::loadBanks(ofxXmlSettings & XML){
                     string item = XML.getValue("ITEM", "", j);
                     
                     vector<ofPtr<scene> >::iterator it = find_if(allScenes.begin(), allScenes.end(), matchSceneIndex(item));
-                    tb->scenes.push_back((*it));
+                    if(it != allScenes.end())tb->scenes.push_back((*it)); //if the scene doesn't exist no reference is pushed back
                     
                 }
                 
@@ -516,11 +516,29 @@ void bankManager::deleteScene(){
     if(allScenes.size() <= 1)return;
     
     ofPtr<scene> t = currentScene;
+    removeAllSceneReferences(t);
     currentScene = selectPrevScene(currentScene, true); //TO DO : might need wrap function
     vector <ofPtr<scene> > :: iterator it = find(allScenes.begin(),allScenes.end(), t);
     allScenes.erase(it);
     currentZone = currentScene->getFirstTriggerZone();
 
+}
+
+void bankManager::removeAllSceneReferences(ofPtr<scene> s){
+    
+    vector<ofPtr<bank> >::iterator b_it = allBanks.begin();
+    
+    while(b_it != allBanks.end()){
+        
+        vector<ofPtr<scene> >::iterator s_it;
+        
+        s_it = remove((*b_it)->scenes.begin(), (*b_it)->scenes.end(), s);
+        if(s_it != (*b_it)->scenes.end())(*b_it)->scenes.erase(s_it, (*b_it)->scenes.end());
+        
+        b_it++;
+    }
+    
+    
 }
 
 void bankManager::copyScene(){
