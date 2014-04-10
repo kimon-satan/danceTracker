@@ -123,7 +123,11 @@ ofPtr<triggerZone> scene::addTriggerZone(ofPtr<triggerZone> tz){
     
     ofPtr <triggerZone> t = ofPtr<triggerZone>(new triggerZone(mOsc));
     checkUniqueId(t);
-    triggerZones.insert(getInsertIt(tz), t);
+    if(tz){
+        triggerZones.insert(getInsertIt(tz), t);
+    }else{
+        triggerZones.push_back(t);
+    }
     
     //addZone to SC
     mOsc->addZone(t->getUid(), t->getName());

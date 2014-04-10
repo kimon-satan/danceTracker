@@ -503,6 +503,7 @@ void bankManager::createScene(){
     
     currentScene->unTriggerAll();
     currentScene->deselectAll();
+    currentZone.reset();
     
     ofPtr<scene> t = ofPtr<scene>(new scene(pOsc));
     checkUniqueId(t);
