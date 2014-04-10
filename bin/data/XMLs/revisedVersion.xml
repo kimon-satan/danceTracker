@@ -570,7 +570,7 @@
                 <DIM_Y>2.000000000</DIM_Y>
                 <DIM_Z>0.799657583</DIM_Z>
                 <RADIUS>0.250000000</RADIUS>
-                <SOUNDFILE>origamiPaper/longFoldSeq.wav</SOUNDFILE>
+                <SOUNDFILE>origamiPaper/shortFoldSeq1.wav</SOUNDFILE>
                 <IS_LOOP>0</IS_LOOP>
                 <IS_PLAY_TO_END>1</IS_PLAY_TO_END>
                 <INVERTED>0</INVERTED>
@@ -627,7 +627,7 @@
                 <DIM_Y>2.000000000</DIM_Y>
                 <DIM_Z>0.799657583</DIM_Z>
                 <RADIUS>0.250000000</RADIUS>
-                <SOUNDFILE>origamiPaper/smoothFold_1.wav</SOUNDFILE>
+                <SOUNDFILE>origamiPaper/rustle.wav</SOUNDFILE>
                 <IS_LOOP>0</IS_LOOP>
                 <IS_PLAY_TO_END>1</IS_PLAY_TO_END>
                 <INVERTED>0</INVERTED>
@@ -684,7 +684,7 @@
                 <DIM_Y>2.000000000</DIM_Y>
                 <DIM_Z>0.799657583</DIM_Z>
                 <RADIUS>0.250000000</RADIUS>
-                <SOUNDFILE>origamiPaper/smoothFold_1.wav</SOUNDFILE>
+                <SOUNDFILE>origamiPaper/shortFoldSeq2.wav</SOUNDFILE>
                 <IS_LOOP>0</IS_LOOP>
                 <IS_PLAY_TO_END>1</IS_PLAY_TO_END>
                 <INVERTED>0</INVERTED>
@@ -707,7 +707,178 @@
                     <MAP>0</MAP>
                 </amp>
                 <rate>
-                    <ABS_VAL>0.480000019</ABS_VAL>
+                    <ABS_VAL>0.440000057</ABS_VAL>
+                    <MIN_VAL>-2.000000000</MIN_VAL>
+                    <MAX_VAL>2.000000000</MAX_VAL>
+                    <MAP>0</MAP>
+                </rate>
+                <fadeIn>
+                    <ABS_VAL>0.010000000</ABS_VAL>
+                    <MIN_VAL>0.010000000</MIN_VAL>
+                    <MAX_VAL>2.000000000</MAX_VAL>
+                    <MAP>0</MAP>
+                </fadeIn>
+                <fadeOut>
+                    <ABS_VAL>0.010000000</ABS_VAL>
+                    <MIN_VAL>0.010000000</MIN_VAL>
+                    <MAX_VAL>2.000000000</MAX_VAL>
+                    <MAP>0</MAP>
+                </fadeOut>
+                <startPos>
+                    <ABS_VAL>0.000000000</ABS_VAL>
+                    <MIN_VAL>0.000000000</MIN_VAL>
+                    <MAX_VAL>1.000000000</MAX_VAL>
+                    <MAP>0</MAP>
+                </startPos>
+            </ZONE>
+            <ZONE>
+                <NAME>stretchyWet</NAME>
+                <POS_X>1.387434483</POS_X>
+                <POS_Y>-0.052356005</POS_Y>
+                <POS_Z>2.198952913</POS_Z>
+                <SHAPE>1</SHAPE>
+                <DIM_X>0.867808223</DIM_X>
+                <DIM_Y>2.000000000</DIM_Y>
+                <DIM_Z>0.799657583</DIM_Z>
+                <RADIUS>0.250000000</RADIUS>
+                <SOUNDFILE>origamiPaper/stretchyDry.wav</SOUNDFILE>
+                <IS_LOOP>0</IS_LOOP>
+                <IS_PLAY_TO_END>1</IS_PLAY_TO_END>
+                <INVERTED>0</INVERTED>
+                <MOV_ENABLED>0</MOV_ENABLED>
+                <MOV_INVERTED>0</MOV_INVERTED>
+                <ENABLED>1</ENABLED>
+                <MIN_REPLAY>0.000000000</MIN_REPLAY>
+                <SYNTH_TYPE>0</SYNTH_TYPE>
+                <SELECTOR_TYPE>0</SELECTOR_TYPE>
+                <pan>
+                    <ABS_VAL>0.000000000</ABS_VAL>
+                    <MIN_VAL>-1.000000000</MIN_VAL>
+                    <MAX_VAL>1.000000000</MAX_VAL>
+                    <MAP>3</MAP>
+                </pan>
+                <amp>
+                    <ABS_VAL>0.790000021</ABS_VAL>
+                    <MIN_VAL>0.000000000</MIN_VAL>
+                    <MAX_VAL>1.000000000</MAX_VAL>
+                    <MAP>0</MAP>
+                </amp>
+                <rate>
+                    <ABS_VAL>0.599999905</ABS_VAL>
+                    <MIN_VAL>-2.000000000</MIN_VAL>
+                    <MAX_VAL>2.000000000</MAX_VAL>
+                    <MAP>0</MAP>
+                </rate>
+                <fadeIn>
+                    <ABS_VAL>0.010000000</ABS_VAL>
+                    <MIN_VAL>0.010000000</MIN_VAL>
+                    <MAX_VAL>2.000000000</MAX_VAL>
+                    <MAP>0</MAP>
+                </fadeIn>
+                <fadeOut>
+                    <ABS_VAL>0.010000000</ABS_VAL>
+                    <MIN_VAL>0.010000000</MIN_VAL>
+                    <MAX_VAL>2.000000000</MAX_VAL>
+                    <MAP>0</MAP>
+                </fadeOut>
+                <startPos>
+                    <ABS_VAL>0.000000000</ABS_VAL>
+                    <MIN_VAL>0.000000000</MIN_VAL>
+                    <MAX_VAL>1.000000000</MAX_VAL>
+                    <MAP>0</MAP>
+                </startPos>
+            </ZONE>
+            <ZONE>
+                <NAME>stretchyWet_copy</NAME>
+                <POS_X>-1.125654697</POS_X>
+                <POS_Y>-0.052356005</POS_Y>
+                <POS_Z>2.041884899</POS_Z>
+                <SHAPE>1</SHAPE>
+                <DIM_X>0.867808223</DIM_X>
+                <DIM_Y>2.000000000</DIM_Y>
+                <DIM_Z>0.799657583</DIM_Z>
+                <RADIUS>0.250000000</RADIUS>
+                <SOUNDFILE>origamiPaper/stretchyReverb.wav</SOUNDFILE>
+                <IS_LOOP>0</IS_LOOP>
+                <IS_PLAY_TO_END>1</IS_PLAY_TO_END>
+                <INVERTED>0</INVERTED>
+                <MOV_ENABLED>0</MOV_ENABLED>
+                <MOV_INVERTED>0</MOV_INVERTED>
+                <ENABLED>1</ENABLED>
+                <MIN_REPLAY>0.000000000</MIN_REPLAY>
+                <SYNTH_TYPE>0</SYNTH_TYPE>
+                <SELECTOR_TYPE>0</SELECTOR_TYPE>
+                <pan>
+                    <ABS_VAL>0.000000000</ABS_VAL>
+                    <MIN_VAL>-1.000000000</MIN_VAL>
+                    <MAX_VAL>1.000000000</MAX_VAL>
+                    <MAP>3</MAP>
+                </pan>
+                <amp>
+                    <ABS_VAL>0.790000021</ABS_VAL>
+                    <MIN_VAL>0.000000000</MIN_VAL>
+                    <MAX_VAL>1.000000000</MAX_VAL>
+                    <MAP>0</MAP>
+                </amp>
+                <rate>
+                    <ABS_VAL>0.599999905</ABS_VAL>
+                    <MIN_VAL>-2.000000000</MIN_VAL>
+                    <MAX_VAL>2.000000000</MAX_VAL>
+                    <MAP>0</MAP>
+                </rate>
+                <fadeIn>
+                    <ABS_VAL>0.010000000</ABS_VAL>
+                    <MIN_VAL>0.010000000</MIN_VAL>
+                    <MAX_VAL>2.000000000</MAX_VAL>
+                    <MAP>0</MAP>
+                </fadeIn>
+                <fadeOut>
+                    <ABS_VAL>0.010000000</ABS_VAL>
+                    <MIN_VAL>0.010000000</MIN_VAL>
+                    <MAX_VAL>2.000000000</MAX_VAL>
+                    <MAP>0</MAP>
+                </fadeOut>
+                <startPos>
+                    <ABS_VAL>0.000000000</ABS_VAL>
+                    <MIN_VAL>0.000000000</MIN_VAL>
+                    <MAX_VAL>1.000000000</MAX_VAL>
+                    <MAP>0</MAP>
+                </startPos>
+            </ZONE>
+            <ZONE>
+                <NAME>stretchyWet_copy</NAME>
+                <POS_X>-1.125654697</POS_X>
+                <POS_Y>-0.052356005</POS_Y>
+                <POS_Z>4.973822117</POS_Z>
+                <SHAPE>1</SHAPE>
+                <DIM_X>0.867808223</DIM_X>
+                <DIM_Y>2.000000000</DIM_Y>
+                <DIM_Z>0.799657583</DIM_Z>
+                <RADIUS>0.250000000</RADIUS>
+                <SOUNDFILE>origamiPaper/stretchyReverb.wav</SOUNDFILE>
+                <IS_LOOP>0</IS_LOOP>
+                <IS_PLAY_TO_END>1</IS_PLAY_TO_END>
+                <INVERTED>0</INVERTED>
+                <MOV_ENABLED>0</MOV_ENABLED>
+                <MOV_INVERTED>0</MOV_INVERTED>
+                <ENABLED>1</ENABLED>
+                <MIN_REPLAY>0.000000000</MIN_REPLAY>
+                <SYNTH_TYPE>0</SYNTH_TYPE>
+                <SELECTOR_TYPE>0</SELECTOR_TYPE>
+                <pan>
+                    <ABS_VAL>0.000000000</ABS_VAL>
+                    <MIN_VAL>-1.000000000</MIN_VAL>
+                    <MAX_VAL>1.000000000</MAX_VAL>
+                    <MAP>3</MAP>
+                </pan>
+                <amp>
+                    <ABS_VAL>0.790000021</ABS_VAL>
+                    <MIN_VAL>0.000000000</MIN_VAL>
+                    <MAX_VAL>1.000000000</MAX_VAL>
+                    <MAP>0</MAP>
+                </amp>
+                <rate>
+                    <ABS_VAL>1.559999943</ABS_VAL>
                     <MIN_VAL>-2.000000000</MIN_VAL>
                     <MAX_VAL>2.000000000</MAX_VAL>
                     <MAP>0</MAP>
@@ -741,7 +912,7 @@
                 <DIM_Y>2.000000000</DIM_Y>
                 <DIM_Z>0.799657583</DIM_Z>
                 <RADIUS>0.250000000</RADIUS>
-                <SOUNDFILE>origamiPaper/smoothFold_1.wav</SOUNDFILE>
+                <SOUNDFILE>origamiPaper/shortFoldSeq3.wav</SOUNDFILE>
                 <IS_LOOP>0</IS_LOOP>
                 <IS_PLAY_TO_END>1</IS_PLAY_TO_END>
                 <INVERTED>0</INVERTED>
@@ -764,7 +935,7 @@
                     <MAP>0</MAP>
                 </amp>
                 <rate>
-                    <ABS_VAL>-0.399999976</ABS_VAL>
+                    <ABS_VAL>0.559999943</ABS_VAL>
                     <MIN_VAL>-2.000000000</MIN_VAL>
                     <MAX_VAL>2.000000000</MAX_VAL>
                     <MAP>0</MAP>
@@ -798,14 +969,14 @@
                 <DIM_Y>2.000000000</DIM_Y>
                 <DIM_Z>0.799657583</DIM_Z>
                 <RADIUS>0.250000000</RADIUS>
-                <SOUNDFILE>origamiPaper/smoothFold_1.wav</SOUNDFILE>
+                <SOUNDFILE>origamiPaper/rustle.wav</SOUNDFILE>
                 <IS_LOOP>0</IS_LOOP>
                 <IS_PLAY_TO_END>1</IS_PLAY_TO_END>
                 <INVERTED>0</INVERTED>
                 <MOV_ENABLED>0</MOV_ENABLED>
                 <MOV_INVERTED>0</MOV_INVERTED>
                 <ENABLED>1</ENABLED>
-                <MIN_REPLAY>1.413612485</MIN_REPLAY>
+                <MIN_REPLAY>0.000000000</MIN_REPLAY>
                 <SYNTH_TYPE>0</SYNTH_TYPE>
                 <SELECTOR_TYPE>0</SELECTOR_TYPE>
                 <pan>
@@ -821,7 +992,7 @@
                     <MAP>0</MAP>
                 </amp>
                 <rate>
-                    <ABS_VAL>-0.399999976</ABS_VAL>
+                    <ABS_VAL>0.759999990</ABS_VAL>
                     <MIN_VAL>-2.000000000</MIN_VAL>
                     <MAX_VAL>2.000000000</MAX_VAL>
                     <MAP>0</MAP>

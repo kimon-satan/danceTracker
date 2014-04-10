@@ -18,6 +18,7 @@ vector<synthParam>synthDictionary::getSynthParams(int sType){
     if(sType == ST_SIMPLE){
     
         paramList.push_back(synthParam("pan", -1, 1, 0, MT_GLOBAL_Z));
+        paramList.push_back(synthParam("rev", 0, 1, 0, MT_FIXED));
         paramList.push_back(synthParam("amp", 0,1, 0.5, MT_FIXED));
         paramList.push_back(synthParam("rate", -2,2,1, MT_FIXED));
         paramList.push_back(synthParam("fadeIn", 0.01,2.0, 0.01,MT_FIXED));
