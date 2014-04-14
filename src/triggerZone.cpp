@@ -17,6 +17,7 @@ triggerZone::triggerZone(ofPtr<oscManager> o) : mOsc(o){
     radius = 0.25;
     
     isOccupied = false;
+    isIntersect= false;
     isEnabled = false;
     
    
@@ -44,6 +45,9 @@ triggerZone::triggerZone(ofPtr<oscManager> o) : mOsc(o){
     u_id = dt_utils::getRandom(10);
     
      mName = "zone_" + u_id;
+    
+    changeBuff = 0;
+    changeCount = 0;
     
     
 }
@@ -80,7 +84,13 @@ void triggerZone::draw(ofVec3f camPos){
             ofPopMatrix();
             
             if(isEnabled){
-                (isOccupied) ? ofSetColor(255, 0, 0): ofSetColor(0, 150, 0);
+                if(isOccupied && isIntersect){
+                    ofSetColor(255, 0, 0);
+                }else if(isIntersect || isOccupied){
+                    ofSetColor(205, 85, 85);
+                }else{
+                    ofSetColor(0, 180, 0);
+                }
             }else{
                 ofSetColor(60);
             }
@@ -120,7 +130,7 @@ void triggerZone::checkPoints(ofPtr<dancer> d){
     
     vector<ofVec3f>::iterator it;
     
-    isOccupied = false;
+    isIntersect = false;
     
     iCom.set(0,0,0);
     
@@ -135,7 +145,7 @@ void triggerZone::checkPoints(ofPtr<dancer> d){
                 iCom += (*it);
                 
                 if(inTotal >= targetAmt){
-                    isOccupied = true;
+                    isIntersect = true;
                     break;
                 }
                 
@@ -158,7 +168,7 @@ void triggerZone::checkPoints(ofPtr<dancer> d){
                         iCom += (*it);
                         
                         if(inTotal >= targetAmt){
-                            isOccupied = true;
+                            isIntersect = true;
                             break;
                         }
                        
@@ -175,6 +185,15 @@ void triggerZone::checkPoints(ofPtr<dancer> d){
     
     }
     
+    if(isOccupied != isIntersect){
+        changeCount += 1;
+        if(changeCount >= changeBuff){
+            isOccupied = isIntersect;
+            changeCount = 0;
+        }
+    }else{
+        changeCount = 0;
+    }
    
     if(isOccupied)iCom /= inTotal;
     
@@ -216,7 +235,10 @@ bool triggerZone::checkInRange(ofPtr<dancer> d){
     }
     
     
-    if(!inRange && isOccupied)isOccupied = false;
+    if(!inRange && isOccupied){
+        isOccupied = false;
+        changeCount = 0;
+    }
         
     return inRange;
 
@@ -364,13 +386,15 @@ void triggerZone::evaluate(){
         b *= ((float)silentCount/ofGetFrameRate() >= minReplaySecs);
     }
     
+ 
+    
     if(!isSound && b){
         
         //turn on the sound
         updateSynthParams(true);
         mOsc->playZone(u_id);
         isSound = true;
-
+        changeCount = 0;
         
     }else if(isSound && !b){
         
@@ -378,6 +402,7 @@ void triggerZone::evaluate(){
         silentCount = 0;
         mOsc->stopZone(u_id);
         isSound = false;
+        changeCount = 0;
         
     }
     
@@ -503,6 +528,8 @@ void triggerZone::forceStop(){
 
 void triggerZone::deselect(){
     
+    changeCount = 0;
+    isIntersect = false;
     isOccupied = false;
     isMoving = false;
     forceStop();
@@ -578,3 +605,7 @@ string triggerZone::getUid(){
     
     return u_id;
 }
+
+
+void triggerZone::setChangeBuff(int i){changeBuff = i;}
+int triggerZone::getChangeBuff(){ return changeBuff; }

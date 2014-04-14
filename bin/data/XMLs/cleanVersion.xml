@@ -35,6 +35,7 @@
                 <MOV_INVERTED>1</MOV_INVERTED>
                 <ENABLED>1</ENABLED>
                 <MIN_REPLAY>1.073298454</MIN_REPLAY>
+                <CHANGE_BUFF>0</CHANGE_BUFF>
                 <SYNTH_TYPE>0</SYNTH_TYPE>
                 <SELECTOR_TYPE>1</SELECTOR_TYPE>
                 <pan>
@@ -110,6 +111,7 @@
                 <MOV_INVERTED>0</MOV_INVERTED>
                 <ENABLED>1</ENABLED>
                 <MIN_REPLAY>0.000000000</MIN_REPLAY>
+                <CHANGE_BUFF>0</CHANGE_BUFF>
                 <SYNTH_TYPE>1</SYNTH_TYPE>
                 <SELECTOR_TYPE>0</SELECTOR_TYPE>
                 <pan>
@@ -179,6 +181,7 @@
                 <MOV_INVERTED>0</MOV_INVERTED>
                 <ENABLED>1</ENABLED>
                 <MIN_REPLAY>0.000000000</MIN_REPLAY>
+                <CHANGE_BUFF>0</CHANGE_BUFF>
                 <SYNTH_TYPE>1</SYNTH_TYPE>
                 <SELECTOR_TYPE>0</SELECTOR_TYPE>
                 <pan>
@@ -248,6 +251,7 @@
                 <MOV_INVERTED>0</MOV_INVERTED>
                 <ENABLED>1</ENABLED>
                 <MIN_REPLAY>0.000000000</MIN_REPLAY>
+                <CHANGE_BUFF>0</CHANGE_BUFF>
                 <SYNTH_TYPE>1</SYNTH_TYPE>
                 <SELECTOR_TYPE>0</SELECTOR_TYPE>
                 <pan>
@@ -317,6 +321,7 @@
                 <MOV_INVERTED>0</MOV_INVERTED>
                 <ENABLED>1</ENABLED>
                 <MIN_REPLAY>0.000000000</MIN_REPLAY>
+                <CHANGE_BUFF>0</CHANGE_BUFF>
                 <SYNTH_TYPE>1</SYNTH_TYPE>
                 <SELECTOR_TYPE>0</SELECTOR_TYPE>
                 <pan>
@@ -386,6 +391,7 @@
                 <MOV_INVERTED>0</MOV_INVERTED>
                 <ENABLED>1</ENABLED>
                 <MIN_REPLAY>0.000000000</MIN_REPLAY>
+                <CHANGE_BUFF>0</CHANGE_BUFF>
                 <SYNTH_TYPE>1</SYNTH_TYPE>
                 <SELECTOR_TYPE>0</SELECTOR_TYPE>
                 <pan>
@@ -455,6 +461,7 @@
                 <MOV_INVERTED>0</MOV_INVERTED>
                 <ENABLED>1</ENABLED>
                 <MIN_REPLAY>0.000000000</MIN_REPLAY>
+                <CHANGE_BUFF>0</CHANGE_BUFF>
                 <SYNTH_TYPE>1</SYNTH_TYPE>
                 <SELECTOR_TYPE>0</SELECTOR_TYPE>
                 <pan>
@@ -530,6 +537,7 @@
                 <MOV_INVERTED>0</MOV_INVERTED>
                 <ENABLED>1</ENABLED>
                 <MIN_REPLAY>0.000000000</MIN_REPLAY>
+                <CHANGE_BUFF>0</CHANGE_BUFF>
                 <SYNTH_TYPE>1</SYNTH_TYPE>
                 <SELECTOR_TYPE>0</SELECTOR_TYPE>
                 <pan>
@@ -599,6 +607,7 @@
                 <MOV_INVERTED>0</MOV_INVERTED>
                 <ENABLED>0</ENABLED>
                 <MIN_REPLAY>0.000000000</MIN_REPLAY>
+                <CHANGE_BUFF>0</CHANGE_BUFF>
                 <SYNTH_TYPE>1</SYNTH_TYPE>
                 <SELECTOR_TYPE>0</SELECTOR_TYPE>
                 <pan>
@@ -668,6 +677,7 @@
                 <MOV_INVERTED>0</MOV_INVERTED>
                 <ENABLED>0</ENABLED>
                 <MIN_REPLAY>0.000000000</MIN_REPLAY>
+                <CHANGE_BUFF>0</CHANGE_BUFF>
                 <SYNTH_TYPE>1</SYNTH_TYPE>
                 <SELECTOR_TYPE>0</SELECTOR_TYPE>
                 <pan>
@@ -737,6 +747,7 @@
                 <MOV_INVERTED>0</MOV_INVERTED>
                 <ENABLED>1</ENABLED>
                 <MIN_REPLAY>0.000000000</MIN_REPLAY>
+                <CHANGE_BUFF>0</CHANGE_BUFF>
                 <SYNTH_TYPE>1</SYNTH_TYPE>
                 <SELECTOR_TYPE>0</SELECTOR_TYPE>
                 <pan>
@@ -812,6 +823,7 @@
                 <MOV_INVERTED>1</MOV_INVERTED>
                 <ENABLED>1</ENABLED>
                 <MIN_REPLAY>1.020942450</MIN_REPLAY>
+                <CHANGE_BUFF>0</CHANGE_BUFF>
                 <SYNTH_TYPE>0</SYNTH_TYPE>
                 <SELECTOR_TYPE>2</SELECTOR_TYPE>
                 <pan>
@@ -875,6 +887,7 @@
                 <MOV_INVERTED>0</MOV_INVERTED>
                 <ENABLED>1</ENABLED>
                 <MIN_REPLAY>1.020942450</MIN_REPLAY>
+                <CHANGE_BUFF>0</CHANGE_BUFF>
                 <SYNTH_TYPE>0</SYNTH_TYPE>
                 <SELECTOR_TYPE>2</SELECTOR_TYPE>
                 <pan>
@@ -944,6 +957,7 @@
                 <MOV_INVERTED>1</MOV_INVERTED>
                 <ENABLED>1</ENABLED>
                 <MIN_REPLAY>1.020942450</MIN_REPLAY>
+                <CHANGE_BUFF>0</CHANGE_BUFF>
                 <SYNTH_TYPE>0</SYNTH_TYPE>
                 <SELECTOR_TYPE>0</SELECTOR_TYPE>
                 <pan>
@@ -1007,6 +1021,7 @@
                 <MOV_INVERTED>0</MOV_INVERTED>
                 <ENABLED>1</ENABLED>
                 <MIN_REPLAY>0.000000000</MIN_REPLAY>
+                <CHANGE_BUFF>0</CHANGE_BUFF>
                 <SYNTH_TYPE>0</SYNTH_TYPE>
                 <SELECTOR_TYPE>0</SELECTOR_TYPE>
                 <pan>
@@ -1070,6 +1085,7 @@
                 <MOV_INVERTED>0</MOV_INVERTED>
                 <ENABLED>1</ENABLED>
                 <MIN_REPLAY>1.204188466</MIN_REPLAY>
+                <CHANGE_BUFF>0</CHANGE_BUFF>
                 <SYNTH_TYPE>0</SYNTH_TYPE>
                 <SELECTOR_TYPE>0</SELECTOR_TYPE>
                 <pan>
@@ -1133,6 +1149,7 @@
                 <MOV_INVERTED>0</MOV_INVERTED>
                 <ENABLED>1</ENABLED>
                 <MIN_REPLAY>1.047120333</MIN_REPLAY>
+                <CHANGE_BUFF>0</CHANGE_BUFF>
                 <SYNTH_TYPE>0</SYNTH_TYPE>
                 <SELECTOR_TYPE>0</SELECTOR_TYPE>
                 <pan>
@@ -1196,6 +1213,7 @@
                 <MOV_INVERTED>0</MOV_INVERTED>
                 <ENABLED>1</ENABLED>
                 <MIN_REPLAY>1.047120333</MIN_REPLAY>
+                <CHANGE_BUFF>0</CHANGE_BUFF>
                 <SYNTH_TYPE>0</SYNTH_TYPE>
                 <SELECTOR_TYPE>0</SELECTOR_TYPE>
                 <pan>
@@ -1259,6 +1277,7 @@
                 <MOV_INVERTED>0</MOV_INVERTED>
                 <ENABLED>1</ENABLED>
                 <MIN_REPLAY>1.047120333</MIN_REPLAY>
+                <CHANGE_BUFF>0</CHANGE_BUFF>
                 <SYNTH_TYPE>0</SYNTH_TYPE>
                 <SELECTOR_TYPE>0</SELECTOR_TYPE>
                 <pan>
@@ -1322,6 +1341,7 @@
                 <MOV_INVERTED>0</MOV_INVERTED>
                 <ENABLED>1</ENABLED>
                 <MIN_REPLAY>1.125654459</MIN_REPLAY>
+                <CHANGE_BUFF>0</CHANGE_BUFF>
                 <SYNTH_TYPE>0</SYNTH_TYPE>
                 <SELECTOR_TYPE>0</SELECTOR_TYPE>
                 <pan>
@@ -1385,6 +1405,7 @@
                 <MOV_INVERTED>0</MOV_INVERTED>
                 <ENABLED>1</ENABLED>
                 <MIN_REPLAY>1.099476457</MIN_REPLAY>
+                <CHANGE_BUFF>0</CHANGE_BUFF>
                 <SYNTH_TYPE>0</SYNTH_TYPE>
                 <SELECTOR_TYPE>0</SELECTOR_TYPE>
                 <pan>
@@ -1448,6 +1469,7 @@
                 <MOV_INVERTED>0</MOV_INVERTED>
                 <ENABLED>1</ENABLED>
                 <MIN_REPLAY>1.020942450</MIN_REPLAY>
+                <CHANGE_BUFF>0</CHANGE_BUFF>
                 <SYNTH_TYPE>0</SYNTH_TYPE>
                 <SELECTOR_TYPE>2</SELECTOR_TYPE>
                 <pan>
@@ -1517,6 +1539,7 @@
                 <MOV_INVERTED>1</MOV_INVERTED>
                 <ENABLED>1</ENABLED>
                 <MIN_REPLAY>1.020942450</MIN_REPLAY>
+                <CHANGE_BUFF>0</CHANGE_BUFF>
                 <SYNTH_TYPE>0</SYNTH_TYPE>
                 <SELECTOR_TYPE>0</SELECTOR_TYPE>
                 <pan>
@@ -1580,6 +1603,7 @@
                 <MOV_INVERTED>0</MOV_INVERTED>
                 <ENABLED>1</ENABLED>
                 <MIN_REPLAY>0.497382224</MIN_REPLAY>
+                <CHANGE_BUFF>0</CHANGE_BUFF>
                 <SYNTH_TYPE>0</SYNTH_TYPE>
                 <SELECTOR_TYPE>0</SELECTOR_TYPE>
                 <pan>
@@ -1643,6 +1667,7 @@
                 <MOV_INVERTED>0</MOV_INVERTED>
                 <ENABLED>1</ENABLED>
                 <MIN_REPLAY>0.497382224</MIN_REPLAY>
+                <CHANGE_BUFF>0</CHANGE_BUFF>
                 <SYNTH_TYPE>0</SYNTH_TYPE>
                 <SELECTOR_TYPE>0</SELECTOR_TYPE>
                 <pan>
@@ -1706,6 +1731,7 @@
                 <MOV_INVERTED>0</MOV_INVERTED>
                 <ENABLED>1</ENABLED>
                 <MIN_REPLAY>0.497382224</MIN_REPLAY>
+                <CHANGE_BUFF>0</CHANGE_BUFF>
                 <SYNTH_TYPE>0</SYNTH_TYPE>
                 <SELECTOR_TYPE>0</SELECTOR_TYPE>
                 <pan>
@@ -1769,6 +1795,7 @@
                 <MOV_INVERTED>0</MOV_INVERTED>
                 <ENABLED>1</ENABLED>
                 <MIN_REPLAY>0.497382224</MIN_REPLAY>
+                <CHANGE_BUFF>0</CHANGE_BUFF>
                 <SYNTH_TYPE>0</SYNTH_TYPE>
                 <SELECTOR_TYPE>0</SELECTOR_TYPE>
                 <pan>
@@ -1832,6 +1859,7 @@
                 <MOV_INVERTED>0</MOV_INVERTED>
                 <ENABLED>1</ENABLED>
                 <MIN_REPLAY>0.497382224</MIN_REPLAY>
+                <CHANGE_BUFF>0</CHANGE_BUFF>
                 <SYNTH_TYPE>0</SYNTH_TYPE>
                 <SELECTOR_TYPE>0</SELECTOR_TYPE>
                 <pan>
@@ -1895,6 +1923,7 @@
                 <MOV_INVERTED>0</MOV_INVERTED>
                 <ENABLED>1</ENABLED>
                 <MIN_REPLAY>0.000000000</MIN_REPLAY>
+                <CHANGE_BUFF>0</CHANGE_BUFF>
                 <SYNTH_TYPE>0</SYNTH_TYPE>
                 <SELECTOR_TYPE>0</SELECTOR_TYPE>
                 <pan>
@@ -1958,6 +1987,7 @@
                 <MOV_INVERTED>0</MOV_INVERTED>
                 <ENABLED>1</ENABLED>
                 <MIN_REPLAY>0.000000000</MIN_REPLAY>
+                <CHANGE_BUFF>0</CHANGE_BUFF>
                 <SYNTH_TYPE>0</SYNTH_TYPE>
                 <SELECTOR_TYPE>0</SELECTOR_TYPE>
                 <pan>
@@ -2021,6 +2051,7 @@
                 <MOV_INVERTED>0</MOV_INVERTED>
                 <ENABLED>1</ENABLED>
                 <MIN_REPLAY>0.000000000</MIN_REPLAY>
+                <CHANGE_BUFF>0</CHANGE_BUFF>
                 <SYNTH_TYPE>0</SYNTH_TYPE>
                 <SELECTOR_TYPE>0</SELECTOR_TYPE>
                 <pan>
@@ -2084,6 +2115,7 @@
                 <MOV_INVERTED>0</MOV_INVERTED>
                 <ENABLED>1</ENABLED>
                 <MIN_REPLAY>0.000000000</MIN_REPLAY>
+                <CHANGE_BUFF>0</CHANGE_BUFF>
                 <SYNTH_TYPE>0</SYNTH_TYPE>
                 <SELECTOR_TYPE>0</SELECTOR_TYPE>
                 <pan>
@@ -2147,6 +2179,7 @@
                 <MOV_INVERTED>0</MOV_INVERTED>
                 <ENABLED>1</ENABLED>
                 <MIN_REPLAY>0.000000000</MIN_REPLAY>
+                <CHANGE_BUFF>0</CHANGE_BUFF>
                 <SYNTH_TYPE>0</SYNTH_TYPE>
                 <SELECTOR_TYPE>0</SELECTOR_TYPE>
                 <pan>
@@ -2210,6 +2243,7 @@
                 <MOV_INVERTED>0</MOV_INVERTED>
                 <ENABLED>1</ENABLED>
                 <MIN_REPLAY>0.000000000</MIN_REPLAY>
+                <CHANGE_BUFF>0</CHANGE_BUFF>
                 <SYNTH_TYPE>0</SYNTH_TYPE>
                 <SELECTOR_TYPE>0</SELECTOR_TYPE>
                 <pan>
@@ -2273,6 +2307,7 @@
                 <MOV_INVERTED>0</MOV_INVERTED>
                 <ENABLED>1</ENABLED>
                 <MIN_REPLAY>1.020942450</MIN_REPLAY>
+                <CHANGE_BUFF>0</CHANGE_BUFF>
                 <SYNTH_TYPE>0</SYNTH_TYPE>
                 <SELECTOR_TYPE>2</SELECTOR_TYPE>
                 <pan>
@@ -2342,6 +2377,7 @@
                 <MOV_INVERTED>0</MOV_INVERTED>
                 <ENABLED>1</ENABLED>
                 <MIN_REPLAY>0.497382224</MIN_REPLAY>
+                <CHANGE_BUFF>0</CHANGE_BUFF>
                 <SYNTH_TYPE>0</SYNTH_TYPE>
                 <SELECTOR_TYPE>0</SELECTOR_TYPE>
                 <pan>
@@ -2405,6 +2441,7 @@
                 <MOV_INVERTED>0</MOV_INVERTED>
                 <ENABLED>1</ENABLED>
                 <MIN_REPLAY>0.497382224</MIN_REPLAY>
+                <CHANGE_BUFF>0</CHANGE_BUFF>
                 <SYNTH_TYPE>0</SYNTH_TYPE>
                 <SELECTOR_TYPE>0</SELECTOR_TYPE>
                 <pan>
@@ -2468,6 +2505,7 @@
                 <MOV_INVERTED>0</MOV_INVERTED>
                 <ENABLED>1</ENABLED>
                 <MIN_REPLAY>0.497382224</MIN_REPLAY>
+                <CHANGE_BUFF>0</CHANGE_BUFF>
                 <SYNTH_TYPE>0</SYNTH_TYPE>
                 <SELECTOR_TYPE>0</SELECTOR_TYPE>
                 <pan>
@@ -2531,6 +2569,7 @@
                 <MOV_INVERTED>0</MOV_INVERTED>
                 <ENABLED>1</ENABLED>
                 <MIN_REPLAY>0.497382224</MIN_REPLAY>
+                <CHANGE_BUFF>0</CHANGE_BUFF>
                 <SYNTH_TYPE>0</SYNTH_TYPE>
                 <SELECTOR_TYPE>0</SELECTOR_TYPE>
                 <pan>
@@ -2594,6 +2633,7 @@
                 <MOV_INVERTED>0</MOV_INVERTED>
                 <ENABLED>1</ENABLED>
                 <MIN_REPLAY>0.497382224</MIN_REPLAY>
+                <CHANGE_BUFF>0</CHANGE_BUFF>
                 <SYNTH_TYPE>0</SYNTH_TYPE>
                 <SELECTOR_TYPE>0</SELECTOR_TYPE>
                 <pan>
@@ -2657,6 +2697,7 @@
                 <MOV_INVERTED>0</MOV_INVERTED>
                 <ENABLED>1</ENABLED>
                 <MIN_REPLAY>0.000000000</MIN_REPLAY>
+                <CHANGE_BUFF>0</CHANGE_BUFF>
                 <SYNTH_TYPE>0</SYNTH_TYPE>
                 <SELECTOR_TYPE>0</SELECTOR_TYPE>
                 <pan>
@@ -2720,6 +2761,7 @@
                 <MOV_INVERTED>0</MOV_INVERTED>
                 <ENABLED>1</ENABLED>
                 <MIN_REPLAY>0.000000000</MIN_REPLAY>
+                <CHANGE_BUFF>0</CHANGE_BUFF>
                 <SYNTH_TYPE>0</SYNTH_TYPE>
                 <SELECTOR_TYPE>0</SELECTOR_TYPE>
                 <pan>
@@ -2783,6 +2825,7 @@
                 <MOV_INVERTED>0</MOV_INVERTED>
                 <ENABLED>1</ENABLED>
                 <MIN_REPLAY>0.000000000</MIN_REPLAY>
+                <CHANGE_BUFF>0</CHANGE_BUFF>
                 <SYNTH_TYPE>0</SYNTH_TYPE>
                 <SELECTOR_TYPE>0</SELECTOR_TYPE>
                 <pan>
@@ -2846,6 +2889,7 @@
                 <MOV_INVERTED>0</MOV_INVERTED>
                 <ENABLED>1</ENABLED>
                 <MIN_REPLAY>0.000000000</MIN_REPLAY>
+                <CHANGE_BUFF>0</CHANGE_BUFF>
                 <SYNTH_TYPE>0</SYNTH_TYPE>
                 <SELECTOR_TYPE>0</SELECTOR_TYPE>
                 <pan>
@@ -2909,6 +2953,7 @@
                 <MOV_INVERTED>0</MOV_INVERTED>
                 <ENABLED>1</ENABLED>
                 <MIN_REPLAY>0.000000000</MIN_REPLAY>
+                <CHANGE_BUFF>0</CHANGE_BUFF>
                 <SYNTH_TYPE>0</SYNTH_TYPE>
                 <SELECTOR_TYPE>0</SELECTOR_TYPE>
                 <pan>
@@ -2972,6 +3017,7 @@
                 <MOV_INVERTED>0</MOV_INVERTED>
                 <ENABLED>1</ENABLED>
                 <MIN_REPLAY>0.000000000</MIN_REPLAY>
+                <CHANGE_BUFF>0</CHANGE_BUFF>
                 <SYNTH_TYPE>0</SYNTH_TYPE>
                 <SELECTOR_TYPE>0</SELECTOR_TYPE>
                 <pan>
@@ -3035,6 +3081,7 @@
                 <MOV_INVERTED>0</MOV_INVERTED>
                 <ENABLED>1</ENABLED>
                 <MIN_REPLAY>1.020942450</MIN_REPLAY>
+                <CHANGE_BUFF>0</CHANGE_BUFF>
                 <SYNTH_TYPE>0</SYNTH_TYPE>
                 <SELECTOR_TYPE>2</SELECTOR_TYPE>
                 <pan>
@@ -3104,6 +3151,7 @@
                 <MOV_INVERTED>1</MOV_INVERTED>
                 <ENABLED>0</ENABLED>
                 <MIN_REPLAY>1.020942450</MIN_REPLAY>
+                <CHANGE_BUFF>0</CHANGE_BUFF>
                 <SYNTH_TYPE>0</SYNTH_TYPE>
                 <SELECTOR_TYPE>2</SELECTOR_TYPE>
                 <pan>
@@ -3167,6 +3215,7 @@
                 <MOV_INVERTED>0</MOV_INVERTED>
                 <ENABLED>1</ENABLED>
                 <MIN_REPLAY>0.497382224</MIN_REPLAY>
+                <CHANGE_BUFF>0</CHANGE_BUFF>
                 <SYNTH_TYPE>0</SYNTH_TYPE>
                 <SELECTOR_TYPE>0</SELECTOR_TYPE>
                 <pan>
@@ -3230,6 +3279,7 @@
                 <MOV_INVERTED>0</MOV_INVERTED>
                 <ENABLED>1</ENABLED>
                 <MIN_REPLAY>0.497382224</MIN_REPLAY>
+                <CHANGE_BUFF>0</CHANGE_BUFF>
                 <SYNTH_TYPE>0</SYNTH_TYPE>
                 <SELECTOR_TYPE>0</SELECTOR_TYPE>
                 <pan>
@@ -3293,6 +3343,7 @@
                 <MOV_INVERTED>0</MOV_INVERTED>
                 <ENABLED>1</ENABLED>
                 <MIN_REPLAY>0.497382224</MIN_REPLAY>
+                <CHANGE_BUFF>0</CHANGE_BUFF>
                 <SYNTH_TYPE>0</SYNTH_TYPE>
                 <SELECTOR_TYPE>0</SELECTOR_TYPE>
                 <pan>
@@ -3356,6 +3407,7 @@
                 <MOV_INVERTED>0</MOV_INVERTED>
                 <ENABLED>1</ENABLED>
                 <MIN_REPLAY>0.497382224</MIN_REPLAY>
+                <CHANGE_BUFF>0</CHANGE_BUFF>
                 <SYNTH_TYPE>0</SYNTH_TYPE>
                 <SELECTOR_TYPE>0</SELECTOR_TYPE>
                 <pan>
@@ -3419,6 +3471,7 @@
                 <MOV_INVERTED>0</MOV_INVERTED>
                 <ENABLED>1</ENABLED>
                 <MIN_REPLAY>0.497382224</MIN_REPLAY>
+                <CHANGE_BUFF>0</CHANGE_BUFF>
                 <SYNTH_TYPE>0</SYNTH_TYPE>
                 <SELECTOR_TYPE>0</SELECTOR_TYPE>
                 <pan>
@@ -3482,6 +3535,7 @@
                 <MOV_INVERTED>0</MOV_INVERTED>
                 <ENABLED>1</ENABLED>
                 <MIN_REPLAY>0.497382224</MIN_REPLAY>
+                <CHANGE_BUFF>0</CHANGE_BUFF>
                 <SYNTH_TYPE>0</SYNTH_TYPE>
                 <SELECTOR_TYPE>0</SELECTOR_TYPE>
                 <pan>
@@ -3545,6 +3599,7 @@
                 <MOV_INVERTED>0</MOV_INVERTED>
                 <ENABLED>1</ENABLED>
                 <MIN_REPLAY>0.497382224</MIN_REPLAY>
+                <CHANGE_BUFF>0</CHANGE_BUFF>
                 <SYNTH_TYPE>0</SYNTH_TYPE>
                 <SELECTOR_TYPE>0</SELECTOR_TYPE>
                 <pan>
@@ -3608,6 +3663,7 @@
                 <MOV_INVERTED>0</MOV_INVERTED>
                 <ENABLED>1</ENABLED>
                 <MIN_REPLAY>0.497382224</MIN_REPLAY>
+                <CHANGE_BUFF>0</CHANGE_BUFF>
                 <SYNTH_TYPE>0</SYNTH_TYPE>
                 <SELECTOR_TYPE>0</SELECTOR_TYPE>
                 <pan>
@@ -3671,6 +3727,7 @@
                 <MOV_INVERTED>0</MOV_INVERTED>
                 <ENABLED>1</ENABLED>
                 <MIN_REPLAY>0.497382224</MIN_REPLAY>
+                <CHANGE_BUFF>0</CHANGE_BUFF>
                 <SYNTH_TYPE>0</SYNTH_TYPE>
                 <SELECTOR_TYPE>0</SELECTOR_TYPE>
                 <pan>
@@ -3734,6 +3791,7 @@
                 <MOV_INVERTED>0</MOV_INVERTED>
                 <ENABLED>1</ENABLED>
                 <MIN_REPLAY>0.000000000</MIN_REPLAY>
+                <CHANGE_BUFF>0</CHANGE_BUFF>
                 <SYNTH_TYPE>0</SYNTH_TYPE>
                 <SELECTOR_TYPE>0</SELECTOR_TYPE>
                 <pan>
@@ -3797,6 +3855,7 @@
                 <MOV_INVERTED>0</MOV_INVERTED>
                 <ENABLED>1</ENABLED>
                 <MIN_REPLAY>0.000000000</MIN_REPLAY>
+                <CHANGE_BUFF>0</CHANGE_BUFF>
                 <SYNTH_TYPE>0</SYNTH_TYPE>
                 <SELECTOR_TYPE>0</SELECTOR_TYPE>
                 <pan>
@@ -3860,6 +3919,7 @@
                 <MOV_INVERTED>0</MOV_INVERTED>
                 <ENABLED>1</ENABLED>
                 <MIN_REPLAY>0.000000000</MIN_REPLAY>
+                <CHANGE_BUFF>0</CHANGE_BUFF>
                 <SYNTH_TYPE>0</SYNTH_TYPE>
                 <SELECTOR_TYPE>0</SELECTOR_TYPE>
                 <pan>
@@ -3923,6 +3983,7 @@
                 <MOV_INVERTED>0</MOV_INVERTED>
                 <ENABLED>1</ENABLED>
                 <MIN_REPLAY>0.000000000</MIN_REPLAY>
+                <CHANGE_BUFF>0</CHANGE_BUFF>
                 <SYNTH_TYPE>0</SYNTH_TYPE>
                 <SELECTOR_TYPE>0</SELECTOR_TYPE>
                 <pan>
@@ -3986,6 +4047,7 @@
                 <MOV_INVERTED>0</MOV_INVERTED>
                 <ENABLED>1</ENABLED>
                 <MIN_REPLAY>0.000000000</MIN_REPLAY>
+                <CHANGE_BUFF>0</CHANGE_BUFF>
                 <SYNTH_TYPE>0</SYNTH_TYPE>
                 <SELECTOR_TYPE>0</SELECTOR_TYPE>
                 <pan>
@@ -4049,6 +4111,7 @@
                 <MOV_INVERTED>0</MOV_INVERTED>
                 <ENABLED>1</ENABLED>
                 <MIN_REPLAY>0.000000000</MIN_REPLAY>
+                <CHANGE_BUFF>0</CHANGE_BUFF>
                 <SYNTH_TYPE>0</SYNTH_TYPE>
                 <SELECTOR_TYPE>0</SELECTOR_TYPE>
                 <pan>
@@ -4112,6 +4175,7 @@
                 <MOV_INVERTED>0</MOV_INVERTED>
                 <ENABLED>1</ENABLED>
                 <MIN_REPLAY>1.020942450</MIN_REPLAY>
+                <CHANGE_BUFF>0</CHANGE_BUFF>
                 <SYNTH_TYPE>0</SYNTH_TYPE>
                 <SELECTOR_TYPE>2</SELECTOR_TYPE>
                 <pan>
@@ -4181,6 +4245,7 @@
                 <MOV_INVERTED>0</MOV_INVERTED>
                 <ENABLED>1</ENABLED>
                 <MIN_REPLAY>1.047120333</MIN_REPLAY>
+                <CHANGE_BUFF>0</CHANGE_BUFF>
                 <SYNTH_TYPE>0</SYNTH_TYPE>
                 <SELECTOR_TYPE>2</SELECTOR_TYPE>
                 <pan>
@@ -4250,6 +4315,7 @@
                 <MOV_INVERTED>1</MOV_INVERTED>
                 <ENABLED>1</ENABLED>
                 <MIN_REPLAY>1.623036742</MIN_REPLAY>
+                <CHANGE_BUFF>0</CHANGE_BUFF>
                 <SYNTH_TYPE>0</SYNTH_TYPE>
                 <SELECTOR_TYPE>2</SELECTOR_TYPE>
                 <pan>
@@ -4319,6 +4385,7 @@
                 <MOV_INVERTED>0</MOV_INVERTED>
                 <ENABLED>1</ENABLED>
                 <MIN_REPLAY>1.020942450</MIN_REPLAY>
+                <CHANGE_BUFF>0</CHANGE_BUFF>
                 <SYNTH_TYPE>0</SYNTH_TYPE>
                 <SELECTOR_TYPE>0</SELECTOR_TYPE>
                 <pan>
@@ -4382,6 +4449,7 @@
                 <MOV_INVERTED>0</MOV_INVERTED>
                 <ENABLED>1</ENABLED>
                 <MIN_REPLAY>1.073298454</MIN_REPLAY>
+                <CHANGE_BUFF>0</CHANGE_BUFF>
                 <SYNTH_TYPE>0</SYNTH_TYPE>
                 <SELECTOR_TYPE>0</SELECTOR_TYPE>
                 <pan>
@@ -4445,6 +4513,7 @@
                 <MOV_INVERTED>0</MOV_INVERTED>
                 <ENABLED>1</ENABLED>
                 <MIN_REPLAY>1.073298454</MIN_REPLAY>
+                <CHANGE_BUFF>0</CHANGE_BUFF>
                 <SYNTH_TYPE>0</SYNTH_TYPE>
                 <SELECTOR_TYPE>0</SELECTOR_TYPE>
                 <pan>
@@ -4508,6 +4577,7 @@
                 <MOV_INVERTED>0</MOV_INVERTED>
                 <ENABLED>1</ENABLED>
                 <MIN_REPLAY>1.047120333</MIN_REPLAY>
+                <CHANGE_BUFF>0</CHANGE_BUFF>
                 <SYNTH_TYPE>0</SYNTH_TYPE>
                 <SELECTOR_TYPE>0</SELECTOR_TYPE>
                 <pan>
@@ -4571,6 +4641,7 @@
                 <MOV_INVERTED>0</MOV_INVERTED>
                 <ENABLED>1</ENABLED>
                 <MIN_REPLAY>1.020942450</MIN_REPLAY>
+                <CHANGE_BUFF>0</CHANGE_BUFF>
                 <SYNTH_TYPE>0</SYNTH_TYPE>
                 <SELECTOR_TYPE>0</SELECTOR_TYPE>
                 <pan>
@@ -4634,6 +4705,7 @@
                 <MOV_INVERTED>0</MOV_INVERTED>
                 <ENABLED>1</ENABLED>
                 <MIN_REPLAY>2.094240665</MIN_REPLAY>
+                <CHANGE_BUFF>0</CHANGE_BUFF>
                 <SYNTH_TYPE>0</SYNTH_TYPE>
                 <SELECTOR_TYPE>0</SELECTOR_TYPE>
                 <pan>
@@ -4697,6 +4769,7 @@
                 <MOV_INVERTED>0</MOV_INVERTED>
                 <ENABLED>1</ENABLED>
                 <MIN_REPLAY>1.047120333</MIN_REPLAY>
+                <CHANGE_BUFF>0</CHANGE_BUFF>
                 <SYNTH_TYPE>0</SYNTH_TYPE>
                 <SELECTOR_TYPE>0</SELECTOR_TYPE>
                 <pan>
@@ -4760,6 +4833,7 @@
                 <MOV_INVERTED>0</MOV_INVERTED>
                 <ENABLED>1</ENABLED>
                 <MIN_REPLAY>1.020942450</MIN_REPLAY>
+                <CHANGE_BUFF>0</CHANGE_BUFF>
                 <SYNTH_TYPE>0</SYNTH_TYPE>
                 <SELECTOR_TYPE>0</SELECTOR_TYPE>
                 <pan>
@@ -4823,6 +4897,7 @@
                 <MOV_INVERTED>0</MOV_INVERTED>
                 <ENABLED>1</ENABLED>
                 <MIN_REPLAY>1.047120333</MIN_REPLAY>
+                <CHANGE_BUFF>0</CHANGE_BUFF>
                 <SYNTH_TYPE>0</SYNTH_TYPE>
                 <SELECTOR_TYPE>0</SELECTOR_TYPE>
                 <pan>
@@ -4892,6 +4967,7 @@
                 <MOV_INVERTED>0</MOV_INVERTED>
                 <ENABLED>1</ENABLED>
                 <MIN_REPLAY>1.073298454</MIN_REPLAY>
+                <CHANGE_BUFF>0</CHANGE_BUFF>
                 <SYNTH_TYPE>0</SYNTH_TYPE>
                 <SELECTOR_TYPE>0</SELECTOR_TYPE>
                 <pan>
@@ -4955,6 +5031,7 @@
                 <MOV_INVERTED>0</MOV_INVERTED>
                 <ENABLED>0</ENABLED>
                 <MIN_REPLAY>1.073298454</MIN_REPLAY>
+                <CHANGE_BUFF>0</CHANGE_BUFF>
                 <SYNTH_TYPE>0</SYNTH_TYPE>
                 <SELECTOR_TYPE>0</SELECTOR_TYPE>
                 <pan>
@@ -5018,6 +5095,7 @@
                 <MOV_INVERTED>0</MOV_INVERTED>
                 <ENABLED>1</ENABLED>
                 <MIN_REPLAY>1.047120333</MIN_REPLAY>
+                <CHANGE_BUFF>0</CHANGE_BUFF>
                 <SYNTH_TYPE>0</SYNTH_TYPE>
                 <SELECTOR_TYPE>0</SELECTOR_TYPE>
                 <pan>
@@ -5081,6 +5159,7 @@
                 <MOV_INVERTED>0</MOV_INVERTED>
                 <ENABLED>1</ENABLED>
                 <MIN_REPLAY>1.020942450</MIN_REPLAY>
+                <CHANGE_BUFF>0</CHANGE_BUFF>
                 <SYNTH_TYPE>0</SYNTH_TYPE>
                 <SELECTOR_TYPE>0</SELECTOR_TYPE>
                 <pan>
@@ -5144,6 +5223,7 @@
                 <MOV_INVERTED>0</MOV_INVERTED>
                 <ENABLED>1</ENABLED>
                 <MIN_REPLAY>1.073298454</MIN_REPLAY>
+                <CHANGE_BUFF>0</CHANGE_BUFF>
                 <SYNTH_TYPE>0</SYNTH_TYPE>
                 <SELECTOR_TYPE>0</SELECTOR_TYPE>
                 <pan>
@@ -5207,6 +5287,7 @@
                 <MOV_INVERTED>0</MOV_INVERTED>
                 <ENABLED>1</ENABLED>
                 <MIN_REPLAY>1.047120333</MIN_REPLAY>
+                <CHANGE_BUFF>0</CHANGE_BUFF>
                 <SYNTH_TYPE>0</SYNTH_TYPE>
                 <SELECTOR_TYPE>0</SELECTOR_TYPE>
                 <pan>
@@ -5270,6 +5351,7 @@
                 <MOV_INVERTED>0</MOV_INVERTED>
                 <ENABLED>1</ENABLED>
                 <MIN_REPLAY>1.020942450</MIN_REPLAY>
+                <CHANGE_BUFF>0</CHANGE_BUFF>
                 <SYNTH_TYPE>0</SYNTH_TYPE>
                 <SELECTOR_TYPE>0</SELECTOR_TYPE>
                 <pan>
@@ -5333,6 +5415,7 @@
                 <MOV_INVERTED>0</MOV_INVERTED>
                 <ENABLED>1</ENABLED>
                 <MIN_REPLAY>1.047120333</MIN_REPLAY>
+                <CHANGE_BUFF>0</CHANGE_BUFF>
                 <SYNTH_TYPE>0</SYNTH_TYPE>
                 <SELECTOR_TYPE>0</SELECTOR_TYPE>
                 <pan>
@@ -5402,6 +5485,7 @@
                 <MOV_INVERTED>0</MOV_INVERTED>
                 <ENABLED>1</ENABLED>
                 <MIN_REPLAY>2.382199049</MIN_REPLAY>
+                <CHANGE_BUFF>0</CHANGE_BUFF>
                 <SYNTH_TYPE>0</SYNTH_TYPE>
                 <SELECTOR_TYPE>0</SELECTOR_TYPE>
                 <pan>
@@ -5465,6 +5549,7 @@
                 <MOV_INVERTED>0</MOV_INVERTED>
                 <ENABLED>1</ENABLED>
                 <MIN_REPLAY>3.612565517</MIN_REPLAY>
+                <CHANGE_BUFF>0</CHANGE_BUFF>
                 <SYNTH_TYPE>0</SYNTH_TYPE>
                 <SELECTOR_TYPE>0</SELECTOR_TYPE>
                 <pan>
@@ -5534,6 +5619,7 @@
                 <MOV_INVERTED>0</MOV_INVERTED>
                 <ENABLED>1</ENABLED>
                 <MIN_REPLAY>3.246073484</MIN_REPLAY>
+                <CHANGE_BUFF>0</CHANGE_BUFF>
                 <SYNTH_TYPE>0</SYNTH_TYPE>
                 <SELECTOR_TYPE>0</SELECTOR_TYPE>
                 <pan>
@@ -5597,6 +5683,7 @@
                 <MOV_INVERTED>0</MOV_INVERTED>
                 <ENABLED>1</ENABLED>
                 <MIN_REPLAY>2.513088942</MIN_REPLAY>
+                <CHANGE_BUFF>0</CHANGE_BUFF>
                 <SYNTH_TYPE>0</SYNTH_TYPE>
                 <SELECTOR_TYPE>0</SELECTOR_TYPE>
                 <pan>
@@ -5660,6 +5747,7 @@
                 <MOV_INVERTED>0</MOV_INVERTED>
                 <ENABLED>1</ENABLED>
                 <MIN_REPLAY>3.691099644</MIN_REPLAY>
+                <CHANGE_BUFF>0</CHANGE_BUFF>
                 <SYNTH_TYPE>0</SYNTH_TYPE>
                 <SELECTOR_TYPE>0</SELECTOR_TYPE>
                 <pan>
@@ -5723,6 +5811,7 @@
                 <MOV_INVERTED>0</MOV_INVERTED>
                 <ENABLED>1</ENABLED>
                 <MIN_REPLAY>0.366492152</MIN_REPLAY>
+                <CHANGE_BUFF>0</CHANGE_BUFF>
                 <SYNTH_TYPE>0</SYNTH_TYPE>
                 <SELECTOR_TYPE>0</SELECTOR_TYPE>
                 <pan>
@@ -5792,6 +5881,7 @@
                 <MOV_INVERTED>0</MOV_INVERTED>
                 <ENABLED>1</ENABLED>
                 <MIN_REPLAY>3.246073484</MIN_REPLAY>
+                <CHANGE_BUFF>0</CHANGE_BUFF>
                 <SYNTH_TYPE>0</SYNTH_TYPE>
                 <SELECTOR_TYPE>0</SELECTOR_TYPE>
                 <pan>
@@ -5855,6 +5945,7 @@
                 <MOV_INVERTED>0</MOV_INVERTED>
                 <ENABLED>1</ENABLED>
                 <MIN_REPLAY>2.513088942</MIN_REPLAY>
+                <CHANGE_BUFF>0</CHANGE_BUFF>
                 <SYNTH_TYPE>0</SYNTH_TYPE>
                 <SELECTOR_TYPE>0</SELECTOR_TYPE>
                 <pan>
@@ -5918,6 +6009,7 @@
                 <MOV_INVERTED>0</MOV_INVERTED>
                 <ENABLED>1</ENABLED>
                 <MIN_REPLAY>2.041884899</MIN_REPLAY>
+                <CHANGE_BUFF>0</CHANGE_BUFF>
                 <SYNTH_TYPE>0</SYNTH_TYPE>
                 <SELECTOR_TYPE>0</SELECTOR_TYPE>
                 <pan>
@@ -5981,6 +6073,7 @@
                 <MOV_INVERTED>0</MOV_INVERTED>
                 <ENABLED>1</ENABLED>
                 <MIN_REPLAY>1.073298454</MIN_REPLAY>
+                <CHANGE_BUFF>0</CHANGE_BUFF>
                 <SYNTH_TYPE>0</SYNTH_TYPE>
                 <SELECTOR_TYPE>0</SELECTOR_TYPE>
                 <pan>
@@ -6044,6 +6137,7 @@
                 <MOV_INVERTED>0</MOV_INVERTED>
                 <ENABLED>1</ENABLED>
                 <MIN_REPLAY>0.366492152</MIN_REPLAY>
+                <CHANGE_BUFF>0</CHANGE_BUFF>
                 <SYNTH_TYPE>0</SYNTH_TYPE>
                 <SELECTOR_TYPE>0</SELECTOR_TYPE>
                 <pan>

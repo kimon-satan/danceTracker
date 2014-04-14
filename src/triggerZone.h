@@ -105,6 +105,9 @@ public:
     bool getIsMovInvert();
     void setIsMovInvert(bool b);
     
+    void setChangeBuff(int i);
+    int getChangeBuff();
+    
     void newIndex();
     string getUid();
 
@@ -130,10 +133,10 @@ private:
     
     string mName, mSoundFileName;
     
-    bool isOccupied, isEnabled, isSelected, isSound;
+    bool isOccupied, isIntersect, isEnabled, isSelected, isSound;
     
     bool isLoop, isPlayToEnd, isOccInvert, isMovEnabled, isMovInvert, isMoving;
-    int  silentCount;
+    int  silentCount, changeBuff, changeCount;
     
     ofPtr<oscManager> mOsc;
     

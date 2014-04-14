@@ -311,9 +311,9 @@ void testApp::setupZonePanels(){
     for(int i = 0; i < 3; i ++){
         
         if(i == 0)
-            zoneCanvases[i] = new ofxUICanvas(ofGetWidth()/2 - 400, ofGetHeight() - 230, 600, 230);
+            zoneCanvases[i] = new ofxUICanvas(ofGetWidth()/2 - 400, ofGetHeight() - 240, 600, 240);
         else
-            zoneCanvases[i] = new ofxUICanvas(ofGetWidth()/2 + 210, ofGetHeight() - 230, 300, 230);
+            zoneCanvases[i] = new ofxUICanvas(ofGetWidth()/2 + 210, ofGetHeight() - 240, 300, 240);
         
         zoneCanvases[i]->setColorFill(ofxUIColor(200));
         zoneCanvases[i]->setColorFillHighlight(ofxUIColor(255));
@@ -396,6 +396,9 @@ void testApp::setupZonePanels(){
     
     ofxUILabelButton * z_reset = (ofxUILabelButton *)zoneCanvases[0]->addWidgetRight(new ofxUILabelButton("ZONE_RESET", true, 100));
     z_reset->setLabelText("RESET");
+    
+    cbSlider = new ofxUISlider("CHANGE_BUFF", 0, 60, 1, slw, 10);
+    zoneCanvases[0]->addWidgetDown(cbSlider);
     
     //-------------------------------------------------------------------
     
@@ -873,6 +876,7 @@ void testApp::s2Events(ofxUIEventArgs &e){
     if(name == "MOV_INVERT")m_bankManager->setCZoneMovInvert(tog->getValue());
     if(name == "OCC_INVERT")m_bankManager->setCZoneOccInvert(tog->getValue());
     if(name == "MIN_REPLAY")m_bankManager->setCZoneMinReplay(slider->getScaledValue());
+    if(name == "CHANGE_BUFF")m_bankManager->setCZoneChangeBuff(slider->getScaledValue());
     if(name == "RADIUS")m_bankManager->setCZoneRadius(slider->getScaledValue());
     
     if(name == "EDIT_SYNTH_PARAMS"){
@@ -1085,6 +1089,7 @@ void testApp::updateTZGuiElements(ofPtr<triggerZone> zn){
     
     //sensSlider->setValue(zn->getSensitivity());
     repSlider->setValue(zn->getMinReplaySecs());
+    cbSlider->setValue(zn->getChangeBuff());
     synthTypeDisp->setLabel("SYNTH_TYPE: " + synthDictionary::getSynthString(zn->getSynthType()));
     selTypeDisp->setLabel("SELECTOR_TYPE: " + synthDictionary::getSelectorString(zn->getSelectorType()));
     zn->setIsSelected(true);

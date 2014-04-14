@@ -123,6 +123,7 @@ void bankManager::saveZone(ofxXmlSettings & XML, ofPtr<triggerZone> z){
     XML.addValue("ENABLED", z->getIsEnabled());
     //XML.addValue("SENSITIVITY", z->getSensitivity());
     XML.addValue("MIN_REPLAY", z->getMinReplaySecs());
+    XML.addValue("CHANGE_BUFF", z->getChangeBuff());
     XML.addValue("SYNTH_TYPE", z->getSynthType());
     XML.addValue("SELECTOR_TYPE", z->getSelectorType());
     
@@ -294,6 +295,7 @@ void bankManager::loadZone(ofxXmlSettings & XML, ofPtr<triggerZone> z){
     z->setIsEnabled(XML.getValue("ENABLED", false), true);
     //z->setSensitivity(XML.getValue("SENSITIVITY", 1.0));
     z->setMinReplaySecs(XML.getValue("MIN_REPLAY", 0.0));
+    z->setChangeBuff(XML.getValue("CHANGE_BUFF", z->getChangeBuff()));
     z->setSynthType(XML.getValue("SYNTH_TYPE", 0));
     z->setSelectorType(XML.getValue("SELECTOR_TYPE", z->getSelectorType()));
     
@@ -848,6 +850,10 @@ void bankManager::setCZoneMovEnabled(bool b){
 
 void bankManager::setCZoneMinReplay(float f){
     currentZone->setMinReplaySecs(f);
+}
+
+void bankManager::setCZoneChangeBuff(int i){
+    currentZone->setChangeBuff(i);
 }
 
 void bankManager::setCZoneSynthParam(int id, synthParam sp){

@@ -113,6 +113,7 @@ class bankManager{
     void setCZoneMovInvert(bool b);
     void setCZoneMovEnabled(bool b);
     void setCZoneMinReplay(float f);
+    void setCZoneChangeBuff(int i);
     
     void setCZoneSynthParam(int id, synthParam sp);
     

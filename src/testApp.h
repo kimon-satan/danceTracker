@@ -121,7 +121,7 @@ public:
     
     ofxUIRadio * shapeRad;
     
-    ofxUISlider * sensSlider, * repSlider;
+    ofxUISlider * sensSlider, * repSlider, * cbSlider;
     ofxUISlider * radSlid, * tPosX, * tPosY, * tPosZ;
     ofxUISlider * xDimSlid, * yDimSlid, * zDimSlid;
     ofxUIToggle * eblTog, *loopTog, *playToEndTog, *dispSynthTog, *occInvTog, *movEnaTog, *movInvTog;
