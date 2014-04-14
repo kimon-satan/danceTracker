@@ -18,7 +18,8 @@
 enum tzShape{
 
     TZ_SPHERE,
-    TZ_BOX
+    TZ_BOX,
+    TZ_CYLINDER
 
 };
 

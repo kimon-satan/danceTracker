@@ -105,9 +105,17 @@ void triggerZone::draw(ofVec3f camPos){
                     ofPopMatrix();
                     ofPopStyle();
                     
-                }else{
+                }else if(shape == TZ_SPHERE){
                     ofNoFill();
                     ofSphere(0,0,0, radius);
+                }else if(shape == TZ_CYLINDER){
+                    ofNoFill();
+                    ofPushMatrix();
+                    ofRotate(90, 1, 0, 0);
+                    for(int i = 0; i < 20; i++){
+                        ofCircle(0, 0, radius); //incomplete - cylinders need height & y_pos
+                    }
+                    ofPopMatrix();
                 }
 
     
