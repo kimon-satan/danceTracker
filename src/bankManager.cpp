@@ -802,7 +802,7 @@ void bankManager::setCZoneSoundFile(string s){
 
 }
 
-void bankManager::setCZoneShape(int i){currentZone->setShape(i);}
+
 void bankManager::setCZoneRadius(float f){currentZone->setRadius(f);}
 
 void bankManager::setCZonePosition(ofVec3f p){
@@ -871,14 +871,15 @@ void bankManager::setCSceneFadeOut(float f){
 
 
 void bankManager::incCZoneSynthType(){
+    if(!currentZone)return;
     int i = min(ST_COUNT - 1, currentZone->getSynthType() + 1);
     currentZone->setSynthType(i);
 }
 
 void bankManager::decCZoneSynthType(){
+    if(!currentZone)return;
     int i = max(0, currentZone->getSynthType() - 1);
     currentZone->setSynthType(i);
-
 }
 
 void bankManager::incCZoneSelectorType(){
@@ -888,9 +889,21 @@ void bankManager::incCZoneSelectorType(){
 }
 
 void bankManager::decCZoneSelectorType(){
+    if(!currentZone)return;
     int i = max(0, currentZone->getSelectorType() - 1);
     currentZone->setSelectorType(i);
 }
 
+
+void bankManager::incCZoneShapeType(){
+    if(!currentZone)return;
+    int i = min(TZ_COUNT - 1, currentZone->getShape() + 1);
+    currentZone->setShape(i);
+}
+void bankManager::decCZoneShapeType(){
+    if(!currentZone)return;
+    int i = max(0, currentZone->getShape() - 1);
+    currentZone->setShape(i);
+}
 
 

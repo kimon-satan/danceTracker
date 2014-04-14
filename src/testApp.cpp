@@ -308,7 +308,7 @@ void testApp::setupZonePanels(){
     
     //----------------------ZONE CANVASES --------------//
     
-    for(int i = 0; i < 3; i ++){
+    for(int i = 0; i < 4; i ++){
         
         if(i == 0)
             zoneCanvases[i] = new ofxUICanvas(ofGetWidth()/2 - 400, ofGetHeight() - 240, 600, 240);
@@ -336,15 +336,20 @@ void testApp::setupZonePanels(){
     
     zoneCanvases[0]->addSpacer();
     
-    vector<string> st;
+    vector<string> st; //FIX ME: should be in trigger zone
     st.push_back("sphere");
     st.push_back("box");
+    st.push_back("cylinder");
     
-    zoneCanvases[0]->addLabel("SHAPE TYPE", OFX_UI_FONT_SMALL);
-    shapeRad = new ofxUIRadio("SHAPE_TYPE", st, OFX_UI_ORIENTATION_HORIZONTAL ,20, 20);
-    shapeRad->activateToggle("sphere");
+    zoneCanvases[0]->addLabel("SHAPE TYPE:", OFX_UI_FONT_SMALL);
+    shapeText = new ofxUITextArea ("SHAPE_TYPE", "sphere", 70, 20, 0,0,  OFX_UI_FONT_SMALL);
+    zoneCanvases[0]->addWidgetRight(shapeText);
     
-    zoneCanvases[0]->addWidgetRight(shapeRad);
+    ofxUILabelButton * sel_p = (ofxUILabelButton *)zoneCanvases[0]->addWidgetRight(new ofxUILabelButton("SHP_MINUS", true, 25));
+    ofxUILabelButton * sel_m = (ofxUILabelButton *)zoneCanvases[0]->addWidgetRight(new ofxUILabelButton("SHP_PLUS", true, 25));
+    
+    sel_p->setLabelText("-");
+    sel_m->setLabelText("+");
     
     zoneCanvases[0]->addWidgetRight(new ofxUISpacer(1,20));
     
@@ -386,10 +391,8 @@ void testApp::setupZonePanels(){
     selTypeDisp = new ofxUILabel(0,0,200, "SELECTOR_TYPE: ", OFX_UI_FONT_SMALL);
     zoneCanvases[0]->addWidgetRight(selTypeDisp);
     
-    
-    
-    ofxUILabelButton * sel_p = (ofxUILabelButton *)zoneCanvases[0]->addWidgetRight(new ofxUILabelButton("SEL_MINUS", true, 25));
-    ofxUILabelButton * sel_m = (ofxUILabelButton *)zoneCanvases[0]->addWidgetRight(new ofxUILabelButton("SEL_PLUS", true, 25));
+    sel_p = (ofxUILabelButton *)zoneCanvases[0]->addWidgetRight(new ofxUILabelButton("SEL_MINUS", true, 25));
+    sel_m = (ofxUILabelButton *)zoneCanvases[0]->addWidgetRight(new ofxUILabelButton("SEL_PLUS", true, 25));
     
     sel_p->setLabelText("-");
     sel_m->setLabelText("+");
@@ -443,6 +446,12 @@ void testApp::setupZonePanels(){
     zDimSlid= zoneCanvases[2]->addSlider("Z_DIM", 0.05,10.0,0.5);
     
     ofAddListener(zoneCanvases[2]->newGUIEvent,this,&testApp::s2Events);
+    
+    //zone c3
+    radSlid = zoneCanvases[3]->addSlider("RADIUS", 0.05, 3.0, 0.1);
+    yDimSlid= zoneCanvases[3]->addSlider("Y_DIM", 0.05,2.0,0.5);
+    
+    ofAddListener(zoneCanvases[3]->newGUIEvent,this,&testApp::s2Events);
     
 }
 
@@ -607,7 +616,7 @@ void testApp::settingsEvents(ofxUIEventArgs &e){
         
     }else{
         
-        for(int i = 0; i < 3; i++)zoneCanvases[i]->setVisible(false);
+        for(int i = 0; i < 4; i++)zoneCanvases[i]->setVisible(false);
         hideSynthCanvas();
         
     }
@@ -649,7 +658,7 @@ void testApp::dispEvents(ofxUIEventArgs &e){
         cm.disableMouseInput();
         isCamMouse = false;
         isCamMouse = false;
-        for(int i = 0; i < 3; i++)zoneCanvases[i]->setVisible(false);
+        for(int i = 0; i < 4; i++)zoneCanvases[i]->setVisible(false);
         hideSynthCanvas();
         
     }
@@ -863,11 +872,12 @@ void testApp::s2Events(ofxUIEventArgs &e){
         if(name == "ST_PLUS"){isHideSC = true; m_bankManager->incCZoneSynthType();}
         if(name == "SEL_MINUS"){m_bankManager->decCZoneSelectorType();}
         if(name == "SEL_PLUS"){m_bankManager->incCZoneSelectorType();}
+        if(name == "SHP_MINUS"){m_bankManager->decCZoneShapeType();}
+        if(name == "SHP_PLUS"){m_bankManager->incCZoneShapeType();}
         if(name == "ZONE_RESET"){m_bankManager->resetCurrentZone();}
     }
     
-    if(name == "sphere")m_bankManager->setCZoneShape(0);
-    if(name == "box")m_bankManager->setCZoneShape(1);
+
     if(name == "ENABLED")tog->setValue(m_bankManager->setCZoneEnabled(tog->getValue()));
     if(name == "LOOP")m_bankManager->setCZoneLoop(tog->getValue());
     if(name == "PLAY_TO_END")m_bankManager->setCZonePlayToEnd(tog->getValue());
@@ -1045,19 +1055,25 @@ void testApp::updateSceneControls(ofPtr<scene> s, ofPtr<triggerZone> zn){
             
             zoneCanvases[0]->setVisible(true);
             
-            if(zn->getShape() == 0){
+            if(zn->getShape() == TZ_SPHERE){
                 zoneCanvases[1]->setVisible(true);
                 zoneCanvases[2]->setVisible(false);
-            }else{
+                zoneCanvases[3]->setVisible(false);
+            }else if(zn->getShape() == TZ_BOX){
                 zoneCanvases[1]->setVisible(false);
                 zoneCanvases[2]->setVisible(true);
+                zoneCanvases[3]->setVisible(false);
+            }else{
+                zoneCanvases[1]->setVisible(false);
+                zoneCanvases[2]->setVisible(false);
+                zoneCanvases[3]->setVisible(true);
             }
         }
         
         updateTZGuiElements(zn);
         
     }else{
-        for(int i = 0; i < 3; i++)zoneCanvases[i]->setVisible(false);
+        for(int i = 0; i < 4; i++)zoneCanvases[i]->setVisible(false);
         sc2TextInput[1]->setTextString("none");
     }
     
@@ -1085,13 +1101,14 @@ void testApp::updateTZGuiElements(ofPtr<triggerZone> zn){
     xDimSlid->setValue(zn->getBoxDims().x);
     yDimSlid->setValue(zn->getBoxDims().y);
     zDimSlid->setValue(zn->getBoxDims().z);
-    (zn->getShape() == 0) ? shapeRad->activateToggle("sphere") : shapeRad->activateToggle("box");
+    
     
     //sensSlider->setValue(zn->getSensitivity());
     repSlider->setValue(zn->getMinReplaySecs());
     cbSlider->setValue(zn->getChangeBuff());
     synthTypeDisp->setLabel("SYNTH_TYPE: " + synthDictionary::getSynthString(zn->getSynthType()));
     selTypeDisp->setLabel("SELECTOR_TYPE: " + synthDictionary::getSelectorString(zn->getSelectorType()));
+    shapeText->setTextString(zn->getShapeString());
     zn->setIsSelected(true);
     
     
@@ -1330,7 +1347,7 @@ void testApp::keyPressed(int key){
             settingsTabBar->toggleVisible();
             isSettingsGui = !isSettingsGui;
             if(!isSettingsGui)
-                for(int i = 0; i < 3; i++)zoneCanvases[i]->setVisible(false);
+                for(int i = 0; i < 4; i++)zoneCanvases[i]->setVisible(false);
             else
                 if(settingsTabBar->getActiveCanvas()->getName() == "Scene Setup")updateSceneControls(m_bankManager->getCurrentScene(), m_bankManager->getCurrentZone());
             break;

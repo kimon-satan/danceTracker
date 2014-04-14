@@ -19,7 +19,8 @@ enum tzShape{
 
     TZ_SPHERE,
     TZ_BOX,
-    TZ_CYLINDER
+    TZ_CYLINDER,
+    TZ_COUNT
 
 };
 
@@ -67,6 +68,7 @@ public:
 
     void setShape(int t);
     int getShape();
+    string getShapeString();
     
     void setName(string s);
     string getName();

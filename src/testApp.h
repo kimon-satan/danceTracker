@@ -97,7 +97,7 @@ public:
     ofxUITabBar * displayTabBar;
     ofxUICanvas * settingsCanvases[NUM_SETTINGS_CANVASES];
     ofxUICanvas * displayCanvases[2];
-    ofxUICanvas * zoneCanvases[3];
+    ofxUICanvas * zoneCanvases[4];
     ofxUIScrollableCanvas * synthCanvas;
     ofxUIScrollableCanvas * bankCanvas;
     ofxUICanvas * fakeCanvas;
@@ -119,7 +119,7 @@ public:
     
     ofxUISlider * fInSlid, * fOutSlid;
     
-    ofxUIRadio * shapeRad;
+    ofxUITextArea * shapeText;
     
     ofxUISlider * sensSlider, * repSlider, * cbSlider;
     ofxUISlider * radSlid, * tPosX, * tPosY, * tPosZ;

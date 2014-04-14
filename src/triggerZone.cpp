@@ -106,14 +106,21 @@ void triggerZone::draw(ofVec3f camPos){
                     ofPopStyle();
                     
                 }else if(shape == TZ_SPHERE){
+                    
                     ofNoFill();
                     ofSphere(0,0,0, radius);
+                    
                 }else if(shape == TZ_CYLINDER){
                     ofNoFill();
                     ofPushMatrix();
-                    ofRotate(90, 1, 0, 0);
+                   
+                    ofTranslate(0, -boxDims.y/2, 0);
                     for(int i = 0; i < 20; i++){
-                        ofCircle(0, 0, radius); //incomplete - cylinders need height & y_pos
+                        ofTranslate(0, boxDims.y/20, 0);
+                        ofPushMatrix();
+                         ofRotate(90, 1, 0, 0);
+                        ofCircle(0, 0, radius);
+                        ofPopMatrix();
                     }
                     ofPopMatrix();
                 }
@@ -177,7 +184,7 @@ void triggerZone::checkPoints(ofPtr<dancer> d){
                         
                         if(inTotal >= targetAmt){
                             isIntersect = true;
-                            break;
+                            //break;
                         }
                        
                         
@@ -190,6 +197,34 @@ void triggerZone::checkPoints(ofPtr<dancer> d){
             
         }
         
+    
+    }else if(shape == TZ_CYLINDER){
+    
+        for(it = d->pixels.begin(); it != d->pixels.end(); it++){
+        
+            if(it->y <= center.y + boxDims.y/2 && it->y >= center.y - boxDims.y/2){
+            
+                ofVec2f p(it->x, it->z);
+                ofVec2f c(center.x, center.z);
+                if(p.distance(c) <= radius){
+                    
+                    inTotal += 1;
+                    
+                    iCom += (*it);
+                    
+                    if(inTotal >= targetAmt){
+                        isIntersect = true;
+                        //break;
+                    }
+                    
+                    
+                }
+                
+            }
+            
+        }
+
+    
     
     }
     
@@ -465,7 +500,13 @@ void triggerZone::setPosZ(float z){center.z = z;}
 
 void triggerZone::setShape(int t){shape = tzShape(t);}
 int triggerZone::getShape(){return (int)shape;}
-
+string triggerZone::getShapeString(){
+    switch(shape){
+        case TZ_SPHERE:return "sphere";
+        case TZ_BOX:return "box";
+        case TZ_CYLINDER:return "cylinder";
+    }
+}
 
 void triggerZone::setName(string s){
     
