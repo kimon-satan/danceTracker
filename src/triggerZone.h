@@ -91,7 +91,7 @@ public:
     float getMinReplaySecs();
     
     int getSynthType();
-    void setSynthType(int i);
+    void setSynthType(int i, bool isLoading = false);
     
     int getSelectorType();
     void setSelectorType(int i);

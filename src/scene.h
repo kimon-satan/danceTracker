@@ -19,7 +19,7 @@ class scene{
     void draw(ofVec3f camPos);
     void update(ofPtr<dancer> d);
     
-    ofPtr<triggerZone> addTriggerZone(ofPtr<triggerZone> tz);
+    ofPtr<triggerZone> addTriggerZone(ofPtr<triggerZone> tz, bool isLoading = false);
     ofPtr<triggerZone> copyTriggerZone(ofPtr<triggerZone> tz);
     ofPtr<triggerZone> getFirstTriggerZone();
     ofPtr<triggerZone> getNextTriggerZone(ofPtr<triggerZone> tz, bool isWrap = false);
@@ -33,6 +33,7 @@ class scene{
     
     void deselectAll();
     void unTriggerAll();
+    void resetAll();
     
     //getters and setters
     

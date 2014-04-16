@@ -256,9 +256,12 @@ void bankManager::loadScene(ofxXmlSettings & XML, ofPtr<scene> nScene){
     
     for(int tz = 0; tz < numZones; tz++){
         
+        ofSleepMillis(1000/60); //FIX ME : a hack to prevent UDP flooding
+                                //but really OSC Manager should handle this and throttle the number of messages per frame
+        
         if(XML.pushTag("ZONE", tz)){
             
-            ofPtr<triggerZone> z = nScene->addTriggerZone(currentZone);
+            ofPtr<triggerZone> z = nScene->addTriggerZone(currentZone, true); //isLoading flag to prevent OSC flood
             
             loadZone(XML, z);
             
@@ -296,7 +299,7 @@ void bankManager::loadZone(ofxXmlSettings & XML, ofPtr<triggerZone> z){
     //z->setSensitivity(XML.getValue("SENSITIVITY", 1.0));
     z->setMinReplaySecs(XML.getValue("MIN_REPLAY", 0.0));
     z->setChangeBuff(XML.getValue("CHANGE_BUFF", z->getChangeBuff()));
-    z->setSynthType(XML.getValue("SYNTH_TYPE", 0));
+    z->setSynthType(XML.getValue("SYNTH_TYPE", 0)); //loading flag to prevent OSC update
     z->setSelectorType(XML.getValue("SELECTOR_TYPE", z->getSelectorType()));
     
     loadSynth(XML, z);
@@ -407,6 +410,7 @@ void bankManager::perfBankIncrement(){
         if(currentBank->scenes.size() > 0){
             currentScene = currentBank->selScene;
             currentScene->unTriggerAll();
+            currentScene->resetAll();
             pOsc->newScene(currentScene->getFadeIn(), currentScene->getFadeOut());
         }
     }
@@ -423,6 +427,7 @@ void bankManager::perfBankDecrement(){
         if(currentBank->scenes.size() > 0){
             currentScene = currentBank->selScene;
             currentScene->unTriggerAll();
+            currentScene->resetAll();
             pOsc->newScene(currentScene->getFadeIn(), currentScene->getFadeOut());
         }
     }
@@ -436,6 +441,7 @@ void bankManager::perfSceneIncrement(){
         currentBank->nextScene();
         currentScene = currentBank->selScene;
         currentScene->unTriggerAll();
+        currentScene->resetAll();
         pOsc->newScene(currentScene->getFadeIn(), currentScene->getFadeOut());
     }
 }
@@ -445,6 +451,7 @@ void bankManager::perfSceneDecrement(){
         currentBank->prevScene();
         currentScene = currentBank->selScene;
         currentScene->unTriggerAll();
+        currentScene->resetAll();
         pOsc->newScene(currentScene->getFadeIn(), currentScene->getFadeOut());
     }
 
@@ -486,8 +493,11 @@ void bankManager::incrementScene(){
     
     currentScene->unTriggerAll();
     currentScene->deselectAll();
+    
     currentScene = selectNextScene(currentScene);
     currentScene->unTriggerAll();
+    currentScene->deselectAll();
+    currentScene->resetAll();
     currentZone = currentScene->getFirstTriggerZone();
     
 }
@@ -498,12 +508,15 @@ void bankManager::decrementScene(){
     currentScene->deselectAll();
     currentScene = selectPrevScene(currentScene);
     currentScene->unTriggerAll();
+    currentScene->deselectAll();
+    currentScene->resetAll();
     currentZone = currentScene->getFirstTriggerZone();
 }
 
 void bankManager::createScene(){
     
     currentScene->unTriggerAll();
+    currentScene->resetAll();
     currentScene->deselectAll();
     currentZone.reset();
     
@@ -548,6 +561,7 @@ void bankManager::copyScene(){
 
     currentScene->unTriggerAll();
     currentScene->deselectAll();
+    currentScene->resetAll();
     
     ofPtr<scene> t = ofPtr<scene>(new scene(*currentScene));
     t->newIndex();
@@ -647,10 +661,11 @@ void bankManager::resetScenes(){
     for(it = allScenes.begin(); it != allScenes.end(); it++){
         (*it)->unTriggerAll();
         (*it)->deselectAll();
+        (*it)->resetAll();
     }
     
-    currentScene = allScenes[0];
     currentZone = currentScene->getFirstTriggerZone();
+    currentZone->setIsSelected(true);
     
 }
 

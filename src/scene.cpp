@@ -67,11 +67,19 @@ void scene::unTriggerAll(){
     vector< ofPtr<triggerZone> >::iterator it;
     
     for(it = triggerZones.begin(); it != triggerZones.end(); it++){
-        
         (*it)->deselect();
-        mOsc->resetZone((*it)->getUid());
     }
     
+}
+
+void scene::resetAll(){
+
+    vector< ofPtr<triggerZone> >::iterator it;
+    
+    for(it = triggerZones.begin(); it != triggerZones.end(); it++){
+        mOsc->resetZone((*it)->getUid());
+    }
+
 }
 
 ofPtr<triggerZone> scene::getNextTriggerZone(ofPtr<triggerZone> tz, bool isWrap){
@@ -119,7 +127,7 @@ ofPtr<triggerZone> scene::getFirstTriggerZone(){
 vector < ofPtr<triggerZone> > scene::getTriggerZones(){ return triggerZones;}
 int scene::getNumTriggerZones(){return triggerZones.size();}
 
-ofPtr<triggerZone> scene::addTriggerZone(ofPtr<triggerZone> tz){
+ofPtr<triggerZone> scene::addTriggerZone(ofPtr<triggerZone> tz, bool isLoading){
     
     ofPtr <triggerZone> t = ofPtr<triggerZone>(new triggerZone(mOsc));
     checkUniqueId(t);
@@ -131,7 +139,7 @@ ofPtr<triggerZone> scene::addTriggerZone(ofPtr<triggerZone> tz){
     
     //addZone to SC
     mOsc->addZone(t->getUid(), t->getName());
-    t->updateAllAudio();
+    if(!isLoading)t->updateAllAudio(); 
     
     return t;
 }

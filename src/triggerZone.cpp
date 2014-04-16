@@ -593,12 +593,12 @@ float triggerZone::getMinReplaySecs(){ return minReplaySecs;}
 
 int triggerZone::getSynthType(){return (int)synth;}
 
-void triggerZone::setSynthType(int i){
+void triggerZone::setSynthType(int i, bool isLoading){
     
     synth = synthType(i);
     synthParams.clear();
     synthParams = synthDictionary::getSynthParams(synth);
-    updateAllAudio();
+    if(!isLoading)updateAllAudio();
 
 }
 

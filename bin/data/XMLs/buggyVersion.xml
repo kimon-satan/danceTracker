@@ -5072,9 +5072,9 @@
                 <SOUNDFILE>origamiScene4/11_thisIsWhat.wav</SOUNDFILE>
                 <IS_LOOP>0</IS_LOOP>
                 <IS_PLAY_TO_END>1</IS_PLAY_TO_END>
-                <INVERTED>0</INVERTED>
+                <INVERTED>1</INVERTED>
                 <MOV_ENABLED>0</MOV_ENABLED>
-                <MOV_INVERTED>1</MOV_INVERTED>
+                <MOV_INVERTED>0</MOV_INVERTED>
                 <ENABLED>1</ENABLED>
                 <MIN_REPLAY>1.623036742</MIN_REPLAY>
                 <CHANGE_BUFF>0</CHANGE_BUFF>
@@ -8875,7 +8875,7 @@
                 <DIM_Y>1.419006824</DIM_Y>
                 <DIM_Z>0.697431505</DIM_Z>
                 <RADIUS>0.332876712</RADIUS>
-                <SOUNDFILE>Fortinbras/yorricksMyBrain.wav</SOUNDFILE>
+                <SOUNDFILE>fortinbras/yorricksMyBrain.wav</SOUNDFILE>
                 <IS_LOOP>0</IS_LOOP>
                 <IS_PLAY_TO_END>1</IS_PLAY_TO_END>
                 <INVERTED>0</INVERTED>
@@ -12526,12 +12526,12 @@
                 </startPos>
             </ZONE>
             <ZONE>
-                <NAME>rustle</NAME>
+                <NAME>rustle_bug</NAME>
                 <POS_X>0.654449940</POS_X>
                 <POS_Y>0.000000000</POS_Y>
                 <POS_Z>5.235602379</POS_Z>
                 <SHAPE>1</SHAPE>
-                <DIM_X>0.595205486</DIM_X>
+                <DIM_X>0.697431505</DIM_X>
                 <DIM_Y>0.604280829</DIM_Y>
                 <DIM_Z>0.697431505</DIM_Z>
                 <RADIUS>0.250000000</RADIUS>

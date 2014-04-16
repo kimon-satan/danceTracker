@@ -78,6 +78,7 @@ public:
     
     ofPtr<oscManager>  mOsc;
     ofEasyCam  cm;
+    bool isUntriggered;
     
     
     //UI Variables

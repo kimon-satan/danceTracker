@@ -37,6 +37,7 @@ void testApp::setup(){
     
     setupGui();
     updateSceneControls(m_bankManager->getCurrentScene(), m_bankManager->getCurrentZone());
+    isUntriggered = true;
     
 }
 
@@ -591,8 +592,10 @@ void testApp::update(){
     
     if(m_kinectManager.getDancer()){
         m_bankManager->update(m_kinectManager.getDancer());
-    }else{
+        isUntriggered = false;
+    }else if(!isUntriggered) {
         m_bankManager->unTriggerAll();
+        isUntriggered = true;
     }
     
     
