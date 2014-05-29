@@ -665,7 +665,7 @@ void bankManager::resetScenes(){
     }
     
     currentZone = currentScene->getFirstTriggerZone();
-    currentZone->setIsSelected(true);
+    if(currentZone)currentZone->setIsSelected(true);
     
 }
 
