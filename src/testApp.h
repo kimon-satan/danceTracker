@@ -72,6 +72,9 @@ public:
     
     void perfChange(string name);
     
+    //goldsmiths hack to bypass OSC manager
+    ofxOscSender m_sender;
+    
     ofPtr<bankManager> m_bankManager;
     kinectManager m_kinectManager;
         

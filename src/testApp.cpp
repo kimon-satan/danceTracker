@@ -39,6 +39,9 @@ void testApp::setup(){
     updateSceneControls(m_bankManager->getCurrentScene(), m_bankManager->getCurrentZone());
     isUntriggered = true;
     
+    m_sender.setup("localhost", 6448);
+    
+    
 }
 
 void testApp::setupGui(){
@@ -587,16 +590,32 @@ void testApp::updateMainSettingsGui(){
 //--------------------------------------------------------------
 void testApp::update(){
     
-    mOsc->update();
+    //mOsc->update();
     m_kinectManager.update();
     
     if(m_kinectManager.getDancer()){
+        
+        ofxOscMessage m;
+        ofVec3f com =  m_kinectManager.getDancer()->com;
+        float moveAmt = (float)m_kinectManager.getDancer()->movAmt;
+        m.setAddress("/oscCustomFeatures");
+        m.addFloatArg(com.x);
+        m.addFloatArg(com.y);
+        m.addFloatArg(com.z);
+        //m.addFloatArg(moveAmt);
+        
+        m_sender.sendMessage(m);
+        
+    }
+    
+    //not using any of the bank stuff here
+   /* if(m_kinectManager.getDancer()){
         m_bankManager->update(m_kinectManager.getDancer());
         isUntriggered = false;
     }else if(!isUntriggered) {
         m_bankManager->unTriggerAll();
         isUntriggered = true;
-    }
+    }*/
     
     
 }
@@ -1487,7 +1506,7 @@ void testApp::exit(){
     
     if(synthCanvas != NULL)delete synthCanvas;
     
-    mOsc->sendExit();
+    //mOsc->sendExit();
     
 }
 
