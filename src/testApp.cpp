@@ -40,6 +40,8 @@ void testApp::setup(){
     isUntriggered = true;
     
     m_sender.setup("localhost", 6448);
+    isFullscreenMode = false;
+    //myReceiver.setup(57120);
     
     
 }
@@ -606,6 +608,17 @@ void testApp::update(){
         
         m_sender.sendMessage(m);
         
+    }else{
+        
+        ofxOscMessage m;
+        m.setAddress("/oscCustomFeatures");
+        m.addFloatArg(0.0);
+        m.addFloatArg(0.0);
+        m.addFloatArg(0.0);
+        //m.addFloatArg(moveAmt);
+        
+        m_sender.sendMessage(m);
+        
     }
     
     //not using any of the bank stuff here
@@ -617,6 +630,18 @@ void testApp::update(){
         isUntriggered = true;
     }*/
     
+    while(myReceiver.hasWaitingMessages()){
+        ofxOscMessage m;
+        myReceiver.getNextMessage(&m);
+        
+        if(m.getAddress() == "/param"){
+            
+            state = m.getArgAsInt32(0);
+            cout << state << endl;
+            
+        }
+        
+    }
     
 }
 
@@ -1243,6 +1268,18 @@ void testApp::draw(){
     ofSetColor(0);
     ofBackground(120);
     
+    if(isFullscreenMode){
+    
+        ofPushMatrix();
+        ofTranslate(ofGetWidth(), 0);
+        ofScale(-1, 1);
+        //m_kinectManager.getCfFinder()->draw(0,0,ofGetWidth(),ofGetHeight());
+        ofSetColor(220,255,240);
+        m_kinectManager.getSegMask()->draw(0,0,ofGetWidth() ,ofGetHeight());
+        ofPopMatrix();
+        return;
+    }
+    
     ofDrawBitmapString("FPS: " +  ofToString(ofGetFrameRate(), 2), 20,20);
     
     
@@ -1281,7 +1318,13 @@ void testApp::draw(){
         
         
         if(isViewSegPoints){
-            if(m_kinectManager.getDancer())m_kinectManager.drawUserPointCloud();
+            if(m_kinectManager.getDancer()){
+              m_kinectManager.drawUserPointCloud();
+                ofVec3f p = m_kinectManager.getDancer()->nearestPoint;
+                ofSetColor(255);
+                ofSphere(p.x, p.y, p.z, 0.05);
+                
+            }
         }else{
             m_kinectManager.drawScenePointCloud();
         }
@@ -1371,7 +1414,7 @@ void testApp::keyPressed(int key){
             if(!isSettingsGui)
                 for(int i = 0; i < 4; i++)zoneCanvases[i]->setVisible(false);
             else
-                if(settingsTabBar->getActiveCanvas()->getName() == "Scene Setup")updateSceneControls(m_bankManager->getCurrentScene(), m_bankManager->getCurrentZone());
+               // if(settingsTabBar->getActiveCanvas()->getName() == "Scene Setup")updateSceneControls(m_bankManager->getCurrentScene(), m_bankManager->getCurrentZone());
             break;
             
         case OF_KEY_RETURN:
@@ -1379,9 +1422,14 @@ void testApp::keyPressed(int key){
             isDisplayGui = !isDisplayGui;
             break;
             
-        case 'F':
+      /*  case 'F':
             m_kinectManager.toggleFake();
             fakeCanvas->setVisible(m_kinectManager.getIsFake());
+            break;*/
+            
+            case 'F':
+            ofToggleFullscreen();
+            isFullscreenMode = !isFullscreenMode;
             break;
             
             

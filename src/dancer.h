@@ -23,6 +23,7 @@ public:
     int stillCount, movCount;
     float height;
     vector<ofVec3f> pixels;
+    ofVec3f nearestPoint;
     
 };
 

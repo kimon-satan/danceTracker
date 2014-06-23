@@ -144,11 +144,12 @@ void kinectManager::update(){
         }
         
         
-        if(isBgRecorded){
+       // if(isBgRecorded){
             
-            segment();
-            
-            if(isUser){
+            if(bgDepths.size() > 0)frameDiff();
+            bgDepths = curDepths;
+        
+            //if(isUser){
                 if(!mDancer){
                     
                     mDancer = ofPtr<dancer>(new dancer());
@@ -156,12 +157,12 @@ void kinectManager::update(){
                     
                 }
                 analyseUser();
-            }else{
+            /*}else{
                 mDancer.reset();
                 kDepths.clear();
-            }
+            }*/
            
-        }
+        //}
         
     }else if(isFakeUser){
         
@@ -291,6 +292,71 @@ void kinectManager::recordBg(){
 
 
 void kinectManager::frameDiff(){
+    
+    unsigned char * s_pix = segImg.getPixels();
+    
+    int counter = 0;
+    
+	for(int i = 0; i < curDepths.size(); i ++) {
+        
+        
+        if(curDepths[i].z > nearThresh && curDepths[i].z < farThresh){
+            
+            //is inside range
+            
+            if(curDepths[i].z == 0){ //curDepth didn't record data
+                s_pix[i] = 0;
+            }else if(bgDepths[i].z == 0){ // bgDepth didn't record data
+                s_pix[i] = 255;
+            }else if(abs(curDepths[i].z - bgDepths[i].z) > segThresh){ //meets difference threshold
+                s_pix[i] = 255;
+            }else{
+                s_pix[i] = 0; // doesn't meet thresholds
+            }
+            
+        }else{
+            s_pix[i] = 0;
+        }
+        
+    }
+    
+    segImg.erode();
+    segImg.flagImageChanged();
+    segMask.allocate(segImg.getWidth(), segImg.getHeight());
+    segMask = segImg;
+    segMask.resize(kinect.width, kinect.height);
+    
+    int numPixels = kinect.width * kinect.height;
+    
+    cfFinder.findContours(segMask, numPixels * minBlob, numPixels * maxBlob, 1, false);
+   /* segMask.set(0);
+    
+    //make a new mask based based on the contour
+    
+    if(cfFinder.blobs.size() > 0){
+        
+        isUser = true;
+        
+        CvPoint pts[cfFinder.blobs[0].nPts];
+        
+        for(int i = 0; i < cfFinder.blobs[0].nPts; i ++){
+            
+            pts[i].x = cfFinder.blobs[0].pts[i].x;
+            pts[i].y = cfFinder.blobs[0].pts[i].y;
+            
+        }
+        
+        CvPoint * ppt[1] = { pts };
+        
+        int ppt_size[1] = { cfFinder.blobs[0].nPts };
+        
+        cvFillPoly(segMask.getCvImage(), ppt, ppt_size , 1, cvScalarAll(255));
+        
+    }else{
+        isUser = false;
+    }*/
+    
+
 
     
 
@@ -375,24 +441,42 @@ void kinectManager::analyseUser(){
     unsigned char * s_pix = segMask.getPixels();
     
     ofVec3f total(0,0,0);
+
+    float minDist = 1000;
     
     for(int y = 0; y < kinect.height; y ++){
         
         for(int x = 0; x < kinect.width; x ++){
             
             if(s_pix[y * kinect.width + x] > 0){
-                ofVec3f cur = kinect.getWorldCoordinateAt(x, y);
-                ofVec3f curR = cur.getRotated(-qangle, qaxis);
-                curR *= ofVec3f(0.001,-0.001,0.001);
-                total += curR;
+              
                 
                 if(kDepths.size() > 0){
                     int f = 0;
-                    f = abs(kDepths[y * kinect.width + x] - kinect.getDistanceAt(x, y));
-                    if(f > 500)mov += f;
+                    float dist = kinect.getDistanceAt(x, y);
+                    f = abs(kDepths[y * kinect.width + x] - dist);
+              
+                    if(f > 500){
+                        
+                        ofVec3f cur = kinect.getWorldCoordinateAt(x, y);
+                        ofVec3f curR = cur.getRotated(-qangle, qaxis);
+                        curR *= ofVec3f(0.001,-0.001,0.001);
+                        total += curR;
+                        mDancer->pixels.push_back(curR);
+                        
+                        mov += f;
+                        if(dist < minDist && dist != 0){
+                            
+                            minDist = dist;
+                            mDancer->nearestPoint = curR;
+                        }
+                        
+                    }
                 }
                 
-                mDancer->pixels.push_back(curR);
+
+               
+            
                 
             }
             
@@ -400,16 +484,17 @@ void kinectManager::analyseUser(){
         
 	}
     
+    kDepths.setFromPixels(kinect.getRawDepthPixels(), kinect.width, kinect.height, 1);
+    
     if(mDancer->pixels.size() == 0)return;
-        
+    
     mDancer->com = total/mDancer->pixels.size();
 
     
-    vector<ofVec3f>::iterator it = remove_if(mDancer->pixels.begin(), mDancer->pixels.end(),findOutliers(mDancer->com, mDancer->height));
+    //vector<ofVec3f>::iterator it = remove_if(mDancer->pixels.begin(), mDancer->pixels.end(),findOutliers(mDancer->com, mDancer->height));
     
-    mDancer->pixels.erase(it, mDancer->pixels.end());
+    //mDancer->pixels.erase(it, mDancer->pixels.end());
     
-    kDepths.setFromPixels(kinect.getRawDepthPixels(), kinect.width, kinect.height, 1);
     
     
     //average movement of a depth pixel
@@ -429,7 +514,8 @@ void kinectManager::analyseUser(){
         mDancer->movCount = 0;
         if(mDancer->stillCount > movBuff)mDancer->isMoving = false;
     }
-        
+    
+
     
 }
 

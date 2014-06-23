@@ -80,11 +80,14 @@ public:
         
     
     ofPtr<oscManager>  mOsc;
+    ofxOscReceiver myReceiver;
     ofEasyCam  cm;
     bool isUntriggered;
     
     
     //UI Variables
+    
+    bool isFullscreenMode;
     
     bool isSettingsGui, isDisplayGui, isCamMouse, isCamKey, isTextFocus, isPerfMode;
     bool isMouseDown, isSaveDialog, isLoadDialog;
@@ -150,6 +153,8 @@ public:
     //displayCanvas 3d
     
     ofxUIToggle * mouseTog;
+    
+    int state;
     
     
     
