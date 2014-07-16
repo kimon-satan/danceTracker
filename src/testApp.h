@@ -71,18 +71,22 @@ public:
     void hideSynthCanvas();
     
     void perfChange(string name);
+    void sendFeatureNames();
     
     //goldsmiths hack to bypass OSC manager
-    ofxOscSender m_sender;
+    ofxOscSender weki_sender;
+    ofxOscReceiver weki_receiver;
+    ofxOscSender remote_sender;
     
     ofPtr<bankManager> m_bankManager;
     kinectManager m_kinectManager;
         
     
     ofPtr<oscManager>  mOsc;
-    ofxOscReceiver myReceiver;
+ 
     ofEasyCam  cm;
     bool isUntriggered;
+    float accumulator;
     
     
     //UI Variables
@@ -155,6 +159,7 @@ public:
     ofxUIToggle * mouseTog;
     
     int state;
+    float sendStep;
     
     
     

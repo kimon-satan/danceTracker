@@ -369,30 +369,50 @@ void kinectManager::analyseUser(){
     mDancer->pixels.clear();
     
     int mov = 0;
-
+    
     //create a dense array of rotated mDancer->pixels
     
     unsigned char * s_pix = segMask.getPixels();
+    ofShortPixels nDepths;
+    nDepths.setFromPixels(kinect.getRawDepthPixels(), kinect.width, kinect.height, 1);
     
     ofVec3f total(0,0,0);
+    
+    float minDist = 1000;
+    ofVec3f np(0,0,5);
+    float maxHeight = 0;
+    ofVec3f hp(0,0,0);
     
     for(int y = 0; y < kinect.height; y ++){
         
         for(int x = 0; x < kinect.width; x ++){
             
             if(s_pix[y * kinect.width + x] > 0){
-                ofVec3f cur = kinect.getWorldCoordinateAt(x, y);
-                ofVec3f curR = cur.getRotated(-qangle, qaxis);
-                curR *= ofVec3f(0.001,-0.001,0.001);
-                total += curR;
+                
                 
                 if(kDepths.size() > 0){
                     int f = 0;
-                    f = abs(kDepths[y * kinect.width + x] - kinect.getDistanceAt(x, y));
-                    if(f > 500)mov += f;
+                    
+                    f = abs(kDepths[y * kinect.width + x] - nDepths[y * kinect.width + x]);
+                    
+                    ofVec3f cur = kinect.getWorldCoordinateAt(x, y);
+                    ofVec3f curR = cur.getRotated(-qangle, qaxis);
+                    curR *= ofVec3f(0.001,-0.001,0.001);
+                    if(curR.y > floorY){
+                        
+                        total += curR;
+                        mDancer->pixels.push_back(curR);
+                        
+                        if(f > 500){
+                            mov += f; //this isn't great as it also includes outliers
+                        }
+                        
+                    }
                 }
                 
-                mDancer->pixels.push_back(curR);
+                
+                
+                
                 
             }
             
@@ -400,36 +420,53 @@ void kinectManager::analyseUser(){
         
 	}
     
-    if(mDancer->pixels.size() == 0)return;
-        
-    mDancer->com = total/mDancer->pixels.size();
-
-    
-    vector<ofVec3f>::iterator it = remove_if(mDancer->pixels.begin(), mDancer->pixels.end(),findOutliers(mDancer->com, mDancer->height));
-    
-    mDancer->pixels.erase(it, mDancer->pixels.end());
     
     kDepths.setFromPixels(kinect.getRawDepthPixels(), kinect.width, kinect.height, 1);
-    
-    
-    //average movement of a depth pixel
-    //gives good indication of moving or still
     if(mDancer->pixels.size() == 0)return;
+    mDancer->com = total/mDancer->pixels.size();
+    vector<ofVec3f>::iterator it = remove_if(mDancer->pixels.begin(), mDancer->pixels.end(),findOutliers(mDancer->com, mDancer->height));
+    mDancer->pixels.erase(it, mDancer->pixels.end());
+ 
     
-    mov /= mDancer->pixels.size();
+    for(int i = 0; i < mDancer->pixels.size(); i++){
+        
+        float dist = mDancer->pixels[i].z;
+        if(dist < minDist && dist > 0.25){
+            minDist = dist;
+            np = mDancer->pixels[i];
+        }
+        
+        if(mDancer->pixels[i].y > maxHeight){
+            maxHeight = mDancer->pixels[i].y;
+            hp = mDancer->pixels[i];
+        }
+
+    }
+    
+    if(minDist < 1000){
+        mDancer->nearestPoint += np;
+        mDancer->nearestPoint /= 2;
+        mDancer->handComVec = ofVec3f(mDancer->nearestPoint - mDancer->com).getNormalized();
+    }
+    
+    if(maxHeight > 0){
+        mDancer->highestPoint += hp;
+        mDancer->highestPoint /= 2;
+    }
+    
+   /* mov /= mDancer->pixels.size();
     mDancer->movAmt += mov;
     mDancer->movAmt /= 2; //a running averge
     
     if(mDancer->movAmt > movThresh){
-         mDancer->movCount += 1;
-         mDancer->stillCount = 0;
+        mDancer->movCount += 1;
+        mDancer->stillCount = 0;
         if(mDancer->movCount > movBuff)mDancer->isMoving = true;
     }else{
         mDancer->stillCount += 1;
         mDancer->movCount = 0;
         if(mDancer->stillCount > movBuff)mDancer->isMoving = false;
-    }
-        
+    }*/
     
 }
 

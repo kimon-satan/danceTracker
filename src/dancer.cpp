@@ -17,5 +17,9 @@ dancer::dancer(){
     movCount = 0;
     com.set(0,0,0);
     height = 1.8;
+    highestPoint.set(0,0,0);
+    nearestPoint.set(0,0,0);
+    handComVec.set(0,0,0);
+
     
 };

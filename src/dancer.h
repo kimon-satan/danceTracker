@@ -24,6 +24,8 @@ public:
     float height;
     vector<ofVec3f> pixels;
     ofVec3f nearestPoint;
+    ofVec3f highestPoint;
+    ofVec3f handComVec;
     
 };
 

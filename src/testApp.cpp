@@ -39,9 +39,16 @@ void testApp::setup(){
     updateSceneControls(m_bankManager->getCurrentScene(), m_bankManager->getCurrentZone());
     isUntriggered = true;
     
-    m_sender.setup("localhost", 6448);
+    weki_sender.setup("localhost", 6448);
+    weki_receiver.setup(12000);
+    remote_sender.setup("localhost", 14159);
     isFullscreenMode = false;
-    //myReceiver.setup(57120);
+    
+    state = 0;
+    
+    accumulator = 0;
+    sendStep = 0.1;
+    
     
     
 }
@@ -589,36 +596,70 @@ void testApp::updateMainSettingsGui(){
     
 }
 
+void testApp::sendFeatureNames(){
+    
+    ofxOscMessage p;
+    p.setAddress("/oscCustomFeaturesNames");
+    
+    p.addStringArg( "comX");
+    p.addStringArg( "comY");
+    p.addStringArg( "comZ");
+    p.addStringArg( "npX");
+    p.addStringArg( "npY");
+    p.addStringArg( "npZ");
+    p.addStringArg( "hpX");
+    p.addStringArg( "hpY");
+    p.addStringArg( "hpZ");
+    p.addStringArg( "hcVecX");
+    p.addStringArg( "hcVecY");
+    p.addStringArg( "hcVecZ");
+
+    weki_sender.sendMessage(p);
+}
+
+
 //--------------------------------------------------------------
 void testApp::update(){
     
     //mOsc->update();
     m_kinectManager.update();
+    accumulator += ofGetLastFrameTime();
     
-    if(m_kinectManager.getDancer()){
-        
-        ofxOscMessage m;
-        ofVec3f com =  m_kinectManager.getDancer()->com;
-        float moveAmt = (float)m_kinectManager.getDancer()->movAmt;
-        m.setAddress("/oscCustomFeatures");
-        m.addFloatArg(com.x);
-        m.addFloatArg(com.y);
-        m.addFloatArg(com.z);
-        //m.addFloatArg(moveAmt);
-        
-        m_sender.sendMessage(m);
-        
-    }else{
-        
-        ofxOscMessage m;
-        m.setAddress("/oscCustomFeatures");
-        m.addFloatArg(0.0);
-        m.addFloatArg(0.0);
-        m.addFloatArg(0.0);
-        //m.addFloatArg(moveAmt);
-        
-        m_sender.sendMessage(m);
-        
+    if (accumulator > sendStep){
+    
+        if(m_kinectManager.getDancer()){
+            
+            ofxOscMessage m;
+            ofVec3f com =  m_kinectManager.getDancer()->com;
+            ofVec3f hp = m_kinectManager.getDancer()->highestPoint;
+            ofVec3f np = m_kinectManager.getDancer()->nearestPoint;
+            ofVec3f hcVec = m_kinectManager.getDancer()->handComVec;
+            m.setAddress("/oscCustomFeatures");
+            m.addFloatArg(com.x);
+            m.addFloatArg(com.y);
+            m.addFloatArg(com.z);
+            m.addFloatArg(hp.x);
+            m.addFloatArg(hp.y);
+            m.addFloatArg(hp.z);
+            m.addFloatArg(np.x);
+            m.addFloatArg(np.y);
+            m.addFloatArg(np.z);
+            m.addFloatArg(hcVec.x);
+            m.addFloatArg(hcVec.y);
+            m.addFloatArg(hcVec.z);
+            //m.addFloatArg(moveAmt);
+            
+            weki_sender.sendMessage(m);
+            
+        }else{
+            
+            ofxOscMessage m;
+            m.setAddress("/oscCustomFeatures");
+            for(int i = 0; i < 9; i++)  m.addFloatArg(0.0);
+            weki_sender.sendMessage(m);
+            
+        }
+            
     }
     
     //not using any of the bank stuff here
@@ -630,14 +671,17 @@ void testApp::update(){
         isUntriggered = true;
     }*/
     
-    while(myReceiver.hasWaitingMessages()){
+    while(weki_receiver.hasWaitingMessages()){
+       
         ofxOscMessage m;
-        myReceiver.getNextMessage(&m);
+        weki_receiver.getNextMessage(&m);
+        cout << m.getAddress() << endl;
         
-        if(m.getAddress() == "/param"){
+        if(m.getAddress() == "/OSCSynth/params"){
             
             state = m.getArgAsInt32(0);
             cout << state << endl;
+            remote_sender.sendMessage(m);
             
         }
         
@@ -1274,7 +1318,18 @@ void testApp::draw(){
         ofTranslate(ofGetWidth(), 0);
         ofScale(-1, 1);
         //m_kinectManager.getCfFinder()->draw(0,0,ofGetWidth(),ofGetHeight());
-        ofSetColor(220,255,240);
+        switch(state){
+            case 0: ofSetColor(ofColor::red);break;
+            case 1: ofSetColor(ofColor::yellow);break;
+            case 2: ofSetColor(ofColor::blue);break;
+            case 3: ofSetColor(ofColor::green);break;
+            case 4: ofSetColor(ofColor::cyan);break;
+            case 5: ofSetColor(ofColor::magenta );break;
+            case 6: ofSetColor(ofColor::gray);break;
+            case 7: ofSetColor(ofColor::white);break;
+        }
+        
+        
         m_kinectManager.getSegMask()->draw(0,0,ofGetWidth() ,ofGetHeight());
         ofPopMatrix();
         return;
@@ -1323,6 +1378,9 @@ void testApp::draw(){
                 ofVec3f p = m_kinectManager.getDancer()->nearestPoint;
                 ofSetColor(255);
                 ofSphere(p.x, p.y, p.z, 0.05);
+                ofVec3f q = m_kinectManager.getDancer()->highestPoint;
+                ofSetColor(255, 0, 0);
+                ofSphere(q.x, q.y, q.z, 0.05);
                 
             }
         }else{
@@ -1430,6 +1488,10 @@ void testApp::keyPressed(int key){
             case 'F':
             ofToggleFullscreen();
             isFullscreenMode = !isFullscreenMode;
+            break;
+            
+            case 's':
+            sendFeatureNames();
             break;
             
             
