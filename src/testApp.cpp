@@ -41,10 +41,10 @@ void testApp::setup(){
     
     weki_sender.setup("localhost", 6448);
     weki_receiver.setup(12000);
-    remote_sender.setup("localhost", 14159);
+    remote_sender.setup("localhost", 57120);
     isFullscreenMode = false;
     
-    state = 0;
+    state = 1;
     
     accumulator = 0;
     sendStep = 0.1;
@@ -654,9 +654,10 @@ void testApp::update(){
         }else{
             
             ofxOscMessage m;
-            m.setAddress("/oscCustomFeatures");
-            for(int i = 0; i < 9; i++)  m.addFloatArg(0.0);
-            weki_sender.sendMessage(m);
+            m.setAddress("/OSCSynth/params");
+            m.addIntArg(CURR_INDEX);
+            m.addIntArg(0);
+            remote_sender.sendMessage(m);
             
         }
             
@@ -675,13 +676,49 @@ void testApp::update(){
        
         ofxOscMessage m;
         weki_receiver.getNextMessage(&m);
-        cout << m.getAddress() << endl;
         
         if(m.getAddress() == "/OSCSynth/params"){
             
-            state = m.getArgAsInt32(0);
-            cout << state << endl;
-            remote_sender.sendMessage(m);
+            int cState = 0;
+            float highestProb = 0;
+
+            
+            for(int i = 0; i < 4; i++){
+              
+                if(m.getArgAsFloat(i) > highestProb && m.getArgAsFloat(i) > CURR_THRESH){
+                    highestProb = m.getArgAsFloat(i);
+                    cState = i;
+                }
+            }
+            
+            highestProb = 0;
+            
+            for(int i = 4; i < 6; i++){
+                if(m.getArgAsFloat(i)  > highestProb){
+                    highestProb = m.getArgAsFloat(i);
+                    floorPos = i - 4;
+                }
+            }
+            
+            
+    
+            if(lState == cState){
+                stateCount += 1;
+            }else{
+                stateCount = 0;
+                lState = cState;
+            }
+            
+            if(stateCount > CURR_REPS){
+                state = 1 + cState + floorPos * 4;
+                ofxOscMessage p;
+                p.setAddress(m.getAddress());
+                p.addIntArg(CURR_INDEX); //the index
+                p.addIntArg(state);
+                remote_sender.sendMessage(p);
+            }
+            
+            
             
         }
         
@@ -1319,18 +1356,21 @@ void testApp::draw(){
         ofScale(-1, 1);
         //m_kinectManager.getCfFinder()->draw(0,0,ofGetWidth(),ofGetHeight());
         switch(state){
-            case 0: ofSetColor(ofColor::red);break;
-            case 1: ofSetColor(ofColor::yellow);break;
-            case 2: ofSetColor(ofColor::blue);break;
-            case 3: ofSetColor(ofColor::green);break;
-            case 4: ofSetColor(ofColor::cyan);break;
-            case 5: ofSetColor(ofColor::magenta );break;
-            case 6: ofSetColor(ofColor::gray);break;
-            case 7: ofSetColor(ofColor::white);break;
+            case 1: ofSetColor(ofColor::red);break;
+            case 2: ofSetColor(ofColor::yellow);break;
+            case 3: ofSetColor(ofColor::blue);break;
+            case 4: ofSetColor(ofColor::green);break;
+            case 5: ofSetColor(ofColor::cyan);break;
+            case 6: ofSetColor(ofColor::magenta );break;
+            case 7: ofSetColor(ofColor::gray);break;
+            case 8: ofSetColor(ofColor::white);break;
         }
         
         
         m_kinectManager.getSegMask()->draw(0,0,ofGetWidth() ,ofGetHeight());
+        ofSetColor(0);
+        ofDrawBitmapString(ofToString(state), ofGetWidth()/2, ofGetHeight()/2);
+        
         ofPopMatrix();
         return;
     }

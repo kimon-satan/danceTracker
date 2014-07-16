@@ -7,6 +7,9 @@
 #include "bankManager.h"
 
 #define NUM_SETTINGS_CANVASES 5
+#define CURR_INDEX 0
+#define CURR_THRESH 0.65
+#define CURR_REPS 2
 
 enum dtDisplayMode{
     
@@ -158,7 +161,7 @@ public:
     
     ofxUIToggle * mouseTog;
     
-    int state;
+    int state, stateCount, lState, floorPos;
     float sendStep;
     
     
