@@ -41,7 +41,7 @@ void testApp::setup(){
     
     weki_sender.setup("localhost", 6448);
     weki_receiver.setup(12000);
-    remote_sender.setup("169.254.94.49", 14159);
+    remote_sender.setup("localhost", 57120);
     isFullscreenMode = false;
     
     state = 1;
@@ -693,23 +693,13 @@ void testApp::update(){
             float highestProb = 0;
 
             
-            for(int i = 0; i < 4; i++){
+            for(int i = 3; i < 7; i++){
               
                 if(m.getArgAsFloat(i) > highestProb && m.getArgAsFloat(i) > CURR_THRESH){
                     highestProb = m.getArgAsFloat(i);
-                    cState = i;
+                    cState = i - 3;
                 }
             }
-            
-            highestProb = 0;
-            
-            for(int i = 4; i < 6; i++){
-                if(m.getArgAsFloat(i)  > highestProb){
-                    highestProb = m.getArgAsFloat(i);
-                    floorPos = i - 4;
-                }
-            }
-            
             
     
             if(lState == cState){
@@ -720,11 +710,14 @@ void testApp::update(){
             }
             
             if(stateCount > CURR_REPS){
-                state = 1 + cState + floorPos * 4;
+                state = 1 + cState;
                 ofxOscMessage p;
                 p.setAddress(m.getAddress());
                 p.addIntArg(CURR_INDEX); //the index this will be removed when running with wekiRecorder
                 p.addIntArg(state);
+                p.addFloatArg(m.getArgAsFloat(0));
+                p.addFloatArg(m.getArgAsFloat(1));
+                p.addFloatArg(m.getArgAsFloat(2));
                 remote_sender.sendMessage(p);
             }
             
