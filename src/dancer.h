@@ -26,6 +26,9 @@ public:
     ofVec3f nearestPoint;
     ofVec3f highestPoint;
     ofVec3f handComVec;
+    ofVec2f minXVec;
+    ofVec2f maxXVec;
+    ofVec2f centroid;
     
 };
 

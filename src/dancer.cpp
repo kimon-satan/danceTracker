@@ -21,5 +21,7 @@ dancer::dancer(){
     nearestPoint.set(0,0,0);
     handComVec.set(0,0,0);
 
+
+
     
 };

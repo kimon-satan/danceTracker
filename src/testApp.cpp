@@ -613,7 +613,11 @@ void testApp::sendFeatureNames(){
     p.addStringArg( "hcVecX");
     p.addStringArg( "hcVecY");
     p.addStringArg( "hcVecZ");
-
+    p.addStringArg( "minVecX_x");
+    p.addStringArg( "minVecX_y");
+    p.addStringArg( "maxVecX_x");
+    p.addStringArg( "maxVecX_y");
+    
     weki_sender.sendMessage(p);
 }
 
@@ -634,6 +638,9 @@ void testApp::update(){
             ofVec3f hp = m_kinectManager.getDancer()->highestPoint;
             ofVec3f np = m_kinectManager.getDancer()->nearestPoint;
             ofVec3f hcVec = m_kinectManager.getDancer()->handComVec;
+            ofVec2f mvx = m_kinectManager.getDancer()->minXVec;
+            ofVec2f mxvx = m_kinectManager.getDancer()->maxXVec;
+            
             m.setAddress("/oscCustomFeatures");
             m.addFloatArg(com.x);
             m.addFloatArg(com.y);
@@ -647,7 +654,10 @@ void testApp::update(){
             m.addFloatArg(hcVec.x);
             m.addFloatArg(hcVec.y);
             m.addFloatArg(hcVec.z);
-            //m.addFloatArg(moveAmt);
+            m.addFloatArg(mvx.x);
+            m.addFloatArg(mvx.y);
+            m.addFloatArg(mxvx.x);
+            m.addFloatArg(mxvx.y);
             
             weki_sender.sendMessage(m);
             
@@ -1368,8 +1378,23 @@ void testApp::draw(){
         
         
         m_kinectManager.getSegMask()->draw(0,0,ofGetWidth() ,ofGetHeight());
+        float w = m_kinectManager.getSegMask()->width;
+        float h = m_kinectManager.getSegMask()->height;
         ofSetColor(0);
         ofDrawBitmapString(ofToString(state), ofGetWidth()/2, ofGetHeight()/2);
+        
+        if(m_kinectManager.getDancer()){
+            
+            ofSetColor(255, 255, 0);
+            ofVec2f mvx = m_kinectManager.getDancer()->minXVec;
+            ofVec2f mxvx = m_kinectManager.getDancer()->maxXVec;
+            ofVec2f c = m_kinectManager.getDancer()->centroid;
+            c.x *= ofGetWidth()/w;
+            c.y *= ofGetHeight()/h;
+            ofLine(c.x, c.y, c.x + mvx.x * 400, c.y + mvx.y * 400);
+            ofLine(c.x, c.y, c.x + mxvx.x * 400, c.y + mxvx.y * 400);
+            
+        }
         
         ofPopMatrix();
         return;
@@ -1468,7 +1493,16 @@ void testApp::draw(){
         ofFill();
         ofSetColor(50);
         ofRect(0,0,320,240);
-        m_kinectManager.getChFinder()->draw(0,0,320,240);
+        m_kinectManager.getCfFinder()->draw(0,0,320,240);
+        
+        if(m_kinectManager.getDancer()){
+            ofSetColor(255, 255, 0);
+            ofVec2f mvx = m_kinectManager.getDancer()->minXVec;
+            ofVec2f mxvx = m_kinectManager.getDancer()->maxXVec;
+            ofVec2f c = m_kinectManager.getDancer()->centroid/2;
+            ofLine(c.x, c.y, c.x + mvx.x * 100, c.y + mvx.y * 100);
+            ofLine(c.x, c.y, c.x + mxvx.x * 100, c.y + mxvx.y * 100);
+        }
         ofTranslate(0, 260);
         ofSetColor(255);
         ofDrawBitmapString("contour analysis", 0,0);

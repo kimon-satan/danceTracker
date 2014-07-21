@@ -334,22 +334,64 @@ void kinectManager::segment(){
     int numPixels = kinect.width * kinect.height;
     
     cfFinder.findContours(segMask, numPixels * minBlob, numPixels * maxBlob, 1, false);
-    chFinder.findContours(segMask,numPixels * minBlob, numPixels * maxBlob, 1, false);
+
     segMask.set(0);
+    
     
     //make a new mask based based on the contour
     
+    
     if(cfFinder.blobs.size() > 0){
+        
+        float lVec = 0;
+        float minX, maxX, minY, maxY;
+        minX = 1000;
+        maxX = - 1000;
+        minY = 1000;
+        maxY = - 1000;
         
         isUser = true;
         
         CvPoint pts[cfFinder.blobs[0].nPts];
+        
+        if(mDancer){
+            mDancer->centroid.x = cfFinder.blobs[0].centroid.x;
+            mDancer->centroid.y = cfFinder.blobs[0].centroid.y;
+        }
         
         for(int i = 0; i < cfFinder.blobs[0].nPts; i ++){
             
             pts[i].x = cfFinder.blobs[0].pts[i].x;
             pts[i].y = cfFinder.blobs[0].pts[i].y;
             
+            
+            if(mDancer){
+                
+                ofVec2f p(pts[i].x, pts[i].y);
+                p -= cfFinder.blobs[0].centroid;
+                
+                if(p.length() > lVec)lVec = p.length();
+                
+                if(p.x < minX){
+                    minX = p.x;
+                    mDancer->minXVec = p;
+                }
+                
+                if(p.x > maxX){
+                    maxX = p.x;
+                    mDancer->maxXVec = p;
+                }
+                
+            }
+            
+            
+            
+            
+        }
+        
+        if(mDancer){
+            mDancer->minXVec/= lVec;
+            mDancer->maxXVec/= lVec;
         }
         
         CvPoint * ppt[1] = { pts };
@@ -535,7 +577,7 @@ void kinectManager::setMovBuff(int i){movBuff = i;}
 ofxCvGrayscaleImage * kinectManager::getLiveImg(){return &liveImg;}
 ofxCvGrayscaleImage * kinectManager::getSegMask(){return &segMask;}
 ofxCvContourFinder * kinectManager::getCfFinder(){return &cfFinder;}
-cHullFinder * kinectManager::getChFinder(){return &chFinder;}
+
 
 
 
