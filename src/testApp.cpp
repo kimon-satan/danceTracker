@@ -41,7 +41,7 @@ void testApp::setup(){
     
     weki_sender.setup("localhost", 6448);
     weki_receiver.setup(12000);
-    remote_sender.setup("localhost", 57120);
+    remote_sender.setup("169.254.94.49", 14159);
     isFullscreenMode = false;
     
     state = 1;
@@ -713,7 +713,7 @@ void testApp::update(){
                 state = 1 + cState + floorPos * 4;
                 ofxOscMessage p;
                 p.setAddress(m.getAddress());
-                p.addIntArg(CURR_INDEX); //the index
+                p.addIntArg(CURR_INDEX); //the index this will be removed when running with wekiRecorder
                 p.addIntArg(state);
                 remote_sender.sendMessage(p);
             }
