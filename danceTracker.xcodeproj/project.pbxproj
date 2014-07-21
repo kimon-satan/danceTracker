@@ -35,6 +35,7 @@
 		D9A7714818DEF930000FCDDE /* bankManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D9A7714618DEF930000FCDDE /* bankManager.cpp */; };
 		D9A7714B18DF4203000FCDDE /* kinectManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D9A7714918DF4203000FCDDE /* kinectManager.cpp */; };
 		D9D9F9B218E1D629000CBB7B /* dancer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D9D9F9B018E1D629000CBB7B /* dancer.cpp */; };
+		D9F7E0E2197D07C80095DA7E /* cHullFinder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D9F7E0E0197D07C80095DA7E /* cHullFinder.cpp */; };
 		E4328149138ABC9F0047C5CB /* openFrameworksDebug.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E4328148138ABC890047C5CB /* openFrameworksDebug.a */; };
 		E45BE97B0E8CC7DD009D7055 /* AGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E45BE9710E8CC7DD009D7055 /* AGL.framework */; };
 		E45BE97C0E8CC7DD009D7055 /* ApplicationServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E45BE9720E8CC7DD009D7055 /* ApplicationServices.framework */; };
@@ -234,6 +235,8 @@
 		D9A7714A18DF4203000FCDDE /* kinectManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = kinectManager.h; sourceTree = "<group>"; };
 		D9D9F9B018E1D629000CBB7B /* dancer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dancer.cpp; sourceTree = "<group>"; };
 		D9D9F9B118E1D629000CBB7B /* dancer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dancer.h; sourceTree = "<group>"; };
+		D9F7E0E0197D07C80095DA7E /* cHullFinder.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = cHullFinder.cpp; sourceTree = "<group>"; };
+		D9F7E0E1197D07C80095DA7E /* cHullFinder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = cHullFinder.h; sourceTree = "<group>"; };
 		E4328143138ABC890047C5CB /* openFrameworksLib.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = openFrameworksLib.xcodeproj; path = ../../../libs/openFrameworksCompiled/project/osx/openFrameworksLib.xcodeproj; sourceTree = SOURCE_ROOT; };
 		E45BE9710E8CC7DD009D7055 /* AGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AGL.framework; path = /System/Library/Frameworks/AGL.framework; sourceTree = "<absolute>"; };
 		E45BE9720E8CC7DD009D7055 /* ApplicationServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ApplicationServices.framework; path = /System/Library/Frameworks/ApplicationServices.framework; sourceTree = "<absolute>"; };
@@ -761,6 +764,8 @@
 				6307f2e2ff481d4a1e4271c210ecf6f0 /* triggerZone.h */,
 				D96A2EDC18D4D1BA00C71009 /* dt_utils.cpp */,
 				D96A2EDD18D4D1BA00C71009 /* dt_utils.h */,
+				D9F7E0E0197D07C80095DA7E /* cHullFinder.cpp */,
+				D9F7E0E1197D07C80095DA7E /* cHullFinder.h */,
 			);
 			path = src;
 			sourceTree = SOURCE_ROOT;
@@ -1140,6 +1145,7 @@
 				D9A7714818DEF930000FCDDE /* bankManager.cpp in Sources */,
 				D9A7714B18DF4203000FCDDE /* kinectManager.cpp in Sources */,
 				D9D9F9B218E1D629000CBB7B /* dancer.cpp in Sources */,
+				D9F7E0E2197D07C80095DA7E /* cHullFinder.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

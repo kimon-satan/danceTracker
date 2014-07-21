@@ -13,7 +13,7 @@
 #include "ofxKinect.h"
 #include "ofxOpenCv.h"
 #include "ofxXmlSettings.h"
-
+#include "cHullFinder.h"
 #include "dancer.h"
 
 #define USE_KINECT true
@@ -97,6 +97,7 @@ class kinectManager{
     ofxCvGrayscaleImage * getLiveImg();
     ofxCvGrayscaleImage * getSegMask();
     ofxCvContourFinder * getCfFinder();
+    cHullFinder * getChFinder();
     
     
     private:
@@ -130,6 +131,8 @@ class kinectManager{
     ofxCvGrayscaleImage segImg;
     ofxCvGrayscaleImage segMask;
     ofxCvContourFinder cfFinder;
+    cHullFinder chFinder;
+    
     
     int segRes;
     float segThresh, nearThresh, farThresh, minBlob, maxBlob;

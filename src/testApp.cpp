@@ -1468,7 +1468,7 @@ void testApp::draw(){
         ofFill();
         ofSetColor(50);
         ofRect(0,0,320,240);
-        m_kinectManager.getCfFinder()->draw(0,0,320,240);
+        m_kinectManager.getChFinder()->draw(0,0,320,240);
         ofTranslate(0, 260);
         ofSetColor(255);
         ofDrawBitmapString("contour analysis", 0,0);

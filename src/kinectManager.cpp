@@ -334,6 +334,7 @@ void kinectManager::segment(){
     int numPixels = kinect.width * kinect.height;
     
     cfFinder.findContours(segMask, numPixels * minBlob, numPixels * maxBlob, 1, false);
+    chFinder.findContours(segMask,numPixels * minBlob, numPixels * maxBlob, 1, false);
     segMask.set(0);
     
     //make a new mask based based on the contour
@@ -534,6 +535,7 @@ void kinectManager::setMovBuff(int i){movBuff = i;}
 ofxCvGrayscaleImage * kinectManager::getLiveImg(){return &liveImg;}
 ofxCvGrayscaleImage * kinectManager::getSegMask(){return &segMask;}
 ofxCvContourFinder * kinectManager::getCfFinder(){return &cfFinder;}
+cHullFinder * kinectManager::getChFinder(){return &chFinder;}
 
 
 
