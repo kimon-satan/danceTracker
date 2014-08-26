@@ -41,7 +41,26 @@ void testApp::setup(){
     
     weki_sender.setup("localhost", 6448);
     weki_receiver.setup(12000);
-    remote_sender.setup("localhost", 57120);
+    
+    ofxXmlSettings XML;
+    
+    if(XML.loadFile("XMLs/osc.xml")){
+        
+        if(XML.pushTag("OSC_CONFIG")){
+            
+            string host = XML.getValue("HOST", "localhost");
+            int port = XML.getValue("PORT", 57120);
+            remote_sender.setup(host, port);
+            
+            XML.popTag();
+        }
+        
+    }else{
+        cout << "osc config file not found \n";
+         remote_sender.setup("localhost", 57120);
+    }
+    
+   
     isFullscreenMode = false;
     
     state = 1;
